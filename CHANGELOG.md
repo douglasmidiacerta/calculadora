@@ -2,6 +2,26 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.0.7] - 2026-05-19
+
+### Adicionado
+- **Área Administrativa Protegida por Senha**:
+  - Implementação de um botão de engrenagem discreto no cabeçalho do simulador que atua como atalho para o painel administrativo.
+  - Bloqueio por senha exigindo a digitação exata de **`3x51ELCO`** para autenticação da sessão administrativa.
+- **Painel Administrativo com Abas Responsivas**:
+  - **Aba 1 (Geral & Acréscimos)**:
+    - Controle de visibilidade para ocultar/mostrar os botões de customização ("Ocultar Lucro" e "Ver Taxa Custo") para usuários/vendedores comuns.
+    - Edição dos acréscimos por nível (Tabelas 1 a 5) das tabelas Normal e Promo.
+    - Edição do campo **Acréscimo Geral** (+1%, +0.15%, etc.) somado dinamicamente no cálculo de todos os fatores das tabelas Normal e Promo.
+  - **Aba 2 (Fatores Base)**: Edição direta das taxas mensais em formato multiplicador decimal de 1x a 21x para as tabelas Normal e Promo.
+  - **Aba 3 (Custo de Máquina)**: Edição das taxas de desconto real cobradas pela adquirente de 1x a 21x para as bandeiras Master/Visa e Elo.
+- **Mecanismo de Persistência e Backup**:
+  - Salvamento instantâneo de todas as taxas customizadas no `localStorage` do navegador para manter as alterações ativas após o recarregamento da página (F5).
+  - Botão **Restaurar Padrões** no painel administrativo para limpar as configurações locais e restaurar imediatamente as taxas estáticas originais de fábrica do código.
+- **Dropdowns e Cálculos Dinâmicos**:
+  - Reescrita do cálculo da simulação (`simulacao`) para processar os fatores e acréscimos dinâmicos.
+  - Atualização automática dos dropdowns do simulador para refletir as taxas de acréscimo customizadas do admin em tempo real.
+
 ## [1.0.6] - 2026-05-19
 
 ### Adicionado

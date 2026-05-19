@@ -2,27 +2,34 @@
 
 ## Status da Sessão
 - **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
-- **Versão Atual**: `v1.0.6`
-- **Foco da Sessão**: Implementação de botões de customização visual para ocultar/mostrar o lucro líquido na tela e alternar as taxas exibidas na coluna (Taxa do Cliente vs Taxa de Custo/Máquina).
+- **Versão Atual**: `v1.0.7`
+- **Foco da Sessão**: Implementação da Área Administrativa protegida por senha, modal administrativo para taxas dinâmicas e persistência com LocalStorage.
 
 ---
 
 ## Atividades Realizadas
-1. **Estrutura de Contexto**: Sincronização dos arquivos `/ai_context/historico_mestre.md` e `/ai_context/sessao_atual.md` para a versão 1.0.6.
-2. **Botão de Ocultar/Mostrar Lucro**:
-   - Adicionado o estado `showLucro` em `src/App.tsx` e um botão dinâmico no cabeçalho com ícone `Eye` / `EyeOff`. A coluna "Lucro Líquido" é oculta de forma responsiva na tabela na tela do administrador, ideal para simular preços na frente do cliente final.
-3. **Botão de Trocar Taxa Exibida (Cliente vs Custo)**:
-   - Adicionado o estado `tipoTaxaExibida` e botão no cabeçalho de simulação. Permite alternar dinamicamente na tabela na tela a visualização entre a **Taxa do Cliente** (taxa acrescida cobrada final) e a **Taxa de Custo da Máquina** (taxa de desconto real cobrada pela operadora), usando diferenciação de cores.
-4. **Atualização do Changelog**: Registro detalhado da versão 1.0.6 no arquivo `CHANGELOG.md`.
-5. **Recompilação geral**:
-   - Rodando o build do Vite e esbuild para consolidar as alterações na pasta `/dist`.
-6. **Empacotamento de Produção (v1.0.6)**:
-   - Apagar os zips obsoletos da versão 1.0.5.
-   - Gerar `antigravity-v1.0.6.zip` (fontes) e o zip otimizado **`simulador-dist-v1.0.6.zip`** (contendo apenas o compilado de `dist/` pronto para extração na subpasta do cPanel).
-7. **Git Deploy**: Commits e push do progresso na branch `main`.
+1. **Estrutura de Contexto**: Sincronização dos arquivos `/ai_context/historico_mestre.md`, `/ai_context/sessao_atual.md` e `CHANGELOG.md` para a versão 1.0.7.
+2. **Controle de Acesso Admin**:
+   - Criação do botão discreto "Admin" no header da calculadora.
+   - Modal elegante solicitando a senha de administrador **`3x51ELCO`** com validação no client-side.
+3. **Painel de Configuração com Abas**:
+   - Desenvolvimento de modal administrativo dividido em 3 abas de inputs otimizados para uso responsivo:
+     - *Aba 1 (Geral & Acréscimos)*: Switch para ocultar os botões de cabeçalho "Ocultar Lucro" e "Ver Taxa Custo" para vendedores comuns, inputs para acréscimo geral (+X% Geral) e inputs para os acréscimos das Tabelas de nível 1 a 5 (Normal e Promo).
+     - *Aba 2 (Fatores Base)*: Grid de 1x a 21x para a Tabela Normal e Promo.
+     - *Aba 3 (Custo de Máquina)*: Grid de 1x a 21x para as operadoras Master/Visa e Elo.
+4. **Persistência de Dados (Navegador)**:
+   - Persistência instantânea no `localStorage` do navegador para manter as taxas atualizadas de forma segura após F5.
+   - Funcionalidade "Restaurar Padrões" para limpeza de chaves e reversão imediata para as constantes originais do código de fábrica.
+5. **Cálculos e Layout Dinâmicos**:
+   - Atualização do cálculo no simulador para somar dinamicamente acréscimos gerais e de tabelas.
+   - dropdowns do simulador exibindo os valores e porcentagens totais atualizados em tempo real de acordo com as customizações ativas.
+6. **Compilação e Verificação**:
+   - Execução bem-sucedida de `npm run build` gerando estritamente os artefatos de produção em `dist/`.
 
 ---
 
 ## Próximos Passos (Pendentes)
-1. **Deploy da v1.0.6 na Subpasta do cPanel**: Instruir o usuário a limpar a pasta antiga e descompactar **`simulador-dist-v1.0.6.zip`** diretamente no diretório do cPanel.
-2. **Validação**: Testar o clique nos botões "Ver Taxa Custo/Cliente" e "Ocultar/Mostrar Lucro" no painel e confirmar que a tabela se atualiza instantaneamente. Confirmar que a geração da imagem segue o fluxo compactado original.
+1. **Deploy da v1.0.7 na Subpasta do cPanel**:
+   - Orientar o usuário a apagar o zip anterior `simulador-dist-v1.0.6.zip` e descompactar o novo **`simulador-dist-v1.0.7.zip`** na pasta do simulador no cPanel.
+2. **Validação do Painel Admin**:
+   - Pedir ao usuário para testar o clique no botão "Admin", colocar a senha `3x51ELCO` e alterar taxas para certificar-se da atualização dinâmica dos cálculos do simulador na tela de resultados.

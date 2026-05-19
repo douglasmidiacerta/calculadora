@@ -4,32 +4,35 @@
  */
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { DollarSign, FileText, CreditCard, TrendingUp, TrendingDown, Info, Calculator, Share2, LogIn, Lock, User, Eye, EyeOff } from 'lucide-react';
+import { 
+  DollarSign, FileText, CreditCard, TrendingUp, TrendingDown, Info, 
+  Calculator, Share2, LogIn, Lock, User, Eye, EyeOff, Settings, 
+  RotateCcw, Save, X, Sliders, Check, SlidersHorizontal 
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { toPng } from 'html-to-image';
 
-// --- DATA CONSTANTS ---
-// ... (rest of the constants)
+// --- DATA CONSTANTS (FACTORY DEFAULTS) ---
 
-const fatoresBasePromo: Record<number, number> = {
+const DEFAULT_FATORES_BASE_PROMO: Record<number, number> = {
   1: 1.1208, 2: 1.1278, 3: 1.1356, 4: 1.1434, 5: 1.1510, 
   6: 1.1586, 7: 1.1622, 8: 1.1696, 9: 1.1770, 10: 1.1842, 
   11: 1.1914, 12: 1.1985, 13: 1.2055, 14: 1.2124, 15: 1.2193, 
   16: 1.2210, 17: 1.2328, 18: 1.2395, 19: 1.2416, 20: 1.2466, 21: 1.2516
 };
 
-const acrescimosPromo: Record<string, number> = { "1": 0.00, "2": 0.02, "3": 0.03, "4": 0.04, "5": 0.05 };
+const DEFAULT_ACRESCIMOS_PROMO: Record<string, number> = { "1": 0.00, "2": 0.02, "3": 0.03, "4": 0.04, "5": 0.05 };
 
-const fatoresBaseNormal: Record<number, number> = {
+const DEFAULT_FATORES_BASE_NORMAL: Record<number, number> = {
   1: 1.1580, 2: 1.1586, 3: 1.1660, 4: 1.1733, 5: 1.1806, 
   6: 1.1878, 7: 1.1899, 8: 1.1969, 9: 1.2038, 10: 1.2107, 
   11: 1.2176, 12: 1.2243, 13: 1.2564, 14: 1.2679, 15: 1.2744, 
   16: 1.2809, 17: 1.2874, 18: 1.2939, 19: 1.3204, 20: 1.3269, 21: 1.3334
 };
 
-const acrescimosNormal: Record<string, number> = { "1": 0.00, "2": 0.01, "3": 0.02, "4": 0.03, "5": 0.04 };
+const DEFAULT_ACRESCIMOS_NORMAL: Record<string, number> = { "1": 0.00, "2": 0.01, "3": 0.02, "4": 0.03, "5": 0.04 };
 
-const taxasCusto: Record<string, Record<number, number>> = {
+const DEFAULT_TAXAS_CUSTO: Record<string, Record<number, number>> = {
   "Master/Visa": {
     1: 2.99, 2: 3.83, 3: 4.48, 4: 5.12, 5: 5.76, 6: 6.39, 7: 7.21, 8: 7.83, 9: 8.44, 10: 9.05,
     11: 9.66, 12: 10.25, 13: 11.64, 14: 12.23, 15: 12.81, 16: 13.39, 17: 13.96, 18: 14.53,
@@ -52,6 +55,16 @@ type SimulationRow = {
   taxaDinamica: string;
 };
 
+// Helper for local storage
+const loadLocalStorage = <T,>(key: string, defaultValue: T): T => {
+  try {
+    const saved = localStorage.getItem(key);
+    return saved ? JSON.parse(saved) : defaultValue;
+  } catch (e) {
+    return defaultValue;
+  }
+};
+
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('auth_token'));
   const [username, setUsername] = useState("");
@@ -59,6 +72,53 @@ export default function App() {
   const [loginError, setLoginError] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
+  // --- DYNAMIC TAXES & CONTROLS STATES ---
+  const [fatoresBaseNormalState, setFatoresBaseNormalState] = useState<Record<number, number>>(() => 
+    loadLocalStorage('simulador_fatores_normal', DEFAULT_FATORES_BASE_NORMAL)
+  );
+  const [fatoresBasePromoState, setFatoresBasePromoState] = useState<Record<number, number>>(() => 
+    loadLocalStorage('simulador_fatores_promo', DEFAULT_FATORES_BASE_PROMO)
+  );
+  const [acrescimosNormalState, setAcrescimosNormalState] = useState<Record<string, number>>(() => 
+    loadLocalStorage('simulador_acrescimos_normal', DEFAULT_ACRESCIMOS_NORMAL)
+  );
+  const [acrescimosPromoState, setAcrescimosPromoState] = useState<Record<string, number>>(() => 
+    loadLocalStorage('simulador_acrescimos_promo', DEFAULT_ACRESCIMOS_PROMO)
+  );
+  const [acrescimoGeralNormal, setAcrescimoGeralNormal] = useState<number>(() => 
+    loadLocalStorage('simulador_acrescimo_geral_normal', 0.00)
+  );
+  const [acrescimoGeralPromo, setAcrescimoGeralPromo] = useState<number>(() => 
+    loadLocalStorage('simulador_acrescimo_geral_promo', 0.00)
+  );
+  const [taxasCustoState, setTaxasCustoState] = useState<Record<string, Record<number, number>>>(() => 
+    loadLocalStorage('simulador_taxas_custo', DEFAULT_TAXAS_CUSTO)
+  );
+  const [showControlesUsuarioComum, setShowControlesUsuarioComum] = useState<boolean>(() => 
+    loadLocalStorage('simulador_show_controles_comum', true)
+  );
+
+  // --- ADMIN AUTH & POPUPS ---
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => 
+    !!localStorage.getItem('admin_authenticated')
+  );
+  const [showAdminPasswordModal, setShowAdminPasswordModal] = useState(false);
+  const [showAdminPanelModal, setShowAdminPanelModal] = useState(false);
+  const [adminPasswordInput, setAdminPasswordInput] = useState("");
+  const [adminPasswordError, setAdminPasswordError] = useState("");
+  const [adminTab, setAdminTab] = useState<'geral' | 'fatores' | 'custos'>('geral');
+
+  // --- ADMIN EDIT FORM LOCAL STATES ---
+  const [formFatoresBaseNormal, setFormFatoresBaseNormal] = useState<Record<number, number>>({});
+  const [formFatoresBasePromo, setFormFatoresBasePromo] = useState<Record<number, number>>({});
+  const [formAcrescimosNormal, setFormAcrescimosNormal] = useState<Record<string, number>>({});
+  const [formAcrescimosPromo, setFormAcrescimosPromo] = useState<Record<string, number>>({});
+  const [formAcrescimoGeralNormal, setFormAcrescimoGeralNormal] = useState<number>(0);
+  const [formAcrescimoGeralPromo, setFormAcrescimoGeralPromo] = useState<number>(0);
+  const [formTaxasCusto, setFormTaxasCusto] = useState<Record<string, Record<number, number>>>({ "Master/Visa": {}, "Elo": {} });
+  const [formShowControlesComum, setFormShowControlesComum] = useState<boolean>(true);
+
+  // --- CALCULATOR STATES ---
   const [valorDesejado, setValorDesejado] = useState("1000.00");
   const [modoCalculo, setModoCalculo] = useState<"valor" | "limite">("valor");
   const [tipoTabela, setTipoTabela] = useState<"normal" | "promo">("normal");
@@ -139,19 +199,89 @@ export default function App() {
     setValorDesejado(numericValue);
   };
 
+  // --- ADMIN ACTIONS ---
+  const handleOpenAdminPanel = () => {
+    setFormFatoresBaseNormal({ ...fatoresBaseNormalState });
+    setFormFatoresBasePromo({ ...fatoresBasePromoState });
+    setFormAcrescimosNormal({ ...acrescimosNormalState });
+    setFormAcrescimosPromo({ ...acrescimosPromoState });
+    setFormAcrescimoGeralNormal(acrescimoGeralNormal);
+    setFormAcrescimoGeralPromo(acrescimoGeralPromo);
+    setFormTaxasCusto({
+      "Master/Visa": { ...taxasCustoState["Master/Visa"] },
+      "Elo": { ...taxasCustoState["Elo"] }
+    });
+    setFormShowControlesComum(showControlesUsuarioComum);
+    setAdminTab('geral');
+    setShowAdminPanelModal(true);
+  };
+
+  const handleSaveAdminSettings = () => {
+    localStorage.setItem('simulador_fatores_normal', JSON.stringify(formFatoresBaseNormal));
+    localStorage.setItem('simulador_fatores_promo', JSON.stringify(formFatoresBasePromo));
+    localStorage.setItem('simulador_acrescimos_normal', JSON.stringify(formAcrescimosNormal));
+    localStorage.setItem('simulador_acrescimos_promo', JSON.stringify(formAcrescimosPromo));
+    localStorage.setItem('simulador_acrescimo_geral_normal', JSON.stringify(formAcrescimoGeralNormal));
+    localStorage.setItem('simulador_acrescimo_geral_promo', JSON.stringify(formAcrescimoGeralPromo));
+    localStorage.setItem('simulador_taxas_custo', JSON.stringify(formTaxasCusto));
+    localStorage.setItem('simulador_show_controles_comum', JSON.stringify(formShowControlesComum));
+
+    setFatoresBaseNormalState(formFatoresBaseNormal);
+    setFatoresBasePromoState(formFatoresBasePromo);
+    setAcrescimosNormalState(formAcrescimosNormal);
+    setAcrescimosPromoState(formAcrescimosPromo);
+    setAcrescimoGeralNormal(formAcrescimoGeralNormal);
+    setAcrescimoGeralPromo(formAcrescimoGeralPromo);
+    setTaxasCustoState(formTaxasCusto);
+    setShowControlesUsuarioComum(formShowControlesComum);
+
+    setShowAdminPanelModal(false);
+  };
+
+  const handleRestoreDefaults = () => {
+    if (window.confirm("Deseja realmente restaurar as taxas originais de fábrica? Todas as suas alterações serão perdidas.")) {
+      localStorage.removeItem('simulador_fatores_normal');
+      localStorage.removeItem('simulador_fatores_promo');
+      localStorage.removeItem('simulador_acrescimos_normal');
+      localStorage.removeItem('simulador_acrescimos_promo');
+      localStorage.removeItem('simulador_acrescimo_geral_normal');
+      localStorage.removeItem('simulador_acrescimo_geral_promo');
+      localStorage.removeItem('simulador_taxas_custo');
+      localStorage.removeItem('simulador_show_controles_comum');
+
+      setFatoresBaseNormalState(DEFAULT_FATORES_BASE_NORMAL);
+      setFatoresBasePromoState(DEFAULT_FATORES_BASE_PROMO);
+      setAcrescimosNormalState(DEFAULT_ACRESCIMOS_NORMAL);
+      setAcrescimosPromoState(DEFAULT_ACRESCIMOS_PROMO);
+      setAcrescimoGeralNormal(0.00);
+      setAcrescimoGeralPromo(0.00);
+      setTaxasCustoState(DEFAULT_TAXAS_CUSTO);
+      setShowControlesUsuarioComum(true);
+
+      setShowAdminPanelModal(false);
+    }
+  };
+
+  const handleAdminLogout = () => {
+    localStorage.removeItem('admin_authenticated');
+    setIsAdminAuthenticated(false);
+    setShowAdminPanelModal(false);
+  };
+
   const simulacao = useMemo<SimulationRow[]>(() => {
     const valorNum = parseFloat(valorDesejado) || 0;
-    const fatoresBase = tipoTabela === 'normal' ? fatoresBaseNormal : fatoresBasePromo;
-    const acrescimo = tipoTabela === 'normal' ? acrescimosNormal[nivelTabela] : acrescimosPromo[nivelTabela];
+    const fatoresBase = tipoTabela === 'normal' ? fatoresBaseNormalState : fatoresBasePromoState;
+    const acrescimo = tipoTabela === 'normal' ? acrescimosNormalState[nivelTabela] : acrescimosPromoState[nivelTabela];
+    const acrescimoGeral = tipoTabela === 'normal' ? (acrescimoGeralNormal / 100) : (acrescimoGeralPromo / 100);
     
     if (valorNum <= 0) return [];
 
     return Array.from({ length: 21 }, (_, index) => {
       const i = index + 1;
-      const fator = (fatoresBase[i] || 1) + (acrescimo || 0);
+      const fator = (fatoresBase[i] || 1) + (acrescimo || 0) + acrescimoGeral;
 
       const taxaCliente = (((fator - 1) * 100) / i).toFixed(2).replace('.', ',') + '%';
-      const percentualTaxaMaquina = taxasCusto[bandeira][i] || 0;
+      const percentualTaxaMaquina = taxasCustoState[bandeira][i] || 0;
       const taxaCustoStr = percentualTaxaMaquina.toFixed(2).replace('.', ',') + '%';
       
       const taxaDinamica = tipoTaxaExibida === 'cliente' ? taxaCliente : taxaCustoStr;
@@ -181,7 +311,11 @@ export default function App() {
         taxaDinamica: taxaDinamica
       };
     });
-  }, [valorDesejado, tipoTabela, nivelTabela, bandeira, modoCalculo, tipoTaxaExibida]);
+  }, [
+    valorDesejado, tipoTabela, nivelTabela, bandeira, modoCalculo, tipoTaxaExibida, 
+    fatoresBaseNormalState, fatoresBasePromoState, acrescimosNormalState, acrescimosPromoState, 
+    acrescimoGeralNormal, acrescimoGeralPromo, taxasCustoState
+  ]);
 
   if (!isAuthenticated) {
     return (
@@ -273,7 +407,7 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 flex flex-col items-center p-4 md:p-8 font-sans text-slate-800">
       <header className="max-w-4xl w-full mb-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-emerald-900 flex items-center gap-2">
+          <h1 className="text-3xl font-extrabold tracking-tight text-emerald-900 flex items-center gap-2 justify-center sm:justify-start">
             <Calculator className="text-emerald-600" />
             Simulador de Vendas
           </h1>
@@ -281,33 +415,38 @@ export default function App() {
         </div>
         
         <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3">
-          {/* Botão de Trocar Taxa (Exibição) */}
-          <button 
-            onClick={() => setTipoTaxaExibida(tipoTaxaExibida === 'cliente' ? 'custo' : 'cliente')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm ${
-              tipoTaxaExibida === 'custo' 
-                ? 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100/80' 
-                : 'bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100/80'
-            }`}
-            title={tipoTaxaExibida === 'cliente' ? "Mostrar Taxa de Custo da Máquina" : "Mostrar Taxa Cobrada do Cliente"}
-          >
-            <CreditCard size={18} />
-            <span>{tipoTaxaExibida === 'cliente' ? "Ver Taxa Custo" : "Ver Taxa Cliente"}</span>
-          </button>
+          
+          {/* Botão de Trocar Taxa (Exibição) - Exibe apenas se permitido ou se for admin */}
+          {(showControlesUsuarioComum || isAdminAuthenticated) && (
+            <button 
+              onClick={() => setTipoTaxaExibida(tipoTaxaExibida === 'cliente' ? 'custo' : 'cliente')}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm ${
+                tipoTaxaExibida === 'custo' 
+                  ? 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100/80' 
+                  : 'bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100/80'
+              }`}
+              title={tipoTaxaExibida === 'cliente' ? "Mostrar Taxa de Custo da Máquina" : "Mostrar Taxa Cobrada do Cliente"}
+            >
+              <CreditCard size={18} />
+              <span>{tipoTaxaExibida === 'cliente' ? "Ver Taxa Custo" : "Ver Taxa Cliente"}</span>
+            </button>
+          )}
 
-          {/* Botão de Ocultar/Mostrar Lucro */}
-          <button 
-            onClick={() => setShowLucro(!showLucro)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm ${
-              showLucro 
-                ? 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100/80' 
-                : 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-slate-200/80'
-            }`}
-            title={showLucro ? "Ocultar Coluna de Lucro Líquido" : "Mostrar Coluna de Lucro Líquido"}
-          >
-            {showLucro ? <Eye size={18} /> : <EyeOff size={18} />}
-            <span>{showLucro ? "Ocultar Lucro" : "Mostrar Lucro"}</span>
-          </button>
+          {/* Botão de Ocultar/Mostrar Lucro - Exibe apenas se permitido ou se for admin */}
+          {(showControlesUsuarioComum || isAdminAuthenticated) && (
+            <button 
+              onClick={() => setShowLucro(!showLucro)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm ${
+                showLucro 
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100/80' 
+                  : 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-slate-200/80'
+              }`}
+              title={showLucro ? "Ocultar Coluna de Lucro Líquido" : "Mostrar Coluna de Lucro Líquido"}
+            >
+              {showLucro ? <Eye size={18} /> : <EyeOff size={18} />}
+              <span>{showLucro ? "Ocultar Lucro" : "Mostrar Lucro"}</span>
+            </button>
+          )}
 
           <button 
             onClick={handleExport}
@@ -315,6 +454,28 @@ export default function App() {
           >
             <Share2 size={18} className="group-hover:rotate-12 transition-transform" />
             Gerar Imagem
+          </button>
+
+          {/* Botão de Configurações Admin */}
+          <button 
+            onClick={() => {
+              if (isAdminAuthenticated) {
+                handleOpenAdminPanel();
+              } else {
+                setAdminPasswordInput("");
+                setAdminPasswordError("");
+                setShowAdminPasswordModal(true);
+              }
+            }}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm ${
+              isAdminAuthenticated 
+                ? 'bg-amber-500 border-amber-600 text-white hover:bg-amber-600' 
+                : 'bg-white hover:bg-slate-100 text-slate-600 border-slate-200'
+            }`}
+            title="Painel Administrativo de Taxas"
+          >
+            <Settings size={18} className={isAdminAuthenticated ? "animate-pulse" : ""} />
+            <span>{isAdminAuthenticated ? "Painel Admin" : "Admin"}</span>
           </button>
 
           <button 
@@ -405,11 +566,22 @@ export default function App() {
                       onChange={(e) => setNivelTabela(e.target.value)}
                       className="w-full pl-10 rounded-xl border-0 py-2.5 px-4 bg-emerald-700/50 text-white font-semibold focus:ring-2 focus:ring-emerald-400 transition-colors cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236ee7b7%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1em_1em] bg-[right_1rem_center] bg-no-repeat pr-10 hover:bg-emerald-600/50"
                     >
-                      <option value="1">Tabela 1 (Base)</option>
-                      <option value="2">Tabela 2 (+{tipoTabela === 'normal' ? '1%' : '2%'})</option>
-                      <option value="3">Tabela 3 (+{tipoTabela === 'normal' ? '2%' : '3%'})</option>
-                      <option value="4">Tabela 4 (+{tipoTabela === 'normal' ? '3%' : '4%'})</option>
-                      <option value="5">Tabela 5 (+{tipoTabela === 'normal' ? '4%' : '5%'})</option>
+                      {Array.from({ length: 5 }, (_, i) => {
+                        const lvl = String(i + 1);
+                        const baseVal = tipoTabela === 'normal' 
+                          ? acrescimosNormalState[lvl] 
+                          : acrescimosPromoState[lvl];
+                        const geralVal = tipoTabela === 'normal'
+                          ? acrescimoGeralNormal
+                          : acrescimoGeralPromo;
+                        const totalVal = (baseVal * 100) + geralVal;
+
+                        return (
+                          <option key={lvl} value={lvl}>
+                            Tabela {lvl} {i === 0 && totalVal === 0 ? '(Base)' : `(+${totalVal.toFixed(2).replace('.', ',').replace(',00', '')}%)`}
+                          </option>
+                        );
+                      })}
                     </select>
                   </div>
                 </div>
@@ -520,7 +692,7 @@ export default function App() {
           style={{ 
             width: '480px', 
             height: 'max-content',
-            backgroundColor: '#f0f9f1', // Verde muito claro
+            backgroundColor: '#f0f9f1', 
             padding: '24px 16px',
             fontFamily: 'Inter, system-ui, sans-serif',
             display: 'flex',
@@ -636,6 +808,502 @@ export default function App() {
           </div>
         </div>
       </div>
+
+      {/* --- MODAL DE SENHA ADMIN --- */}
+      <AnimatePresence>
+        {showAdminPasswordModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              className="max-w-md w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
+            >
+              <div className="bg-amber-600 p-6 text-center text-white relative">
+                <button 
+                  onClick={() => setShowAdminPasswordModal(false)}
+                  className="absolute top-4 right-4 text-white hover:text-amber-200 transition-colors"
+                >
+                  <X size={20} />
+                </button>
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-amber-500 mb-3 shadow-inner">
+                  <Lock size={24} className="text-amber-200" />
+                </div>
+                <h3 className="text-xl font-bold">Acesso Administrativo</h3>
+                <p className="text-amber-100/60 text-xs mt-1">Insira a chave de segurança para configurar taxas</p>
+              </div>
+
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                if (adminPasswordInput === "3x51ELCO") {
+                  setIsAdminAuthenticated(true);
+                  localStorage.setItem('admin_authenticated', 'true');
+                  setShowAdminPasswordModal(false);
+                  setAdminPasswordInput("");
+                  setAdminPasswordError("");
+                  setTimeout(() => {
+                    handleOpenAdminPanel();
+                  }, 100);
+                } else {
+                  setAdminPasswordError("Chave de segurança incorreta");
+                }
+              }} className="p-6 space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-1.5 px-1">Chave de Acesso</label>
+                  <input 
+                    type="password" 
+                    value={adminPasswordInput}
+                    onChange={(e) => setAdminPasswordInput(e.target.value)}
+                    className="w-full rounded-xl border-2 border-slate-100 py-3 px-4 bg-slate-50 text-slate-800 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 focus:bg-white transition-all outline-none font-semibold text-center tracking-widest text-lg"
+                    placeholder="••••••••"
+                    required
+                    autoFocus
+                  />
+                </div>
+
+                {adminPasswordError && (
+                  <motion.div 
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="bg-rose-50 border border-rose-100 text-rose-600 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2"
+                  >
+                    <div className="w-1.5 h-1.5 rounded-full bg-rose-500"></div>
+                    {adminPasswordError}
+                  </motion.div>
+                )}
+
+                <div className="flex gap-3 pt-2">
+                  <button 
+                    type="button"
+                    onClick={() => setShowAdminPasswordModal(false)}
+                    className="flex-1 px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-sm transition-all active:scale-95"
+                  >
+                    Cancelar
+                  </button>
+                  <button 
+                    type="submit"
+                    className="flex-1 px-4 py-3 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-amber-200 active:scale-95"
+                  >
+                    Acessar Painel
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* --- POPUP / MODAL PAINEL ADMINISTRATIVO --- */}
+      <AnimatePresence>
+        {showAdminPanelModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 30 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 30 }}
+              className="max-w-4xl w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh]"
+            >
+              {/* Header do Painel */}
+              <div className="bg-slate-900 p-6 text-white flex justify-between items-center relative border-b border-slate-800">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-xl bg-amber-500/20 text-amber-500">
+                    <SlidersHorizontal size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold flex items-center gap-2">
+                      Painel Administrativo
+                      <span className="text-[10px] bg-amber-500/20 text-amber-500 font-extrabold uppercase px-2 py-0.5 rounded-full tracking-wider">Modo Edit</span>
+                    </h3>
+                    <p className="text-slate-400 text-xs mt-0.5">Configure acréscimos, tabelas de parcelamento e custos da máquina</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={handleAdminLogout}
+                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-rose-400 rounded-xl transition-all"
+                    title="Encerrar sessão de administrador"
+                  >
+                    <Lock size={12} />
+                    Sair Admin
+                  </button>
+                  <button 
+                    onClick={() => setShowAdminPanelModal(false)}
+                    className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white rounded-xl transition-colors"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Barra de Abas */}
+              <div className="bg-slate-50 border-b border-slate-200 px-6 py-2 flex flex-wrap gap-2">
+                <button
+                  onClick={() => setAdminTab('geral')}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                    adminTab === 'geral' 
+                      ? 'bg-amber-600 text-white shadow-md' 
+                      : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  <Sliders size={14} />
+                  Geral & Acréscimos
+                </button>
+                <button
+                  onClick={() => setAdminTab('fatores')}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                    adminTab === 'fatores' 
+                      ? 'bg-amber-600 text-white shadow-md' 
+                      : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  <Calculator size={14} />
+                  Fatores Base (Normal/Promo)
+                </button>
+                <button
+                  onClick={() => setAdminTab('custos')}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                    adminTab === 'custos' 
+                      ? 'bg-amber-600 text-white shadow-md' 
+                      : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  <CreditCard size={14} />
+                  Custo de Máquina (Elo/Master/Visa)
+                </button>
+              </div>
+
+              {/* Conteúdo das Abas (Scrollable) */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-6 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
+                
+                {/* ABA 1: GERAL & ACRESCIMOS */}
+                {adminTab === 'geral' && (
+                  <div className="space-y-6">
+                    {/* Seção Visibilidade */}
+                    <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div>
+                        <h4 className="text-sm font-bold text-slate-800">Controles de Visibilidade (Vendedor Comum)</h4>
+                        <p className="text-xs text-slate-500 mt-0.5">Se ativo, os botões "Ver Taxa Custo" e "Ocultar Lucro" estarão visíveis no simulador para os vendedores comuns</p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          checked={formShowControlesComum}
+                          onChange={(e) => setFormShowControlesComum(e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-amber-500/20 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
+                        <span className="ml-3 text-xs font-bold text-slate-700">{formShowControlesComum ? "Ativado" : "Desativado"}</span>
+                      </label>
+                    </div>
+
+                    {/* Seção Acréscimos Gerais */}
+                    <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5">
+                      <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-200 pb-2">
+                        <SlidersHorizontal size={16} className="text-amber-600" />
+                        Acréscimos Gerais (Aplica a todas as parcelas)
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Acréscimo Geral - Tabela Normal (%)</label>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">+</span>
+                            <input 
+                              type="number" 
+                              step="0.01"
+                              value={formAcrescimoGeralNormal}
+                              onChange={(e) => setFormAcrescimoGeralNormal(parseFloat(e.target.value) || 0)}
+                              className="w-full bg-white border border-slate-200 rounded-xl py-2.5 pl-7 pr-8 text-sm font-bold text-slate-700 outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
+                            />
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">%</span>
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Acréscimo Geral - Tabela Promo (%)</label>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">+</span>
+                            <input 
+                              type="number" 
+                              step="0.01"
+                              value={formAcrescimoGeralPromo}
+                              onChange={(e) => setFormAcrescimoGeralPromo(parseFloat(e.target.value) || 0)}
+                              className="w-full bg-white border border-slate-200 rounded-xl py-2.5 pl-7 pr-8 text-sm font-bold text-slate-700 outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
+                            />
+                            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">%</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Seção Acréscimos por Nível */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      
+                      {/* Acréscimos Normal */}
+                      <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5">
+                        <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-200 pb-2">
+                          <Sliders size={16} className="text-indigo-600" />
+                          Acréscimos por Tabela (Normal)
+                        </h4>
+                        <div className="space-y-3">
+                          {Array.from({ length: 5 }, (_, i) => {
+                            const lvl = String(i + 1);
+                            const valPct = (formAcrescimosNormal[lvl] || 0) * 100;
+                            return (
+                              <div key={lvl} className="flex items-center justify-between gap-3">
+                                <span className="text-xs font-bold text-slate-600">Tabela {lvl}</span>
+                                <div className="relative w-32">
+                                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">+</span>
+                                  <input 
+                                    type="number"
+                                    step="0.01"
+                                    value={valPct}
+                                    onChange={(e) => {
+                                      const parsed = parseFloat(e.target.value) || 0;
+                                      setFormAcrescimosNormal(prev => ({ ...prev, [lvl]: parsed / 100 }));
+                                    }}
+                                    className="w-full bg-white border border-slate-200 rounded-xl py-1.5 pl-6 pr-8 text-xs font-bold text-slate-700 text-right outline-none focus:border-amber-500"
+                                  />
+                                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">%</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Acréscimos Promo */}
+                      <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5">
+                        <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-200 pb-2">
+                          <Sliders size={16} className="text-emerald-600" />
+                          Acréscimos por Tabela (Promo)
+                        </h4>
+                        <div className="space-y-3">
+                          {Array.from({ length: 5 }, (_, i) => {
+                            const lvl = String(i + 1);
+                            const valPct = (formAcrescimosPromo[lvl] || 0) * 100;
+                            return (
+                              <div key={lvl} className="flex items-center justify-between gap-3">
+                                <span className="text-xs font-bold text-slate-600">Tabela {lvl}</span>
+                                <div className="relative w-32">
+                                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">+</span>
+                                  <input 
+                                    type="number"
+                                    step="0.01"
+                                    value={valPct}
+                                    onChange={(e) => {
+                                      const parsed = parseFloat(e.target.value) || 0;
+                                      setFormAcrescimosPromo(prev => ({ ...prev, [lvl]: parsed / 100 }));
+                                    }}
+                                    className="w-full bg-white border border-slate-200 rounded-xl py-1.5 pl-6 pr-8 text-xs font-bold text-slate-700 text-right outline-none focus:border-amber-500"
+                                  />
+                                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">%</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                )}
+
+                {/* ABA 2: FATORES BASE */}
+                {adminTab === 'fatores' && (
+                  <div className="space-y-6">
+                    <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 text-amber-800 text-xs font-medium flex items-start gap-2.5">
+                      <Info size={16} className="shrink-0 mt-0.5" />
+                      <div>
+                        <strong>Aviso sobre os Fatores Base:</strong> Os fatores são representados em formato multiplicador decimal da adquirente (ex: `1.1208` corresponde a um custo de antecipação e parcelamento total de 12.08% no fator). Edite com atenção para manter a simulação correta.
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      {/* Fatores Normal */}
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 pb-1.5 border-b border-slate-100 flex justify-between">
+                          <span>Tabela Normal (Fator Base)</span>
+                          <span className="text-slate-500">1x a 21x</span>
+                        </h4>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {Array.from({ length: 21 }, (_, index) => {
+                            const p = index + 1;
+                            return (
+                              <div key={p} className="bg-slate-50 border border-slate-100 rounded-xl p-2 flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-500">{p}x</span>
+                                <input 
+                                  type="number"
+                                  step="0.0001"
+                                  value={formFatoresBaseNormal[p] || 1}
+                                  onChange={(e) => {
+                                    const val = parseFloat(e.target.value) || 1;
+                                    setFormFatoresBaseNormal(prev => ({ ...prev, [p]: val }));
+                                  }}
+                                  className="w-20 bg-white border border-slate-200 rounded-lg py-1 px-1.5 text-xs font-bold text-slate-700 text-right outline-none focus:border-amber-500"
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Fatores Promo */}
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 pb-1.5 border-b border-slate-100 flex justify-between">
+                          <span>Tabela Promo (Fator Base)</span>
+                          <span className="text-slate-500">1x a 21x</span>
+                        </h4>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {Array.from({ length: 21 }, (_, index) => {
+                            const p = index + 1;
+                            return (
+                              <div key={p} className="bg-slate-50 border border-slate-100 rounded-xl p-2 flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-500">{p}x</span>
+                                <input 
+                                  type="number"
+                                  step="0.0001"
+                                  value={formFatoresBasePromo[p] || 1}
+                                  onChange={(e) => {
+                                    const val = parseFloat(e.target.value) || 1;
+                                    setFormFatoresBasePromo(prev => ({ ...prev, [p]: val }));
+                                  }}
+                                  className="w-20 bg-white border border-slate-200 rounded-lg py-1 px-1.5 text-xs font-bold text-slate-700 text-right outline-none focus:border-amber-500"
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ABA 3: CUSTOS DE MAQUINA */}
+                {adminTab === 'custos' && (
+                  <div className="space-y-6">
+                    <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-emerald-800 text-xs font-medium flex items-start gap-2.5">
+                      <Info size={16} className="shrink-0 mt-0.5" />
+                      <div>
+                        <strong>Aviso sobre Taxas Custo (Máquina):</strong> Representam a taxa real cobrada pela operadora do cartão (em porcentagem %). Alterar estes valores afeta diretamente a coluna **Lucro Líquido** do simulador.
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      {/* Custos Master/Visa */}
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 pb-1.5 border-b border-slate-100 flex justify-between">
+                          <span>Bandeira Master/Visa (Custo %)</span>
+                          <span className="text-slate-500">1x a 21x</span>
+                        </h4>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {Array.from({ length: 21 }, (_, index) => {
+                            const p = index + 1;
+                            const taxaVal = formTaxasCusto["Master/Visa"] ? formTaxasCusto["Master/Visa"][p] : 0;
+                            return (
+                              <div key={p} className="bg-slate-50 border border-slate-100 rounded-xl p-2 flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-500">{p}x</span>
+                                <div className="relative">
+                                  <input 
+                                    type="number"
+                                    step="0.01"
+                                    value={taxaVal}
+                                    onChange={(e) => {
+                                      const val = parseFloat(e.target.value) || 0;
+                                      setFormTaxasCusto(prev => ({
+                                        ...prev,
+                                        "Master/Visa": { ...prev["Master/Visa"], [p]: val }
+                                      }));
+                                    }}
+                                    className="w-16 bg-white border border-slate-200 rounded-lg py-1 px-1.5 text-xs font-bold text-slate-700 text-right outline-none focus:border-amber-500 pr-5"
+                                  />
+                                  <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] font-bold text-slate-400">%</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Custos Elo */}
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 pb-1.5 border-b border-slate-100 flex justify-between">
+                          <span>Bandeira Elo (Custo %)</span>
+                          <span className="text-slate-500">1x a 21x</span>
+                        </h4>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {Array.from({ length: 21 }, (_, index) => {
+                            const p = index + 1;
+                            const taxaVal = formTaxasCusto["Elo"] ? formTaxasCusto["Elo"][p] : 0;
+                            return (
+                              <div key={p} className="bg-slate-50 border border-slate-100 rounded-xl p-2 flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-500">{p}x</span>
+                                <div className="relative">
+                                  <input 
+                                    type="number"
+                                    step="0.01"
+                                    value={taxaVal}
+                                    onChange={(e) => {
+                                      const val = parseFloat(e.target.value) || 0;
+                                      setFormTaxasCusto(prev => ({
+                                        ...prev,
+                                        "Elo": { ...prev["Elo"], [p]: val }
+                                      }));
+                                    }}
+                                    className="w-16 bg-white border border-slate-200 rounded-lg py-1 px-1.5 text-xs font-bold text-slate-700 text-right outline-none focus:border-amber-500 pr-5"
+                                  />
+                                  <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] font-bold text-slate-400">%</span>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+              </div>
+
+              {/* Rodapé de Ações */}
+              <div className="bg-slate-50 px-6 py-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200">
+                <button
+                  onClick={handleRestoreDefaults}
+                  className="flex items-center gap-1.5 px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs transition-all active:scale-95"
+                >
+                  <RotateCcw size={14} />
+                  Restaurar Padrões
+                </button>
+
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowAdminPanelModal(false)}
+                    className="px-4 py-2.5 bg-white border border-slate-200 text-slate-500 font-bold rounded-xl text-xs hover:bg-slate-100 transition-all active:scale-95"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={handleSaveAdminSettings}
+                    className="flex items-center gap-1.5 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-all shadow-md shadow-emerald-100 active:scale-95"
+                  >
+                    <Save size={14} />
+                    Salvar Alterações
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 }

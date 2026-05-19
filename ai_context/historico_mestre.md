@@ -117,3 +117,23 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
     - `antigravity-v1.0.6.zip` (fontes).
     - `simulador-dist-v1.0.6.zip` (estritamente os compilados em `dist/`).
   - Versionamento Git e push na branch `main`.
+
+---
+
+## [2026-05-19] - Área Administrativa e Configuração Dinâmica de Taxas (v1.0.7)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.0.7`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Criação de uma área administrativa protegida por senha (**`3x51ELCO`**) acessível por um botão discreto de configurações no simulador.
+  - Implementação de um painel administrativo elegante estruturado em 3 abas responsivas:
+    - *Geral & Acréscimos*: Opção para ocultar os botões do header ("Ocultar Lucro" e "Ver Taxa Custo") para usuários/vendedores comuns, edição de acréscimos por nível (Tabelas 1 a 5) e suporte a um acréscimo geral (+1% ou +0.15% Geral) somado dinamicamente no simulador.
+    - *Fatores Base*: Edição em tempo real de fatores decimais de 1x a 21x para as tabelas Normal e Promo.
+    - *Custo da Máquina*: Edição de custos de máquina de 1x a 21x para Elo e Master/Visa.
+  - Persistência robusta via `localStorage` para retenção permanente das taxas editadas após recarregamento de página.
+  - Recurso de "Restaurar Padrões" para limpeza de chaves locais e reversão instantânea aos valores de fábrica do código.
+  - Atualização dos dropdowns e motores de simulação React para consumir as taxas dinamicamente do estado do formulário persistido.
+  - Recompilação bem-sucedida via Vite + esbuild (`npm run build`).
+  - Atualização do `CHANGELOG.md` e dos arquivos do diretório `/ai_context`.
+- **Status Final**: Versão 1.0.7 concluída e compilada com sucesso, pronta para empacotamento e deploy.
+
