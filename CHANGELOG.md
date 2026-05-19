@@ -2,6 +2,13 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.0.4] - 2026-05-19
+
+### Adicionado
+- **Redirecionamento Automático de Barra Final (Resolução Definitiva de Tela Branca em Subpasta)**:
+  - Adicionado script Javascript inline no `<head>` do `index.html` que detecta se a aplicação foi aberta em uma subpasta sem a barra `/` final (ex: `dominio.com/calculadora`) e a redireciona dinamicamente adicionando a barra (ex: `dominio.com/calculadora/`). Isso assegura a correta resolução dos caminhos relativos dos assets (`./assets/...`) pelo navegador.
+  - Adicionado tratamento de URL no servidor Apache via regras de rewrite no `public/.htaccess`, forçando o redirecionamento com barra final (HTTP 301) em diretórios físicos do servidor.
+
 ## [1.0.3] - 2026-05-19
 
 ### Adicionado

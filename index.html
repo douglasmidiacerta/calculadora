@@ -3,7 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Google AI Studio App</title>
+    <title>Simulador de Vendas e Taxas</title>
+    <script>
+      // Garante que se acessado via subpasta sem a barra "/" no final, redirecione adicionando a barra
+      // Isso previne que os caminhos relativos dos assets quebrem e resultem em tela branca
+      (function() {
+        var path = window.location.pathname;
+        if (!path.endsWith('/') && !path.split('/').pop().includes('.')) {
+          window.location.replace(window.location.href + '/');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

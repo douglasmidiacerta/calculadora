@@ -2,41 +2,28 @@
 
 ## Status da Sessão
 - **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
-- **Versão Atual**: `v1.0.2`
-- **Foco da Sessão**: Implementação de arquitetura híbrida de deploy (PHP/Apache) para cPanel sem Node.js e empacotamento otimizado da pasta dist.
+- **Versão Atual**: `v1.0.4`
+- **Foco da Sessão**: Correção definitiva do bug de tela branca em subpastas quando acessadas sem a barra "/" final, forçando o redirecionamento via JS no cliente e .htaccess no Apache.
 
 ---
 
 ## Atividades Realizadas
-1. **Estrutura de Contexto**: Criação do diretório `/ai_context` na raiz do projeto calculadora.
-2. **Inicialização**: Criação dos arquivos de persistência de memória `historico_mestre.md` e `sessao_atual.md`.
-3. **Mapeamento Técnico**:
-   - Identificação do stack do frontend: React 19, Vite 6, Tailwind CSS 4, Motion, Lucide-react, html-to-image.
-   - Identificação do backend: Express com suporte a `/api/login` (hardcoded com `admin/123456`) e servidor proxy Vite para desenvolvimento.
-
-4. **Instalação e Build**:
-   - Execução de `npm install` com êxito (216 pacotes instalados).
-   - Execução de `npm run build` bem-sucedida, gerando a compilação do frontend Vite na pasta `dist` e compilando o Express com `esbuild` em `dist/server.cjs`.
-5. **Servidor Ativo**: O comando `npm start` foi executado e o servidor de produção está operando na porta 3000 (`http://localhost:3000`).
-6. **Log de Alterações**: Criação e atualização do arquivo `CHANGELOG.md` na raiz mapeando as implementações da versão 1.0.0, 1.0.1 e 1.0.2.
-7. **Suporte a Banco de Dados (v1.0.1)**:
-   - Instalação do driver `mysql2`.
-   - Implementação de pool de conexões com MySQL no `server.ts`.
-   - Criação automática da tabela `usuarios` e inserção do admin inicial no banco.
-   - Configuração de portas dinâmicas para o Passenger do cPanel.
-8. **Deploy Híbrido PHP/Apache (v1.0.2)**:
-   - Criação da API de login em PHP nativo (`public/api/login/index.php`) para rodar em cPanel compartilhado comum sem suporte a Node.js.
-   - Conexão do script PHP ao MySQL do cPanel (`PDO`) com inicialização autônoma da tabela de usuários.
-   - Arquivo `.htaccess` adicionado na pasta pública para roteamento suave de APIs e estáticos.
-   - Build do Vite atualizado para incluir os arquivos PHP e `.htaccess` diretamente na pasta compilada final (`/dist`).
-9. **Empacotamento de Produção**:
-   - Remoção dos zips antigos.
-   - Geração de `antigravity-v1.0.2.zip` (fontes e compilados).
-   - Geração do ZIP otimizado **`simulador-dist-v1.0.2.zip`** contendo estritamente a pasta `/dist` compilada, ideal para deploy simples no cPanel.
-10. **Git Deploy**: Commits e push das alterações da versão 1.0.2 no GitHub (`origin/main`).
+1. **Estrutura de Contexto**: Sincronização dos arquivos `/ai_context/historico_mestre.md` e `/ai_context/sessao_atual.md` para a versão 1.0.4.
+2. **Correção de Barra Final (JS inline)**:
+   - Adicionado um script inline autônomo no `<head>` do `index.html` da raiz que redireciona de imediato o navegador adicionando a barra final `/` caso seja acessada uma subpasta sem barra e sem extensão de arquivo (ex: `dominio.com/calculadora` -> `dominio.com/calculadora/`). Isso impede a quebra de caminhos relativos de assets (`./assets/...`).
+3. **Correção de Barra Final (Apache/htaccess)**:
+   - Inserida regra Rewrite no arquivo `public/.htaccess` para forçar o redirecionamento com barra final (HTTP 301) em nível de servidor Apache para diretórios reais do sistema.
+4. **Atualização do Changelog**: Registro detalhado da versão 1.0.4 no arquivo `CHANGELOG.md`.
+5. **Recompilação geral**:
+   - Rodando o build do Vite e esbuild para consolidar as alterações na pasta `/dist`.
+6. **Empacotamento de Produção (v1.0.4)**:
+   - Apagar os zips obsoletos da versão 1.0.3.
+   - Gerar `antigravity-v1.0.4.zip` (fontes) e o zip otimizado **`simulador-dist-v1.0.4.zip`** (contendo apenas o compilado de `dist/` pronto para extração na subpasta do cPanel).
+7. **Git Deploy**: Commits e push do progresso na branch `main`.
 
 ---
 
 ## Próximos Passos (Pendentes)
-1. **Deploy Otimizado no cPanel**: Orientar o usuário a fazer o upload do ZIP compacto `simulador-dist-v1.0.2.zip` e extraí-lo na pasta pública (`public_html` ou diretório do subdomínio).
-2. **Aguardar Feedback de Acesso**: Validar o acesso com login `admin` / `123456` através do script PHP no Apache.
+1. **Deploy da v1.0.4 na Subpasta do cPanel**: Instruir o usuário a limpar a pasta antiga e descompactar **`simulador-dist-v1.0.4.zip`** diretamente no diretório do cPanel.
+2. **Validação**: Testar o acesso via navegador com e sem barra no final da URL para confirmar que o redirecionamento funciona e a tela branca foi sanada de vez.
+3. **Validação de Banco**: Confirmar o login com `admin` / `123456`.

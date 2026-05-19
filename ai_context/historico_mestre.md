@@ -48,8 +48,38 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - Geração de dois arquivos ZIP na raiz:
     - `antigravity-v1.0.2.zip`: Projeto completo com fontes e compilados.
     - `simulador-dist-v1.0.2.zip`: Pacote otimizado contendo estritamente a pasta `dist` compilada, ideal para extração direta na `public_html` do cPanel sem Node.js.
-  - Commits e push das alterações da versão 1.0.2 no GitHub (`origin/main`).
+- **Status Final**: Versão 1.0.3 entregue, com suporte total a subpastas de qualquer nível no cPanel (caminhos de assets e API relativos), resolvendo a tela branca e falhas de conexão.
 
+---
 
+## [2026-05-19] - Suporte a Subpastas e Correção de Tela Branca (v1.0.3)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.0.3`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Configuração da propriedade `base: './'` no `vite.config.ts`, permitindo que o Vite gere caminhos relativos para os arquivos CSS/JS no `index.html`, solucionando de vez a tela branca em subpastas.
+  - Correção sutil no fetch do frontend em `src/App.tsx` para mudar a rota de `/api/login` (absoluta) para `api/login` (relativa), possibilitando o correto envio de requisições de login a partir de subpastas do servidor Apache.
+  - Simplificação e otimização do arquivo `public/.htaccess` para desativar a listagem de arquivos (`Options -Indexes`) de forma limpa.
+  - Atualização do `CHANGELOG.md` documentando a versão 1.0.3.
+  - Recompilação geral com `npm run build`.
+  - Remoção dos pacotes antigos e geração de novos pacotes de deploy na raiz:
+    - `antigravity-v1.0.3.zip` (fontes e compilados).
+    - `simulador-dist-v1.0.3.zip` (somente os arquivos finais da pasta `dist/` para extração rápida).
+  - Commits e push das alterações da versão 1.0.3 no GitHub (`origin/main`).
+- **Status Final**: Versão 1.0.4 entregue com proteção contra tela branca em subpastas sem a barra final ("/"), redirecionando no client-side via Javascript inline e no server-side via .htaccess.
 
+---
 
+## [2026-05-19] - Correção Definitiva de Tela Branca em Subpastas sem Barra Final (v1.0.4)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.0.4`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Implementação de um script JavaScript inline autônomo no `<head>` do `index.html` para redirecionar acessos em subpastas que não tenham a barra "/" final (ex: `dominio.com/calculadora` -> `dominio.com/calculadora/`). Isso impede que o browser tente resolver arquivos de assets relativos a partir da raiz do domínio e resulte em erro 404/tela branca.
+  - Inserção de regra no `public/.htaccess` para forçar o redirecionamento com barra final (Rewrite HTTP 301) para diretórios físicos em servidores Apache.
+  - Atualização do `CHANGELOG.md` com a versão v1.0.4.
+  - Recompilação dos ativos via `npm run build`.
+  - Remoção dos pacotes antigos da versão 1.0.3 e geração de novos pacotes:
+    - `antigravity-v1.0.4.zip` (fontes e compilados).
+    - `simulador-dist-v1.0.4.zip` (somente arquivos compilados de `dist/` para deploy).
+  - Commits e push de atualização de versão para o repositório remoto.

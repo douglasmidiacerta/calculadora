@@ -4,7 +4,9 @@ Options -Indexes
 # Configuração amigável de roteamento Apache
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  # Como a calculadora está em uma subpasta e não possui rotas React Router no navegador
-  # (apenas controle de estado interno), removemos a regra de redirecionamento global RewriteRule / index.html
-  # para que ela não cause erros de pasta física nem conflite com outras subpastas.
+  
+  # Força a barra no final se o request for para um diretório real e não terminar com barra "/"
+  # Exemplo: /calculadora -> /calculadora/
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^(.*[^/])$ %{REQUEST_URI}/ [L,R=301]
 </IfModule>
