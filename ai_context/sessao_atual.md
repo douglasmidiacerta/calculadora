@@ -1,28 +1,23 @@
 # Sessão Atual - Checkpoint de Desenvolvimento
 
 ## Status da Sessão
-- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
-- **Versão Atual**: `v1.0.6`
-- **Foco da Sessão**: Implementação de botões de customização visual para ocultar/mostrar o lucro líquido na tela e alternar as taxas exibidas na coluna (Taxa do Cliente vs Taxa de Custo/Máquina).
+- **ID da Conversa**: `a43a6e45-cf0f-4176-8482-cb8a25a09748`
+- **Versão Atual**: `v1.0.7`
+- **Foco da Sessão**: Consultoria de integração Git-cPanel e implantação de Deploy Automatizado nativo via `.cpanel.yml`.
 
 ---
 
 ## Atividades Realizadas
-1. **Estrutura de Contexto**: Sincronização dos arquivos `/ai_context/historico_mestre.md` e `/ai_context/sessao_atual.md` para a versão 1.0.6.
-2. **Botão de Ocultar/Mostrar Lucro**:
-   - Adicionado o estado `showLucro` em `src/App.tsx` e um botão dinâmico no cabeçalho com ícone `Eye` / `EyeOff`. A coluna "Lucro Líquido" é oculta de forma responsiva na tabela na tela do administrador, ideal para simular preços na frente do cliente final.
-3. **Botão de Trocar Taxa Exibida (Cliente vs Custo)**:
-   - Adicionado o estado `tipoTaxaExibida` e botão no cabeçalho de simulação. Permite alternar dinamicamente na tabela na tela a visualização entre a **Taxa do Cliente** (taxa acrescida cobrada final) e a **Taxa de Custo da Máquina** (taxa de desconto real cobrada pela operadora), usando diferenciação de cores.
-4. **Atualização do Changelog**: Registro detalhado da versão 1.0.6 no arquivo `CHANGELOG.md`.
-5. **Recompilação geral**:
-   - Rodando o build do Vite e esbuild para consolidar as alterações na pasta `/dist`.
-6. **Empacotamento de Produção (v1.0.6)**:
-   - Apagar os zips obsoletos da versão 1.0.5.
-   - Gerar `antigravity-v1.0.6.zip` (fontes) e o zip otimizado **`simulador-dist-v1.0.6.zip`** (contendo apenas o compilado de `dist/` pronto para extração na subpasta do cPanel).
-7. **Git Deploy**: Commits e push do progresso na branch `main`.
+1. **Estrutura de Contexto**: Sincronização dos arquivos `/ai_context/historico_mestre.md` e `/ai_context/sessao_atual.md` para a versão 1.0.7.
+2. **Criação do `.cpanel.yml`**:
+   - Desenvolvido o arquivo de configuração `.cpanel.yml` na raiz do projeto contendo as instruções do motor de deploy do cPanel.
+   - Definido o pipeline de deploy via `rsync` para sincronizar estritamente os arquivos gerados em `/dist` no diretório final de publicação, garantindo um ambiente limpo de arquivos de desenvolvimento e histórico Git.
+3. **Atualização do Changelog**: Registro da nova versão `v1.0.7` no arquivo `CHANGELOG.md`.
+4. **Prontidão do Build**: O comando de build do Vite gera dinamicamente a aplicação em `/dist` unificando frontend e a API híbrida PHP com `.htaccess` integrado.
 
 ---
 
 ## Próximos Passos (Pendentes)
-1. **Deploy da v1.0.6 na Subpasta do cPanel**: Instruir o usuário a limpar a pasta antiga e descompactar **`simulador-dist-v1.0.6.zip`** diretamente no diretório do cPanel.
-2. **Validação**: Testar o clique nos botões "Ver Taxa Custo/Cliente" e "Ocultar/Mostrar Lucro" no painel e confirmar que a tabela se atualiza instantaneamente. Confirmar que a geração da imagem segue o fluxo compactado original.
+1. **Executar Build e Empacotamento v1.0.7**: Executar o build do Vite, remover arquivos .zip da versão anterior e gerar novos arquivos .zip (`antigravity-v1.0.7.zip` e `simulador-dist-v1.0.7.zip`) com os changelogs atualizados.
+2. **Deploy Automático no cPanel**: Instruir o usuário a configurar as chaves SSH do cPanel no GitHub e clonar o repositório por meio do Git™ Version Control do cPanel, acionando o deploy com o `.cpanel.yml` embarcado.
+3. **Validação**: Testar a sincronização remota via cPanel e verificar a correta atualização da versão `1.0.7` em produção.

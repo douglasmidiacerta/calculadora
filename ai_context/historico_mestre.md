@@ -117,3 +117,22 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
     - `antigravity-v1.0.6.zip` (fontes).
     - `simulador-dist-v1.0.6.zip` (estritamente os compilados em `dist/`).
   - Versionamento Git e push na branch `main`.
+- **Status Final**: Versão 1.0.7 entregue, com suporte a deploy automatizado no cPanel via arquivo `.cpanel.yml` e empacotamento completo.
+
+---
+
+## [2026-05-19] - Integração de Deploy Automatizado com cPanel (v1.0.7)
+- **ID da Conversa**: `a43a6e45-cf0f-4176-8482-cb8a25a09748`
+- **Versão**: `v1.0.7`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Criação do arquivo de configuração `.cpanel.yml` na raiz do projeto, configurado especificamente para rodar deploys automáticos em servidores cPanel.
+  - Implementação de tarefa de deploy automatizado que utiliza `rsync` para transferir apenas os arquivos finais e otimizados gerados na pasta `/dist` diretamente para o diretório de destino do servidor (ex: `public_html/calculadora`), ignorando arquivos de configuração do git e códigos-fonte.
+  - Atualização do `CHANGELOG.md` documentando a versão v1.0.7.
+  - Recompilação completa dos assets via `npm run build`.
+  - Remoção dos pacotes antigos da v1.0.6 e empacotamento de novos zips na raiz:
+    - `antigravity-v1.0.7.zip` (fontes).
+    - `simulador-dist-v1.0.7.zip` (estritamente a pasta `dist/` compilada com a API PHP).
+  - Versionamento Git e push na branch `main`.
+- **Status Final**: Versão 1.0.7 entregue com sucesso. Pronto para o usuário clonar o repositório no cPanel e iniciar o deploy automatizado.
+

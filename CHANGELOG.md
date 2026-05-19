@@ -2,6 +2,12 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.0.7] - 2026-05-19
+
+### Adicionado
+- **Integração de Deploy Automatizado com cPanel (`.cpanel.yml`)**:
+  - Criação do arquivo de configuração `.cpanel.yml` na raiz do projeto. Ele instrui a engine de deploy do Git do cPanel a usar o `rsync` para sincronizar os arquivos compilados da pasta `dist/` diretamente na pasta de destino de publicação pública (ex: `/public_html/calculadora`), ignorando os arquivos de código-fonte e o histórico do Git no deploy final.
+
 ## [1.0.6] - 2026-05-19
 
 ### Adicionado
