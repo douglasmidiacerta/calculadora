@@ -14,14 +14,25 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - Reconhecimento dos módulos principais:
     - `src/App.tsx`: Simulador de vendas com tabela normal e promo, cálculo de parcelas até 21x, taxa de máquina Elo/Master/Visa, cálculo de lucro e exportação de imagem.
     - `server.ts`: Backend minimalista em Express com endpoint `/api/login` simulado e integração com o middleware do Vite para desenvolvimento local.
-- **Status Final**: Versão 1.0.0 compilada, empacotada em ZIP para cPanel, versionada e sincronizada no repositório remoto.
-- **Atividades Adicionais**:
-  - Execução de `npm install` com sucesso, adicionando 216 pacotes requeridos.
-  - Execução de `npm run build` bem-sucedida, gerando os artefatos estáticos do frontend do Vite na pasta `dist` e compilando o arquivo `dist/server.cjs` com `esbuild`.
-  - Inicialização do servidor em ambiente de produção via `npm start` na porta 3000 (`http://localhost:3000`).
-  - Criação do arquivo `CHANGELOG.md` na raiz contendo os registros detalhados das implementações da versão 1.0.0.
-  - Exclusão do arquivo ZIP da versão anterior (`simulador-de-vendas-e-taxas (2).zip`).
-  - Geração do arquivo comprimido `antigravity-v1.0.0.zip` contendo os fontes do projeto e os arquivos buildados da pasta `dist` (excluindo `node_modules` e `.git`), garantindo o `CHANGELOG.md` dentro e fora do ZIP.
-  - Execução dos comandos Git (`git add .`, `git commit` e `git push -u origin main`), sincronizando o projeto e o zip final no repositório remoto do GitHub.
+- **Status Final**: Versão 1.0.1 implantada, com suporte a banco de dados MySQL de produção do cPanel e empacotamento completo.
+
+---
+
+## [2026-05-19] - Suporte ao Banco de Dados MySQL e cPanel (v1.0.1)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.0.1`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Instalação e integração da dependência `mysql2` para conexão assíncrona com o MySQL do cPanel.
+  - Implementação de pool de conexões robusto em `server.ts` com suporte às credenciais configuradas via `.env`.
+  - Mecanismo de inicialização dinâmica de banco de dados (`initializeDatabase`) criando a tabela `usuarios` e inserindo o usuário `admin` padrão (`123456`) automaticamente se não existirem.
+  - Adaptação do endpoint `/api/login` para validar as credenciais no MySQL, mantendo um fallback seguro estático em ambiente local.
+  - Atualização do arquivo de configuração `.env` e `.env.example` com os parâmetros fornecidos pelo usuário.
+  - Reconfiguração da porta do servidor para `process.env.PORT || 3000` garantindo o correto proxy no Phusion Passenger do cPanel.
+  - Atualização do `CHANGELOG.md` com a versão 1.0.1.
+  - Recompilação completa (`npm run build`).
+  - Remoção de `antigravity-v1.0.0.zip` e geração do novo pacote de deploy `antigravity-v1.0.1.zip`.
+  - Commits e push das alterações da v1.0.1 no GitHub (`origin/main`).
+
 
 

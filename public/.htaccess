@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # Evita reescrever arquivos físicos existentes (como css, js, imagens ou scripts php)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+  
+  # Redireciona todas as outras requisições para o index.html (SPA)
+  RewriteRule ^ index.html [L]
+</IfModule>

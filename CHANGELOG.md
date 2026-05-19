@@ -2,6 +2,15 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.0.2] - 2026-05-19
+
+### Adicionado
+- **Arquitetura Híbrida de Deploy**: Suporte a servidores sem Node.js instalando suporte nativo a PHP/Apache na rota `/api/login`.
+- Mapeamento de diretório público `public/api/login/index.php` contendo a lógica de login em PHP compatível com qualquer cPanel compartilhado simples.
+- Inicialização autônoma de tabelas MySQL do cPanel diretamente pelo arquivo PHP (`PDO`).
+- Inclusão do arquivo `.htaccess` para roteamento amigável e proteção de rotas estáticas do Apache.
+- Geração automática do build empacotado que acopla o frontend estático e o backend PHP diretamente na pasta `/dist`.
+
 ## [1.0.1] - 2026-05-19
 
 ### Adicionado
