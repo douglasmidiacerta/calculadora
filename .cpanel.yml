@@ -1,12 +1,5 @@
-# Arquivo de Deploy Automatizado do cPanel
-# Documentacao: https://docs.cpanel.net/cpanel/git-version-control/guide-to-git-deployment/
-
 ---
 deployment:
   tasks:
-    # 1. Defina o caminho absoluto da pasta publica no cPanel onde o simulador ficara rodando.
-    # Caminho configurado sob medida para o usuario 'ljonline' na subpasta 'calculadora'
     - export DEPLOYPATH=/home1/ljonline/public_html/calculadora
-
-    # 2. Copia o conteudo compilado da pasta 'dist' para o diretorio de destino.
     - /bin/rsync -av --delete dist/ $DEPLOYPATH
