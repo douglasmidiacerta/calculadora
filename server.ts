@@ -50,7 +50,7 @@ async function startServer() {
   }
 
   // API Routes
-  app.post("/api/login", async (req, res) => {
+  app.post(["/api/login", "/api/login/"], async (req, res) => {
     const { username, password } = req.body;
 
     try {

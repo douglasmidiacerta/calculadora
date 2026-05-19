@@ -2,6 +2,13 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.0.5] - 2026-05-19
+
+### Adicionado
+- **Resolução do Erro de Método Não Permitido (HTTP 405 / POST convertendo para GET)**:
+  - Alterada a chamada do fetch de login no frontend (`src/App.tsx`) para usar a barra final (`api/login/`). Isso impede que o Apache redirecione a requisição POST para a URL com barra final gerando um redirecionamento HTTP 301, o qual converte o método para GET no navegador e descarta os parâmetros JSON (o que causava o erro HTTP 405 no script PHP).
+  - Atualizada a rota correspondente no backend Express local (`server.ts`) para suportar em array tanto `/api/login` quanto `/api/login/`, assegurando o perfeito funcionamento da aplicação tanto localmente quanto em produção.
+
 ## [1.0.4] - 2026-05-19
 
 ### Adicionado

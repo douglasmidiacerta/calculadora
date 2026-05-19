@@ -83,3 +83,20 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
     - `antigravity-v1.0.4.zip` (fontes e compilados).
     - `simulador-dist-v1.0.4.zip` (somente arquivos compilados de `dist/` para deploy).
   - Commits e push de atualização de versão para o repositório remoto.
+- **Status Final**: Versão 1.0.5 entregue com a rota do fetch corrigida para "api/login/" (com barra final), solucionando a conversão de POST em GET decorrente do redirecionamento 301 do Apache e eliminando o erro "Método não permitido" (HTTP 405).
+
+---
+
+## [2026-05-19] - Resolução de Erro de Método Não Permitido (HTTP 405) no Login (v1.0.5)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.0.5`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Correção na chamada de API no frontend em `src/App.tsx` para direcionar a requisição POST para `api/login/` (com barra final). Isso contorna a regra do Apache que redireciona diretórios físicos sem barra final emitindo um HTTP 301, o qual converte a requisição em GET no navegador e descarta os dados JSON.
+  - Correção na rota correspondente no backend Express local em `server.ts` para suportar ambas as variantes `["/api/login", "/api/login/"]`, garantindo plena compatibilidade em desenvolvimento local.
+  - Atualização do `CHANGELOG.md` documentando a versão v1.0.5.
+  - Recompilação completa dos assets via `npm run build`.
+  - Remoção dos pacotes antigos da v1.0.4 e empacotamento de novos zips na raiz:
+    - `antigravity-v1.0.5.zip` (fontes).
+    - `simulador-dist-v1.0.5.zip` (estritamente a pasta `dist/` compilada com a API PHP).
+  - Versionamento Git e push na branch `main`.
