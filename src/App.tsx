@@ -589,7 +589,7 @@ export default function App() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.02 }}
                     key={row.parcelas} 
-                    className="hover:bg-emerald-50/40 transition-colors group"
+                    className={`${index % 2 === 0 ? 'bg-white' : 'bg-emerald-50/30'} hover:bg-emerald-50/80 transition-colors group`}
                   >
                     <td className="py-4 px-6 text-center">
                        <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 text-slate-700 font-bold group-hover:bg-emerald-100 group-hover:text-emerald-700 transition-colors">
@@ -719,63 +719,66 @@ export default function App() {
                 </tr>
               </thead>
               <tbody>
-                {simulacao.map((row) => (
-                  <tr key={row.parcelas}>
-                    <td style={{ 
-                      padding: '6px 8px', 
-                      textAlign: 'left', 
-                      backgroundColor: '#ffffff', 
-                      borderRadius: '8px 0 0 8px',
-                      color: '#065f46',
-                      fontWeight: '800',
-                      fontSize: '11px',
-                      borderLeft: '1px solid #e2e8f0',
-                      borderTop: '1px solid #f1f5f9',
-                      borderBottom: '1px solid #f1f5f9'
-                    }}>
-                      {row.parcelas}x
-                    </td>
-                    <td style={{ 
-                      padding: '6px 4px', 
-                      textAlign: 'center', 
-                      backgroundColor: '#ffffff', 
-                      color: '#065f46', 
-                      fontWeight: '700', 
-                      fontSize: '11px',
-                      borderTop: '1px solid #f1f5f9',
-                      borderBottom: '1px solid #f1f5f9'
-                    }}>
-                      {row.valorParcela.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </td>
-                    <td style={{ 
-                      padding: '6px 4px', 
-                      textAlign: 'right', 
-                      backgroundColor: '#ffffff', 
-                      color: '#1e293b', 
-                      fontWeight: '600', 
-                      fontSize: '11px',
-                      borderTop: '1px solid #f1f5f9',
-                      borderBottom: '1px solid #f1f5f9'
-                    }}>
-                      {(modoCalculo === 'valor' ? row.totalAPassar : row.valorLiquido).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </td>
-                    <td style={{ 
-                      padding: '6px 8px', 
-                      textAlign: 'right', 
-                      backgroundColor: '#ffffff', 
-                      color: '#047857', 
-                      fontWeight: '800', 
-                      fontSize: '10px', 
-                      borderRadius: '0 8px 8px 0',
-                      whiteSpace: 'nowrap',
-                      borderRight: '1px solid #e2e8f0',
-                      borderTop: '1px solid #f1f5f9',
-                      borderBottom: '1px solid #f1f5f9'
-                    }}>
-                      {row.taxaDinamica}
-                    </td>
-                  </tr>
-                ))}
+                {simulacao.map((row, index) => {
+                  const rowBgColor = index % 2 === 0 ? '#ffffff' : '#eaf7ed';
+                  return (
+                    <tr key={row.parcelas}>
+                      <td style={{ 
+                        padding: '6px 8px', 
+                        textAlign: 'left', 
+                        backgroundColor: rowBgColor, 
+                        borderRadius: '8px 0 0 8px',
+                        color: '#065f46',
+                        fontWeight: '800',
+                        fontSize: '11px',
+                        borderLeft: '1px solid #e2e8f0',
+                        borderTop: '1px solid #f1f5f9',
+                        borderBottom: '1px solid #f1f5f9'
+                      }}>
+                        {row.parcelas}x
+                      </td>
+                      <td style={{ 
+                        padding: '6px 4px', 
+                        textAlign: 'center', 
+                        backgroundColor: rowBgColor, 
+                        color: '#065f46', 
+                        fontWeight: '700', 
+                        fontSize: '11px',
+                        borderTop: '1px solid #f1f5f9',
+                        borderBottom: '1px solid #f1f5f9'
+                      }}>
+                        {row.valorParcela.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </td>
+                      <td style={{ 
+                        padding: '6px 4px', 
+                        textAlign: 'right', 
+                        backgroundColor: rowBgColor, 
+                        color: '#1e293b', 
+                        fontWeight: '600', 
+                        fontSize: '11px',
+                        borderTop: '1px solid #f1f5f9',
+                        borderBottom: '1px solid #f1f5f9'
+                      }}>
+                        {(modoCalculo === 'valor' ? row.totalAPassar : row.valorLiquido).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </td>
+                      <td style={{ 
+                        padding: '6px 8px', 
+                        textAlign: 'right', 
+                        backgroundColor: rowBgColor, 
+                        color: '#047857', 
+                        fontWeight: '800', 
+                        fontSize: '10px', 
+                        borderRadius: '0 8px 8px 0',
+                        whiteSpace: 'nowrap',
+                        borderRight: '1px solid #e2e8f0',
+                        borderTop: '1px solid #f1f5f9',
+                        borderBottom: '1px solid #f1f5f9'
+                      }}>
+                        {row.taxaDinamica}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

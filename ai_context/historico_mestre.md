@@ -149,5 +149,19 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - Atualização do `CHANGELOG.md` documentando a versão v1.0.8.
   - Recompilação geral via `npm run build` gerando os artefatos otimizados de produção.
   - Atualização do histórico mestre e sessão atual no `/ai_context`.
-- **Status Final**: Versão 1.0.8 compilada com sucesso e empacotada em formato ZIP (`simulador-dist-v1.0.8.zip` e `antigravity-v1.0.8.zip`) para deploy final no cPanel.
+- **Status Final**: Versão 1.0.8 concluída e compilada com sucesso.
+
+---
+
+## [2026-05-19] - Zebra Striping nas Tabelas do Simulador e Exportação de Imagem (v1.0.9)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.0.9`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Implementação de zebra striping (linhas intercaladas) na tabela principal de exibição na tela (alternando entre `bg-white` e `bg-emerald-50/30`).
+  - Implementação de zebra striping na tabela compactada vertical de exportação da simulação para imagem, intercalando células brancas (`#ffffff`) e verde-claro suave (`#eaf7ed`).
+  - Melhoria visual significativa para a leitura das parcelas e valores totais pelo vendedor e pelo cliente final.
+  - Recompilação geral via `npm run build` gerando os artefatos finais em `dist/`.
+  - Atualização do `CHANGELOG.md` e arquivos de contexto localizados em `/ai_context`.
+- **Status Final**: Versão 1.0.9 concluída com sucesso, com compilação gerada e empacotamento completo em formato ZIP (`simulador-dist-v1.0.9.zip` e `antigravity-v1.0.9.zip`) para deploy final no cPanel.
 

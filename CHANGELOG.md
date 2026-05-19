@@ -2,6 +2,14 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.0.9] - 2026-05-19
+
+### Adicionado
+- **Zebra Striping (Linhas Intercaladas) nas Tabelas**:
+  - Implementação de coloração intercalada para as linhas de parcelas da tabela de simulação na tela comum (`bg-white` e `bg-emerald-50/30`).
+  - Adicionado suporte a coloração intercalada também na **geração de imagem compactada vertical**, alternando entre branco (`#ffffff`) e um verde bem suave (`#eaf7ed`).
+  - Esta alteração melhora significativamente a legibilidade da tabela ao comparar parcelas, taxas e valores totais a passar ou receber tanto no computador/celular quanto nas imagens geradas e compartilhadas.
+
 ## [1.0.8] - 2026-05-19
 
 ### Alterado
