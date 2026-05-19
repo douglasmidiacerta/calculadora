@@ -181,6 +181,19 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
     - `antigravity-v1.1.0.zip` (fontes).
     - `simulador-dist-v1.1.0.zip` (estritamente a pasta `dist/` compilada com a API PHP).
   - Versionamento Git e push para as branches remotas.
-- **Status Final**: Versão 1.1.0 entregue com sucesso no cPanel.
+- **Status Final**: Versão 1.1.1 entregue, com suporte a deploy contínuo via GitHub Actions (CI/CD) e empacotamento otimizado.
 
+---
 
+## [2026-05-19] - Pipeline de Deploy Contínuo via GitHub Actions (v1.1.1)
+- **ID da Conversa**: `a43a6e45-cf0f-4176-8482-cb8a25a09748`
+- **Versão**: `v1.1.1`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Criação do arquivo de workflow do GitHub Actions em `.github/workflows/deploy.yml` para compilação automática (`npm run build`) e deploy FTP (`SamKirkland/FTP-Deploy-Action`) a partir do repositório público do GitHub diretamente para a pasta `/public_html/calculadora` no cPanel.
+  - Atualização do arquivo `package.json` para refletir a versão `1.1.1` do projeto.
+  - Atualização do `CHANGELOG.md` documentando detalhadamente a versão `v1.1.1`.
+  - Recompilação dos ativos finais de produção.
+  - Geração automática dos pacotes zip da nova versão: `antigravity-v1.1.1.zip` e `simulador-dist-v1.1.1.zip`.
+  - Configuração das orientações de configuração dos segredos do repositório GitHub (FTP_SERVER, FTP_USERNAME, FTP_PASSWORD) para o usuário.
+- **Status Final**: Versão v1.1.1 pronta e empacotada, aguardando configuração das credenciais FTP pelo usuário no GitHub para ativação total da esteira.

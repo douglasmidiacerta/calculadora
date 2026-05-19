@@ -2,6 +2,13 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.1.1] - 2026-05-19
+
+### Adicionado
+- **Pipeline de Integração e Deploy Contínuo (CI/CD) via GitHub Actions**:
+  - Criação do arquivo de workflow `.github/workflows/deploy.yml` pré-configurado.
+  - Implementação de build automático no ambiente do GitHub (`npm ci && npm run build`) e sincronização dos ativos otimizados da pasta `/dist` diretamente para o servidor cPanel via FTP utilizando a action `SamKirkland/FTP-Deploy-Action`. Isso elimina a necessidade de chaves SSH ou de clicar manualmente no botão do cPanel para efetuar os próximos deploys.
+
 ## [1.1.0] - 2026-05-19
 
 ### Adicionado
