@@ -1,6 +1,12 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
+## [1.1.2] - 2026-05-19
+
+### Alterado
+- **Ajuste Fino do Destino de Deploy FTP**:
+  - Ajustada a propriedade `server-dir` no arquivo `.github/workflows/deploy.yml` de `/public_html/calculadora/` para `./`.
+  - Esta alteração permite compatibilidade total com contas FTP dedicadas criadas no cPanel que já estejam restritas ao diretório `/public_html/calculadora`, evitando problemas de permissão e estruturação incorreta de diretórios durante a sincronização automática.
 
 ## [1.1.1] - 2026-05-19
 

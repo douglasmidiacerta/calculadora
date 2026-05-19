@@ -196,4 +196,19 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - Recompilação dos ativos finais de produção.
   - Geração automática dos pacotes zip da nova versão: `antigravity-v1.1.1.zip` e `simulador-dist-v1.1.1.zip`.
   - Configuração das orientações de configuração dos segredos do repositório GitHub (FTP_SERVER, FTP_USERNAME, FTP_PASSWORD) para o usuário.
-- **Status Final**: Versão v1.1.1 pronta e empacotada, aguardando configuração das credenciais FTP pelo usuário no GitHub para ativação total da esteira.
+- **Status Final**: Versão 1.1.2 entregue com o ajuste fino para conta FTP restrita da calculadora.
+
+---
+
+## [2026-05-19] - Ajuste Fino de Deploy FTP para Conta Dedicada (v1.1.2)
+- **ID da Conversa**: `a43a6e45-cf0f-4176-8482-cb8a25a09748`
+- **Versão**: `v1.1.2`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Ajustada a propriedade `server-dir` no workflow do GitHub Actions `.github/workflows/deploy.yml` de `/public_html/calculadora/` para `./`.
+  - Esta mudança garante compatibilidade nativa com contas FTP restritas de segurança configuradas no cPanel (as quais iniciam a sessão de FTP já dentro do diretório `/public_html/calculadora/`).
+  - Atualização do arquivo `package.json` definindo a nova versão `1.1.2`.
+  - Atualização do `CHANGELOG.md` documentando as alterações.
+  - Recompilação completa dos ativos de produção e geração dos pacotes zip da nova versão `v1.1.2` (`antigravity-v1.1.2.zip` e `simulador-dist-v1.1.2.zip`).
+  - Commits e envio das atualizações (push) para o repositório remoto nas branches `git-cpanel-integration-setup` e `main` para acionar imediatamente a esteira de build automatizado do GitHub Actions.
+- **Status Final**: Versão 1.1.2 implantada com sucesso e esteira de CI/CD em execução com a conta dedicada do usuário.
