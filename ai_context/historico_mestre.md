@@ -135,5 +135,19 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - Atualização dos dropdowns e motores de simulação React para consumir as taxas dinamicamente do estado do formulário persistido.
   - Recompilação bem-sucedida via Vite + esbuild (`npm run build`).
   - Atualização do `CHANGELOG.md` e dos arquivos do diretório `/ai_context`.
-- **Status Final**: Versão 1.0.7 concluída e compilada com sucesso, pronta para empacotamento e deploy.
+- **Status Final**: Versão 1.0.7 concluída e compilada com sucesso.
+
+---
+
+## [2026-05-19] - Remoção Definitiva de Botões Visuais e Centralização no Painel Admin (v1.0.8)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.0.8`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Remoção completa dos botões do cabeçalho ("Ver Taxa Custo/Cliente" e "Ocultar/Mostrar Lucro") da interface do vendedor comum para manter a tela 100% limpa e evitar exposição de dados sensíveis na presença de clientes.
+  - Consolidação dos controles visuais de exibição de Lucro Líquido e Taxa de Custo exclusivamente dentro do Painel Administrativo restrito (protegido por senha).
+  - Atualização do `CHANGELOG.md` documentando a versão v1.0.8.
+  - Recompilação geral via `npm run build` gerando os artefatos otimizados de produção.
+  - Atualização do histórico mestre e sessão atual no `/ai_context`.
+- **Status Final**: Versão 1.0.8 compilada com sucesso e empacotada em formato ZIP (`simulador-dist-v1.0.8.zip` e `antigravity-v1.0.8.zip`) para deploy final no cPanel.
 

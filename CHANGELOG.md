@@ -2,6 +2,14 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.0.8] - 2026-05-19
+
+### Alterado
+- **Remoção Definitiva dos Botões de Customização Visual no Cabeçalho**:
+  - Os botões "Ver Taxa Custo/Cliente" e "Ocultar/Mostrar Lucro" foram removidos por completo do header do simulador principal.
+  - Isso garante uma interface 100% limpa, segura e profissional para vendedores e clientes finais, sem indícios visuais de margem ou custos de máquina para usuários comuns.
+  - Todo o controle de visibilidade (exibição de lucro líquido e tipo de taxa exibida) foi centralizado exclusivamente na **Aba 1 (Opções & Acréscimos)** do Painel Administrativo restrito (protegido pela senha **`3x51ELCO`**), mantendo a persistência integrada via `localStorage`.
+
 ## [1.0.7] - 2026-05-19
 
 ### Adicionado

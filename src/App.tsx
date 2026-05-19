@@ -94,8 +94,13 @@ export default function App() {
   const [taxasCustoState, setTaxasCustoState] = useState<Record<string, Record<number, number>>>(() => 
     loadLocalStorage('simulador_taxas_custo', DEFAULT_TAXAS_CUSTO)
   );
-  const [showControlesUsuarioComum, setShowControlesUsuarioComum] = useState<boolean>(() => 
-    loadLocalStorage('simulador_show_controles_comum', true)
+
+  // --- VISUAL SETTINGS (CONTROLLED ONLY VIA ADMIN PANEL) ---
+  const [showLucro, setShowLucro] = useState<boolean>(() => 
+    loadLocalStorage('simulador_show_lucro', true)
+  );
+  const [tipoTaxaExibida, setTipoTaxaExibida] = useState<"cliente" | "custo">(() => 
+    loadLocalStorage('simulador_tipo_taxa_exibida', 'cliente')
   );
 
   // --- ADMIN AUTH & POPUPS ---
@@ -116,7 +121,8 @@ export default function App() {
   const [formAcrescimoGeralNormal, setFormAcrescimoGeralNormal] = useState<number>(0);
   const [formAcrescimoGeralPromo, setFormAcrescimoGeralPromo] = useState<number>(0);
   const [formTaxasCusto, setFormTaxasCusto] = useState<Record<string, Record<number, number>>>({ "Master/Visa": {}, "Elo": {} });
-  const [formShowControlesComum, setFormShowControlesComum] = useState<boolean>(true);
+  const [formShowLucro, setFormShowLucro] = useState<boolean>(true);
+  const [formTipoTaxaExibida, setFormTipoTaxaExibida] = useState<"cliente" | "custo">("cliente");
 
   // --- CALCULATOR STATES ---
   const [valorDesejado, setValorDesejado] = useState("1000.00");
@@ -124,8 +130,6 @@ export default function App() {
   const [tipoTabela, setTipoTabela] = useState<"normal" | "promo">("normal");
   const [nivelTabela, setNivelTabela] = useState("5");
   const [bandeira, setBandeira] = useState("Master/Visa");
-  const [showLucro, setShowLucro] = useState<boolean>(true);
-  const [tipoTaxaExibida, setTipoTaxaExibida] = useState<"cliente" | "custo">("cliente");
   const exportRef = useRef<HTMLDivElement>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -211,7 +215,8 @@ export default function App() {
       "Master/Visa": { ...taxasCustoState["Master/Visa"] },
       "Elo": { ...taxasCustoState["Elo"] }
     });
-    setFormShowControlesComum(showControlesUsuarioComum);
+    setFormShowLucro(showLucro);
+    setFormTipoTaxaExibida(tipoTaxaExibida);
     setAdminTab('geral');
     setShowAdminPanelModal(true);
   };
@@ -224,7 +229,8 @@ export default function App() {
     localStorage.setItem('simulador_acrescimo_geral_normal', JSON.stringify(formAcrescimoGeralNormal));
     localStorage.setItem('simulador_acrescimo_geral_promo', JSON.stringify(formAcrescimoGeralPromo));
     localStorage.setItem('simulador_taxas_custo', JSON.stringify(formTaxasCusto));
-    localStorage.setItem('simulador_show_controles_comum', JSON.stringify(formShowControlesComum));
+    localStorage.setItem('simulador_show_lucro', JSON.stringify(formShowLucro));
+    localStorage.setItem('simulador_tipo_taxa_exibida', JSON.stringify(formTipoTaxaExibida));
 
     setFatoresBaseNormalState(formFatoresBaseNormal);
     setFatoresBasePromoState(formFatoresBasePromo);
@@ -233,13 +239,14 @@ export default function App() {
     setAcrescimoGeralNormal(formAcrescimoGeralNormal);
     setAcrescimoGeralPromo(formAcrescimoGeralPromo);
     setTaxasCustoState(formTaxasCusto);
-    setShowControlesUsuarioComum(formShowControlesComum);
+    setShowLucro(formShowLucro);
+    setTipoTaxaExibida(formTipoTaxaExibida);
 
     setShowAdminPanelModal(false);
   };
 
   const handleRestoreDefaults = () => {
-    if (window.confirm("Deseja realmente restaurar as taxas originais de fábrica? Todas as suas alterações serão perdidas.")) {
+    if (window.confirm("Deseja realmente restaurar as taxas e opções originais de fábrica? Todas as suas alterações serão perdidas.")) {
       localStorage.removeItem('simulador_fatores_normal');
       localStorage.removeItem('simulador_fatores_promo');
       localStorage.removeItem('simulador_acrescimos_normal');
@@ -247,7 +254,8 @@ export default function App() {
       localStorage.removeItem('simulador_acrescimo_geral_normal');
       localStorage.removeItem('simulador_acrescimo_geral_promo');
       localStorage.removeItem('simulador_taxas_custo');
-      localStorage.removeItem('simulador_show_controles_comum');
+      localStorage.removeItem('simulador_show_lucro');
+      localStorage.removeItem('simulador_tipo_taxa_exibida');
 
       setFatoresBaseNormalState(DEFAULT_FATORES_BASE_NORMAL);
       setFatoresBasePromoState(DEFAULT_FATORES_BASE_PROMO);
@@ -256,7 +264,8 @@ export default function App() {
       setAcrescimoGeralNormal(0.00);
       setAcrescimoGeralPromo(0.00);
       setTaxasCustoState(DEFAULT_TAXAS_CUSTO);
-      setShowControlesUsuarioComum(true);
+      setShowLucro(true);
+      setTipoTaxaExibida('cliente');
 
       setShowAdminPanelModal(false);
     }
@@ -416,38 +425,6 @@ export default function App() {
         
         <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3">
           
-          {/* Botão de Trocar Taxa (Exibição) - Exibe apenas se permitido ou se for admin */}
-          {(showControlesUsuarioComum || isAdminAuthenticated) && (
-            <button 
-              onClick={() => setTipoTaxaExibida(tipoTaxaExibida === 'cliente' ? 'custo' : 'cliente')}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm ${
-                tipoTaxaExibida === 'custo' 
-                  ? 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100/80' 
-                  : 'bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100/80'
-              }`}
-              title={tipoTaxaExibida === 'cliente' ? "Mostrar Taxa de Custo da Máquina" : "Mostrar Taxa Cobrada do Cliente"}
-            >
-              <CreditCard size={18} />
-              <span>{tipoTaxaExibida === 'cliente' ? "Ver Taxa Custo" : "Ver Taxa Cliente"}</span>
-            </button>
-          )}
-
-          {/* Botão de Ocultar/Mostrar Lucro - Exibe apenas se permitido ou se for admin */}
-          {(showControlesUsuarioComum || isAdminAuthenticated) && (
-            <button 
-              onClick={() => setShowLucro(!showLucro)}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm ${
-                showLucro 
-                  ? 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100/80' 
-                  : 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-slate-200/80'
-              }`}
-              title={showLucro ? "Ocultar Coluna de Lucro Líquido" : "Mostrar Coluna de Lucro Líquido"}
-            >
-              {showLucro ? <Eye size={18} /> : <EyeOff size={18} />}
-              <span>{showLucro ? "Ocultar Lucro" : "Mostrar Lucro"}</span>
-            </button>
-          )}
-
           <button 
             onClick={handleExport}
             className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-lg shadow-emerald-200 transition-all active:scale-95 group text-sm"
@@ -956,7 +933,7 @@ export default function App() {
                   }`}
                 >
                   <Sliders size={14} />
-                  Geral & Acréscimos
+                  Opções & Acréscimos
                 </button>
                 <button
                   onClick={() => setAdminTab('fatores')}
@@ -988,22 +965,46 @@ export default function App() {
                 {/* ABA 1: GERAL & ACRESCIMOS */}
                 {adminTab === 'geral' && (
                   <div className="space-y-6">
-                    {/* Seção Visibilidade */}
-                    <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                      <div>
-                        <h4 className="text-sm font-bold text-slate-800">Controles de Visibilidade (Vendedor Comum)</h4>
-                        <p className="text-xs text-slate-500 mt-0.5">Se ativo, os botões "Ver Taxa Custo" e "Ocultar Lucro" estarão visíveis no simulador para os vendedores comuns</p>
+                    {/* Seção Visibilidade & Controles */}
+                    <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 space-y-4">
+                      <h4 className="text-sm font-bold text-slate-800 border-b border-slate-200 pb-2 flex items-center gap-2">
+                        <Eye size={16} className="text-amber-600" />
+                        Opções de Exibição do Simulador
+                      </h4>
+                      
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-1">
+                        <div>
+                          <h5 className="text-xs font-bold text-slate-700">Exibir Coluna de Lucro Líquido</h5>
+                          <p className="text-[10px] text-slate-500 mt-0.5">Se desativado, oculta totalmente a coluna de margem/lucro líquido na tabela principal do simulador</p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input 
+                            type="checkbox" 
+                            checked={formShowLucro}
+                            onChange={(e) => setFormShowLucro(e.target.checked)}
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-amber-500/20 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
+                          <span className="ml-3 text-xs font-bold text-slate-700">{formShowLucro ? "Exibir" : "Ocultar"}</span>
+                        </label>
                       </div>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input 
-                          type="checkbox" 
-                          checked={formShowControlesComum}
-                          onChange={(e) => setFormShowControlesComum(e.target.checked)}
-                          className="sr-only peer"
-                        />
-                        <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-amber-500/20 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
-                        <span className="ml-3 text-xs font-bold text-slate-700">{formShowControlesComum ? "Ativado" : "Desativado"}</span>
-                      </label>
+
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-1 border-t border-slate-100 pt-3">
+                        <div>
+                          <h5 className="text-xs font-bold text-slate-700">Ver Taxa de Custo da Máquina</h5>
+                          <p className="text-[10px] text-slate-500 mt-0.5">Se ativado, exibe a taxa real cobrada pela operadora em vez da taxa final cobrada do cliente</p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input 
+                            type="checkbox" 
+                            checked={formTipoTaxaExibida === 'custo'}
+                            onChange={(e) => setFormTipoTaxaExibida(e.target.checked ? 'custo' : 'cliente')}
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-amber-500/20 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
+                          <span className="ml-3 text-xs font-bold text-slate-700">{formTipoTaxaExibida === 'custo' ? "Taxa Custo" : "Taxa Cliente"}</span>
+                        </label>
+                      </div>
                     </div>
 
                     {/* Seção Acréscimos Gerais */}
