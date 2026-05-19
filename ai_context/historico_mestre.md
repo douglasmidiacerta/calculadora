@@ -100,3 +100,20 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
     - `antigravity-v1.0.5.zip` (fontes).
     - `simulador-dist-v1.0.5.zip` (estritamente a pasta `dist/` compilada com a API PHP).
   - Versionamento Git e push na branch `main`.
+- **Status Final**: Versão 1.0.6 entregue contendo botões modernos de controle visual no cabeçalho para alternar a exibição da taxa (Cliente vs Custo da Máquina) e ocultar/mostrar a coluna de Lucro Líquido na tela.
+
+---
+
+## [2026-05-19] - Customização Visual de Lucro Líquido e Exibição de Taxas (v1.0.6)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.0.6`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Implementação do estado `showLucro` (booleano) e botão moderno "Ocultar/Mostrar Lucro" no `<header>` da aplicação. Quando ativo, oculta dinamicamente a coluna "Lucro Líquido" na tela de resultados, permitindo ao administrador simular na frente de clientes sem revelar as margens.
+  - Implementação do estado `tipoTaxaExibida` (`"cliente"` ou `"custo"`) e botão "Ver Taxa Custo/Cliente" no `<header>`. Permite alternar dinamicamente o cálculo e a exibição na tabela na tela entre a **Taxa do Cliente** (com acréscimo) e a **Taxa de Custo da Máquina** (custo real da adquirente), mudando a paleta de cores para facilitar o entendimento (verde para cliente, laranja/âmbar para máquina).
+  - Atualização do `CHANGELOG.md` documentando a versão v1.0.6.
+  - Recompilação completa dos assets via `npm run build`.
+  - Remoção dos pacotes antigos da v1.0.5 e empacotamento de novos zips na raiz:
+    - `antigravity-v1.0.6.zip` (fontes).
+    - `simulador-dist-v1.0.6.zip` (estritamente os compilados em `dist/`).
+  - Versionamento Git e push na branch `main`.

@@ -2,6 +2,14 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.0.6] - 2026-05-19
+
+### Adicionado
+- **Botão para Mostrar/Ocultar Lucro Líquido na Tela**:
+  - Adicionado estado `showLucro` (booleano) e botão moderno de alternância (Toggle com ícone dinâmico `Eye` / `EyeOff` do lucide-react) no cabeçalho do simulador. Isso permite ocultar a coluna "Lucro Líquido" na tela do computador/celular caso o cliente final esteja visualizando a tabela de simulação.
+- **Botão para Trocar Taxas (Exibição de Taxa Cliente vs Taxa Máquina/Custo)**:
+  - Adicionado estado `tipoTaxaExibida` (variando entre `"cliente"` e `"custo"`) e botão estilizado no cabeçalho. Permite alternar dinamicamente a exibição na tabela entre a **Taxa do Cliente** (taxa final calculada com acréscimo) e a **Taxa de Custo da Máquina** (taxa retida pela adquirente), com diferenciação de cores (verde para cliente e laranja/âmbar para máquina).
+
 ## [1.0.5] - 2026-05-19
 
 ### Adicionado

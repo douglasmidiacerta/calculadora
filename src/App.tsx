@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { DollarSign, FileText, CreditCard, TrendingUp, TrendingDown, Info, Calculator, Share2, LogIn, Lock, User } from 'lucide-react';
+import { DollarSign, FileText, CreditCard, TrendingUp, TrendingDown, Info, Calculator, Share2, LogIn, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { toPng } from 'html-to-image';
 
@@ -64,6 +64,8 @@ export default function App() {
   const [tipoTabela, setTipoTabela] = useState<"normal" | "promo">("normal");
   const [nivelTabela, setNivelTabela] = useState("5");
   const [bandeira, setBandeira] = useState("Master/Visa");
+  const [showLucro, setShowLucro] = useState<boolean>(true);
+  const [tipoTaxaExibida, setTipoTaxaExibida] = useState<"cliente" | "custo">("cliente");
   const exportRef = useRef<HTMLDivElement>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -148,7 +150,11 @@ export default function App() {
       const i = index + 1;
       const fator = (fatoresBase[i] || 1) + (acrescimo || 0);
 
-      const taxaDinamica = (((fator - 1) * 100) / i).toFixed(2).replace('.', ',') + '%';
+      const taxaCliente = (((fator - 1) * 100) / i).toFixed(2).replace('.', ',') + '%';
+      const percentualTaxaMaquina = taxasCusto[bandeira][i] || 0;
+      const taxaCustoStr = percentualTaxaMaquina.toFixed(2).replace('.', ',') + '%';
+      
+      const taxaDinamica = tipoTaxaExibida === 'cliente' ? taxaCliente : taxaCustoStr;
       
       let totalAPassar, valorLiquido;
       
@@ -162,7 +168,6 @@ export default function App() {
 
       const valorParcela = totalAPassar / i;
       
-      const percentualTaxaMaquina = taxasCusto[bandeira][i] || 0;
       const custoMaquina = totalAPassar * (percentualTaxaMaquina / 100);
       const lucroLiquido = totalAPassar - custoMaquina - valorLiquido;
 
@@ -176,7 +181,7 @@ export default function App() {
         taxaDinamica: taxaDinamica
       };
     });
-  }, [valorDesejado, tipoTabela, nivelTabela, bandeira, modoCalculo]);
+  }, [valorDesejado, tipoTabela, nivelTabela, bandeira, modoCalculo, tipoTaxaExibida]);
 
   if (!isAuthenticated) {
     return (
@@ -275,21 +280,49 @@ export default function App() {
           <p className="text-slate-500 font-medium">Cálculo de taxas e lucro líquido em tempo real</p>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-center gap-4">
+        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3">
+          {/* Botão de Trocar Taxa (Exibição) */}
+          <button 
+            onClick={() => setTipoTaxaExibida(tipoTaxaExibida === 'cliente' ? 'custo' : 'cliente')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm ${
+              tipoTaxaExibida === 'custo' 
+                ? 'bg-amber-50 border-amber-200 text-amber-700 hover:bg-amber-100/80' 
+                : 'bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100/80'
+            }`}
+            title={tipoTaxaExibida === 'cliente' ? "Mostrar Taxa de Custo da Máquina" : "Mostrar Taxa Cobrada do Cliente"}
+          >
+            <CreditCard size={18} />
+            <span>{tipoTaxaExibida === 'cliente' ? "Ver Taxa Custo" : "Ver Taxa Cliente"}</span>
+          </button>
+
+          {/* Botão de Ocultar/Mostrar Lucro */}
+          <button 
+            onClick={() => setShowLucro(!showLucro)}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm ${
+              showLucro 
+                ? 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100/80' 
+                : 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-slate-200/80'
+            }`}
+            title={showLucro ? "Ocultar Coluna de Lucro Líquido" : "Mostrar Coluna de Lucro Líquido"}
+          >
+            {showLucro ? <Eye size={18} /> : <EyeOff size={18} />}
+            <span>{showLucro ? "Ocultar Lucro" : "Mostrar Lucro"}</span>
+          </button>
+
           <button 
             onClick={handleExport}
-            className="flex items-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-lg shadow-emerald-200 transition-all active:scale-95 group"
+            className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-lg shadow-emerald-200 transition-all active:scale-95 group text-sm"
           >
-            <Share2 size={20} className="group-hover:rotate-12 transition-transform" />
-            Gerar Imagem p/ Cliente
+            <Share2 size={18} className="group-hover:rotate-12 transition-transform" />
+            Gerar Imagem
           </button>
 
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-3 bg-white hover:bg-slate-100 text-slate-600 rounded-2xl font-bold border border-slate-200 transition-all active:scale-95 shadow-sm"
+            className="flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-600 rounded-2xl font-bold border border-slate-200 transition-all active:scale-95 shadow-sm text-sm"
             title="Sair do sistema"
           >
-            <LogIn size={20} className="rotate-180" />
+            <LogIn size={18} className="rotate-180" />
             Sair
           </button>
         </div>
@@ -393,8 +426,10 @@ export default function App() {
                 <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest text-center">Parcelas</th>
                 <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">Valor da Parcela</th>
                 <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">{modoCalculo === 'valor' ? 'Total a Passar' : 'Total a Receber'}</th>
-                <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">Taxa (% ao mês)</th>
-                <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest text-right">Lucro Líquido</th>
+                <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">
+                  {tipoTaxaExibida === 'cliente' ? 'Taxa Cliente (% ao mês)' : 'Taxa Máquina (Custo)'}
+                </th>
+                {showLucro && <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest text-right">Lucro Líquido</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -408,7 +443,7 @@ export default function App() {
                     className="hover:bg-emerald-50/40 transition-colors group"
                   >
                     <td className="py-4 px-6 text-center">
-                      <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 text-slate-700 font-bold group-hover:bg-emerald-100 group-hover:text-emerald-700 transition-colors">
+                       <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 text-slate-700 font-bold group-hover:bg-emerald-100 group-hover:text-emerald-700 transition-colors">
                         {row.parcelas}x
                       </span>
                     </td>
@@ -426,17 +461,21 @@ export default function App() {
                       <span className="text-slate-800 font-semibold">{formatCurrency(modoCalculo === 'valor' ? row.totalAPassar : row.valorLiquido)}</span>
                     </td>
                     <td className="py-4 px-6">
-                      <span className="text-emerald-700 font-bold">{row.taxaDinamica}</span>
+                      <span className={`font-bold ${tipoTaxaExibida === 'cliente' ? 'text-emerald-700' : 'text-amber-600'}`}>
+                        {row.taxaDinamica}
+                      </span>
                     </td>
-                    <td className="py-4 px-6 text-right">
-                      <div className={`flex flex-col items-end gap-1`}>
-                        <div className={`inline-flex items-center gap-1.5 font-bold text-lg ${row.lucro >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
-                          {row.lucro >= 0 ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
-                          {formatCurrency(row.lucro)}
+                    {showLucro && (
+                      <td className="py-4 px-6 text-right">
+                        <div className={`flex flex-col items-end gap-1`}>
+                          <div className={`inline-flex items-center gap-1.5 font-bold text-lg ${row.lucro >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
+                            {row.lucro >= 0 ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
+                            {formatCurrency(row.lucro)}
+                          </div>
+                          <span className="text-slate-400 text-[10px] font-medium">Margem Líquida</span>
                         </div>
-                        <span className="text-slate-400 text-[10px] font-medium">Margem Líquida</span>
-                      </div>
-                    </td>
+                      </td>
+                    )}
                   </motion.tr>
                 ))}
               </AnimatePresence>
