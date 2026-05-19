@@ -2,8 +2,8 @@
 
 ## Status da Sessão
 - **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
-- **Versão Atual**: `v1.0.1`
-- **Foco da Sessão**: Integração com banco MySQL do cPanel, correção de conexões e geração de pacote de deploy final.
+- **Versão Atual**: `v1.0.2`
+- **Foco da Sessão**: Implementação de arquitetura híbrida de deploy (PHP/Apache) para cPanel sem Node.js e empacotamento otimizado da pasta dist.
 
 ---
 
@@ -18,20 +18,25 @@
    - Execução de `npm install` com êxito (216 pacotes instalados).
    - Execução de `npm run build` bem-sucedida, gerando a compilação do frontend Vite na pasta `dist` e compilando o Express com `esbuild` em `dist/server.cjs`.
 5. **Servidor Ativo**: O comando `npm start` foi executado e o servidor de produção está operando na porta 3000 (`http://localhost:3000`).
-6. **Log de Alterações**: Criação e atualização do arquivo `CHANGELOG.md` na raiz mapeando as implementações da versão 1.0.0 e 1.0.1.
+6. **Log de Alterações**: Criação e atualização do arquivo `CHANGELOG.md` na raiz mapeando as implementações da versão 1.0.0, 1.0.1 e 1.0.2.
 7. **Suporte a Banco de Dados (v1.0.1)**:
    - Instalação do driver `mysql2`.
    - Implementação de pool de conexões com MySQL no `server.ts`.
    - Criação automática da tabela `usuarios` e inserção do admin inicial no banco.
    - Configuração de portas dinâmicas para o Passenger do cPanel.
-8. **Empacotamento de Produção**:
+8. **Deploy Híbrido PHP/Apache (v1.0.2)**:
+   - Criação da API de login em PHP nativo (`public/api/login/index.php`) para rodar em cPanel compartilhado comum sem suporte a Node.js.
+   - Conexão do script PHP ao MySQL do cPanel (`PDO`) com inicialização autônoma da tabela de usuários.
+   - Arquivo `.htaccess` adicionado na pasta pública para roteamento suave de APIs e estáticos.
+   - Build do Vite atualizado para incluir os arquivos PHP e `.htaccess` diretamente na pasta compilada final (`/dist`).
+9. **Empacotamento de Produção**:
    - Remoção dos zips antigos.
-   - Geração do novo zip de entrega **`antigravity-v1.0.1.zip`**.
-9. **Git Deploy**: Commits e push das alterações da versão 1.0.1 no GitHub (`origin/main`).
+   - Geração de `antigravity-v1.0.2.zip` (fontes e compilados).
+   - Geração do ZIP otimizado **`simulador-dist-v1.0.2.zip`** contendo estritamente a pasta `/dist` compilada, ideal para deploy simples no cPanel.
+10. **Git Deploy**: Commits e push das alterações da versão 1.0.2 no GitHub (`origin/main`).
 
 ---
 
 ## Próximos Passos (Pendentes)
-1. **Deploy da v1.0.1 no cPanel**: Orientar o usuário a substituir os arquivos anteriores pelo novo `antigravity-v1.0.1.zip`.
-2. **Ajustar Variáveis no cPanel**: Configurar as variáveis do banco de dados no painel Node.js do cPanel se necessário, ou usar as embutidas no `.env`.
-3. **Aguardar Feedback de Acesso**: Validar se o erro de conexão foi solucionado após o reinício do servidor Node no cPanel.
+1. **Deploy Otimizado no cPanel**: Orientar o usuário a fazer o upload do ZIP compacto `simulador-dist-v1.0.2.zip` e extraí-lo na pasta pública (`public_html` ou diretório do subdomínio).
+2. **Aguardar Feedback de Acesso**: Validar o acesso com login `admin` / `123456` através do script PHP no Apache.

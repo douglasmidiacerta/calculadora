@@ -2,6 +2,13 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.0.3] - 2026-05-19
+
+### Adicionado
+- **Suporte Total a Subpastas (Correção de Tela Branca)**: Configuração de `base: './'` no Vite 6 (`vite.config.ts`), garantindo a geração de caminhos de arquivos estáticos (assets JS/CSS) relativos em vez de absolutos.
+- **Chamada de API Adaptável**: Alteração do endpoint do fetch do login de `/api/login` (absoluto) para `api/login` (relativo) no frontend React, viabilizando requisições corretas a partir de qualquer subpasta do servidor Apache no cPanel.
+- **Otimização do .htaccess**: Ajustes preventivos para desativar a listagem de arquivos (`Options -Indexes`) sem interferir no mapeamento dinâmico de diretórios do Apache em subpastas.
+
 ## [1.0.2] - 2026-05-19
 
 ### Adicionado

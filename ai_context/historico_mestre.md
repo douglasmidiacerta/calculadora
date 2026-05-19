@@ -31,8 +31,25 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - Reconfiguração da porta do servidor para `process.env.PORT || 3000` garantindo o correto proxy no Phusion Passenger do cPanel.
   - Atualização do `CHANGELOG.md` com a versão 1.0.1.
   - Recompilação completa (`npm run build`).
-  - Remoção de `antigravity-v1.0.0.zip` e geração do novo pacote de deploy `antigravity-v1.0.1.zip`.
-  - Commits e push das alterações da v1.0.1 no GitHub (`origin/main`).
+- **Status Final**: Versão 1.0.2 implantada, com suporte a deploy híbrido (PHP/Apache) para cPanel sem Node.js e empacotamento otimizado.
+
+---
+
+## [2026-05-19] - Arquitetura Híbrida PHP/Apache para cPanel sem Node.js (v1.0.2)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.0.2`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Implementação de um backend híbrido em PHP para rodar em servidores compartilhados comuns sem suporte a Node.js.
+  - Criação da estrutura `public/api/login/index.php` contendo a lógica de login em PHP nativo utilizando PDO, incluindo a conexão automática ao MySQL e a geração dinâmica de tabelas e usuários administrativos padrão.
+  - Configuração do arquivo `public/.htaccess` para gerenciar o roteamento amigável e permitir que requisições ao `/api/login` sejam tratadas diretamente pelo script PHP.
+  - Recompilação do projeto com Vite para copiar de forma automatizada o `.htaccess` e a API PHP para a pasta final `/dist`.
+  - Atualização do `CHANGELOG.md` documentando a versão 1.0.2.
+  - Geração de dois arquivos ZIP na raiz:
+    - `antigravity-v1.0.2.zip`: Projeto completo com fontes e compilados.
+    - `simulador-dist-v1.0.2.zip`: Pacote otimizado contendo estritamente a pasta `dist` compilada, ideal para extração direta na `public_html` do cPanel sem Node.js.
+  - Commits e push das alterações da versão 1.0.2 no GitHub (`origin/main`).
+
 
 
 
