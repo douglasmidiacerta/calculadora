@@ -18,10 +18,16 @@
    - Execução de `npm install` com êxito (216 pacotes instalados).
    - Execução de `npm run build` bem-sucedida, gerando a compilação do frontend Vite na pasta `dist` e compilando o Express com `esbuild` em `dist/server.cjs`.
 5. **Servidor Ativo**: O comando `npm start` foi executado e o servidor de produção está operando na porta 3000 (`http://localhost:3000`).
+6. **Log de Alterações**: Criação do arquivo `CHANGELOG.md` na raiz mapeando as implementações da versão 1.0.0.
+7. **Empacotamento de Produção**:
+   - Remoção do zip legado (`simulador-de-vendas-e-taxas (2).zip`).
+   - Geração do novo zip `antigravity-v1.0.0.zip` reunindo os arquivos do projeto e a pasta `dist` (excluindo `node_modules` e `.git`).
+8. **Git Deploy**: Registro do commit inicial da versão e push com sucesso na branch `main` remota do repositório no GitHub.
 
 ---
 
 ## Próximos Passos (Pendentes)
-1. **Verificação do Simulador**: Garantir o funcionamento correto das rotas e verificar as telas locais.
-2. **Aguardar Instruções do Usuário**: Entender as demandas específicas de evolução do simulador de vendas e taxas (ex: conexão com banco MySQL, novos designs, novas taxas, correções, etc.).
+1. **Deploy no cPanel**: Orientar o usuário sobre como fazer o upload do arquivo `antigravity-v1.0.0.zip` gerado para o servidor cPanel.
+2. **Aguardar Instruções do Usuário**: Entender as demandas de evolução e novos ajustes no Simulador de Vendas e Taxas.
+
 

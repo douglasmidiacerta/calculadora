@@ -2,6 +2,16 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.0.1] - 2026-05-19
+
+### Adicionado
+- Integração e suporte nativo ao banco de dados **MySQL** do cPanel utilizando a biblioteca `mysql2/promise`.
+- Criação e inicialização automática da tabela de `usuarios` no banco de dados com a inserção do usuário `admin` padrão (`123456`).
+- Sistema de autenticação adaptável na rota `/api/login` (tentativa no banco com fallback para credenciais estáticas de desenvolvimento).
+- Configuração de escuta de porta dinâmica baseada em `process.env.PORT` para garantir a compatibilidade com o servidor Phusion Passenger do cPanel.
+- Carregamento de variáveis de ambiente do arquivo `.env` via `dotenv/config`.
+- Arquivo `.env.example` e `.env` atualizados com as configurações de conexão fornecidas pelo usuário.
+
 ## [1.0.0] - 2026-05-19
 
 ### Adicionado
