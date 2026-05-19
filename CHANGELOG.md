@@ -2,11 +2,48 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
-## [1.0.7] - 2026-05-19
+## [1.1.0] - 2026-05-19
 
 ### Adicionado
 - **Integração de Deploy Automatizado com cPanel (`.cpanel.yml`)**:
   - Criação do arquivo de configuração `.cpanel.yml` na raiz do projeto. Ele instrui a engine de deploy do Git do cPanel a usar o `rsync` para sincronizar os arquivos compilados da pasta `dist/` diretamente na pasta de destino de publicação pública (ex: `/public_html/calculadora`), ignorando os arquivos de código-fonte e o histórico do Git no deploy final.
+
+## [1.0.9] - 2026-05-19
+
+### Adicionado
+- **Zebra Striping (Linhas Intercaladas) nas Tabelas**:
+  - Implementação de coloração intercalada para as linhas de parcelas da tabela de simulação na tela comum (`bg-white` e `bg-emerald-50/30`).
+  - Adicionado suporte a coloração intercalada também na **geração de imagem compactada vertical**, alternando entre branco (`#ffffff`) e um verde bem suave (`#eaf7ed`).
+  - Esta alteração melhora significativamente a legibilidade da tabela ao comparar parcelas, taxas e valores totais a passar ou receber tanto no computador/celular quanto nas imagens geradas e compartilhadas.
+
+## [1.0.8] - 2026-05-19
+
+### Alterado
+- **Remoção Definitiva dos Botões de Customização Visual no Cabeçalho**:
+  - Os botões "Ver Taxa Custo/Cliente" e "Ocultar/Mostrar Lucro" foram removidos por completo do header do simulador principal.
+  - Isso garante uma interface 100% limpa, segura e profissional para vendedores e clientes finais, sem indícios visuais de margem ou custos de máquina para usuários comuns.
+  - Todo o controle de visibilidade (exibição de lucro líquido e tipo de taxa exibida) foi centralizado exclusivamente na **Aba 1 (Opções & Acréscimos)** do Painel Administrativo restrito (protegido pela senha **`3x51ELCO`**), mantendo a persistência integrada via `localStorage`.
+
+## [1.0.7] - 2026-05-19
+
+### Adicionado
+- **Área Administrativa Protegida por Senha**:
+  - Implementação de um botão de engrenagem discreto no cabeçalho do simulador que atua como atalho para o painel administrativo.
+  - Bloqueio por senha exigindo a digitação exata de **`3x51ELCO`** para autenticação da sessão administrativa.
+- **Painel Administrativo com Abas Responsivas**:
+  - **Aba 1 (Geral & Acréscimos)**:
+    - Controle de visibilidade para ocultar/mostrar os botões de customização ("Ocultar Lucro" e "Ver Taxa Custo") para usuários/vendedores comuns.
+    - Edição dos acréscimos por nível (Tabelas 1 a 5) das tabelas Normal e Promo.
+    - Edição do campo **Acréscimo Geral** (+1%, +0.15%, etc.) somado dinamicamente no cálculo de todos os fatores das tabelas Normal e Promo.
+  - **Aba 2 (Fatores Base)**: Edição direta das taxas mensais em formato multiplicador decimal de 1x a 21x para as tabelas Normal e Promo.
+  - **Aba 3 (Custo de Máquina)**: Edição das taxas de desconto real cobradas pela adquirente de 1x a 21x para as bandeiras Master/Visa e Elo.
+- **Mecanismo de Persistência e Backup**:
+  - Salvamento instantâneo de todas as taxas customizadas no `localStorage` do navegador para manter as alterações ativas após o recarregamento da página (F5).
+  - Botão **Restaurar Padrões** no painel administrativo para limpar as configurações locais e restaurar imediatamente as taxas estáticas originais de fábrica do código.
+- **Dropdowns e Cálculos Dinâmicos**:
+  - Reescrita do cálculo da simulação (`simulacao`) para processar os fatores e acréscimos dinâmicos.
+  - Atualização automática dos dropdowns do simulador para refletir as taxas de acréscimo customizadas do admin em tempo real.
+
 
 ## [1.0.6] - 2026-05-19
 

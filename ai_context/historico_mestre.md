@@ -117,22 +117,70 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
     - `antigravity-v1.0.6.zip` (fontes).
     - `simulador-dist-v1.0.6.zip` (estritamente os compilados em `dist/`).
   - Versionamento Git e push na branch `main`.
-- **Status Final**: Versão 1.0.7 entregue, com suporte a deploy automatizado no cPanel via arquivo `.cpanel.yml` e empacotamento completo.
+- **Status Final**: Versão 1.0.7 entregue, com suporte a Área Administrativa, persistência local e taxas dinâmicas.
 
 ---
 
-## [2026-05-19] - Integração de Deploy Automatizado com cPanel (v1.0.7)
-- **ID da Conversa**: `a43a6e45-cf0f-4176-8482-cb8a25a09748`
+## [2026-05-19] - Área Administrativa e Configuração Dinâmica de Taxas (v1.0.7)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
 - **Versão**: `v1.0.7`
 - **Autor**: Antigravity AI
 - **Alterações**:
+  - Criação de uma área administrativa protegida por senha (**`3x51ELCO`**) acessível por um botão discreto de configurações no simulador.
+  - Implementação de um painel administrativo elegante estruturado em 3 abas responsivas:
+    - *Geral & Acréscimos*: Opção para ocultar os botões do header ("Ocultar Lucro" e "Ver Taxa Custo") para usuários/vendedores comuns, edição de acréscimos por nível (Tabelas 1 a 5) e suporte a um acréscimo geral (+1% ou +0.15% Geral) somado dinamicamente no simulador.
+    - *Fatores Base*: Edição em tempo real de fatores decimais de 1x a 21x para as tabelas Normal e Promo.
+    - *Custo da Máquina*: Edição de custos de máquina de 1x a 21x para Elo e Master/Visa.
+  - Persistência robusta via `localStorage` para retenção permanente das taxas editadas após recarregamento de página.
+  - Recurso de "Restaurar Padrões" para limpeza de chaves locais e reversão instantânea aos valores de fábrica do código.
+  - Atualização dos dropdowns e motores de simulação React para consumir as taxas dinamicamente do estado do formulário persistido.
+  - Recompilação bem-sucedida via Vite + esbuild (`npm run build`).
+  - Atualização do `CHANGELOG.md` e dos arquivos do diretório `/ai_context`.
+- **Status Final**: Versão 1.0.8 concluída e compilada com sucesso.
+
+---
+
+## [2026-05-19] - Remoção Definitiva de Botões Visuais e Centralização no Painel Admin (v1.0.8)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.0.8`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Remoção completa dos botões do cabeçalho ("Ver Taxa Custo/Cliente" e "Ocultar/Mostrar Lucro") da interface do vendedor comum para manter a tela 100% limpa e evitar exposição de dados sensíveis na presença de clientes.
+  - Consolidação dos controles visuais de exibição de Lucro Líquido e Taxa de Custo exclusivamente dentro do Painel Administrativo restrito (protegido por senha).
+  - Atualização do `CHANGELOG.md` documentando a versão v1.0.8.
+  - Recompilação geral via `npm run build` gerando os artefatos otimizados de produção.
+  - Atualização do histórico mestre e sessão atual no `/ai_context`.
+- **Status Final**: Versão 1.0.9 concluída com sucesso.
+
+---
+
+## [2026-05-19] - Zebra Striping nas Tabelas do Simulador e Exportação de Imagem (v1.0.9)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.0.9`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - Implementação de zebra striping (linhas intercaladas) na tabela principal de exibição na tela (alternando entre `bg-white` e `bg-emerald-50/30`).
+  - Implementação de zebra striping na tabela compactada vertical de exportação da simulação para imagem, intercalando células brancas (`#ffffff`) e verde-claro suave (`#eaf7ed`).
+  - Melhoria visual significativa para a leitura das parcelas e valores totais pelo vendedor e pelo cliente final.
+  - Recompilação geral via `npm run build` gerando os artefatos finais em `dist/`.
+  - Atualização do `CHANGELOG.md` e arquivos de contexto localizados em `/ai_context`.
+- **Status Final**: Versão 1.1.0 entregue, com suporte a deploy automatizado no cPanel via arquivo `.cpanel.yml` e empacotamento completo.
+
+---
+
+## [2026-05-19] - Integração de Deploy Automatizado com cPanel (v1.1.0)
+- **ID da Conversa**: `a43a6e45-cf0f-4176-8482-cb8a25a09748`
+- **Versão**: `v1.1.0`
+- **Autor**: Antigravity AI
+- **Alterações**:
   - Criação do arquivo de configuração `.cpanel.yml` na raiz do projeto, configurado especificamente para rodar deploys automáticos em servidores cPanel.
-  - Implementação de tarefa de deploy automatizado que utiliza `rsync` para transferir apenas os arquivos finais e otimizados gerados na pasta `/dist` diretamente para o diretório de destino do servidor (ex: `public_html/calculadora`), ignorando arquivos de configuração do git e códigos-fonte.
-  - Atualização do `CHANGELOG.md` documentando a versão v1.0.7.
+  - Mapeamento de tarefa de deploy que utiliza o utilitário `rsync` para sincronizar os ativos de produção gerados na pasta `/dist` diretamente no diretório final do servidor (`/home1/ljonline/public_html/calculadora`), mantendo o ambiente de deploy limpo e livre de arquivos-fonte ou metadados de Git.
+  - Atualização do `CHANGELOG.md` documentando a versão v1.1.0.
   - Recompilação completa dos assets via `npm run build`.
-  - Remoção dos pacotes antigos da v1.0.6 e empacotamento de novos zips na raiz:
-    - `antigravity-v1.0.7.zip` (fontes).
-    - `simulador-dist-v1.0.7.zip` (estritamente a pasta `dist/` compilada com a API PHP).
-  - Versionamento Git e push na branch `main`.
-- **Status Final**: Versão 1.0.7 entregue com sucesso. Pronto para o usuário clonar o repositório no cPanel e iniciar o deploy automatizado.
+  - Remoção dos pacotes antigos da v1.0.9 e empacotamento de novos zips na raiz:
+    - `antigravity-v1.1.0.zip` (fontes).
+    - `simulador-dist-v1.1.0.zip` (estritamente a pasta `dist/` compilada com a API PHP).
+  - Versionamento Git e push para as branches remotas.
+- **Status Final**: Versão 1.1.0 entregue com sucesso no cPanel.
+
 
