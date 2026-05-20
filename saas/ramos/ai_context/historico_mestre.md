@@ -348,3 +348,16 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Mensagem Limpa**: O encerramento da proposta de simulação de vendas comercial agora finaliza diretamente e de forma limpa na informação de validade da simulação de 7 dias, otimizando o aspecto estético do texto copiado para o cliente final.
   - **SaaS Replicação & Re-build**: Modificações propagadas com sucesso para todas as instâncias de parceiros SaaS físicas.
 - **Status Final**: Versão 1.2.7 testada, compilada em lote e distribuída de forma enxuta via `antigravity-v1.2.7.zip` (17MB). Alterações commitadas e enviadas ao GitHub remoto na branch `main`, ativando o deploy FTP instantâneo nos parceiros do cPanel.
+
+---
+
+## [2026-05-20] - Atualização de Tabelas de Custo dos Parceiros SaaS e Injeção Automatizada (v1.2.8)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.2.8`
+- **Autor**: Antigravity AI (Antigravity)
+- **Alterações**:
+  - **Customização de Custos de Máquina**: Mapeamento e injeção completa de tabelas de custos de adquirente padrão de fábrica (Master/Visa e Elo de 1x a 21x) para 8 parceiros SaaS multi-tenant: Cred Fácil, CredPara, Cred Simples, D Cred, Melhor Crédito, Roma, Rose e Ramos.
+  - **Correção da Cred Simples**: Correção na parcela 13 de Master/Visa para `16.10%` na tabela customizada do script de replicação (conforme especificação exata do usuário).
+  - **Injeção Dinâmica via PowerShell**: Desenvolvimento de lógica de injeção automática em `scripts/copy_to_partners.ps1` usando substituição de expressões regulares multilinha. O script agora detecta chaves e substitui perfeitamente o bloco `DEFAULT_TAXAS_CUSTO` em `App.tsx` no loop de cada parceiro.
+  - **Build & Compilação**: Executados build local (`npm run build`) com sucesso, validando a pasta `/dist` livre de erros.
+- **Status Final**: Versão 1.2.8 concluída, compilada localmente e replicada com sucesso em lote para as 10 instâncias SaaS. Fontes empacotadas no arquivo leve `antigravity-v1.2.8.zip` (17.8MB) e preparadas para commit e push na branch `main` no GitHub.

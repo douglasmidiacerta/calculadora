@@ -55,6 +55,55 @@ type SimulationRow = {
   taxaDinamica: string;
 };
 
+// Helper to compress and resize logo images to prevent storage quota issues and improve performance
+const compressLogoImage = (file: File): Promise<string> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 400;
+        const MAX_HEIGHT = 120;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width = Math.round((width * MAX_HEIGHT) / height);
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(event.target?.result as string);
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = () => {
+        resolve(event.target?.result as string);
+      };
+    };
+    reader.onerror = () => {
+      resolve('');
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
 // Helper for local storage
 const loadLocalStorage = <T,>(key: string, defaultValue: T): T => {
   try {
@@ -990,7 +1039,7 @@ export default function App() {
                 src={logoUrl || "logo.png"} 
                 className="h-8 w-auto object-contain" 
                 alt="Logo" 
-                style={{ filter: "brightness(0) invert(1)" }}
+                style={!logoUrl ? { filter: "brightness(0) invert(1)" } : undefined}
               />
             </div>
             <div style={{ textAlign: 'right' }}>
@@ -1464,16 +1513,23 @@ export default function App() {
                           <input 
                             type="file"
                             accept="image/*"
-                            onChange={(e) => {
+                            onChange={async (e) => {
                               const file = e.target.files?.[0];
                               if (file) {
-                                const reader = new FileReader();
-                                reader.onloadend = () => {
-                                  if (typeof reader.result === 'string') {
-                                    setFormLogoUrl(reader.result);
-                                  }
-                                };
-                                reader.readAsDataURL(file);
+                                try {
+                                  const compressed = await compressLogoImage(file);
+                                  setFormLogoUrl(compressed);
+                                } catch (err) {
+                                  console.error("Erro ao comprimir imagem:", err);
+                                  // Fallback em caso de erro na compressão
+                                  const reader = new FileReader();
+                                  reader.onloadend = () => {
+                                    if (typeof reader.result === 'string') {
+                                      setFormLogoUrl(reader.result);
+                                    }
+                                  };
+                                  reader.readAsDataURL(file);
+                                }
                               }
                             }}
                             className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 cursor-pointer bg-white border border-slate-200 rounded-xl p-1 outline-none"

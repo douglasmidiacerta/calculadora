@@ -55,6 +55,55 @@ type SimulationRow = {
   taxaDinamica: string;
 };
 
+// Helper to compress and resize logo images to prevent storage quota issues and improve performance
+const compressLogoImage = (file: File): Promise<string> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 400;
+        const MAX_HEIGHT = 120;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height = Math.round((height * MAX_WIDTH) / width);
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width = Math.round((width * MAX_HEIGHT) / height);
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(event.target?.result as string);
+          return;
+        }
+
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = () => {
+        resolve(event.target?.result as string);
+      };
+    };
+    reader.onerror = () => {
+      resolve('');
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
 // Helper for local storage
 const loadLocalStorage = <T,>(key: string, defaultValue: T): T => {
   try {
@@ -435,6 +484,8 @@ export default function App() {
     setShowLucroDono(formShowLucroDono);
     setTipoTaxaExibida(formTipoTaxaExibida);
     setLogoUrl(formLogoUrl);
+    setLogoErro(false);
+    setLogoHeaderErro(false);
     setPrimaryColor(formPrimaryColor);
 
     // Envia ao servidor
@@ -480,6 +531,8 @@ export default function App() {
       setShowLucroDono(true);
       setTipoTaxaExibida('cliente');
       setLogoUrl('');
+      setLogoErro(false);
+      setLogoHeaderErro(false);
       setPrimaryColor('#059669');
 
       // Restaura no servidor tambÃ©m
@@ -686,17 +739,20 @@ export default function App() {
         
         <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3">
           
-          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
-            <label className="text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-2">
-              <input 
-                type="checkbox"
-                checked={exportShowTaxa}
-                onChange={(e) => setExportShowTaxa(e.target.checked)}
-                className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500"
-              />
-              Mostrar % na imagem
-            </label>
-          </div>
+          <button 
+            onClick={() => setExportShowTaxa(!exportShowTaxa)}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm select-none ${
+              exportShowTaxa 
+                ? 'bg-emerald-600 border-emerald-600 text-white shadow-emerald-200' 
+                : 'bg-white border-slate-200 text-slate-500 hover:border-emerald-300 hover:text-emerald-700'
+            }`}
+            title="Exibir ou ocultar a coluna de porcentagem na imagem da simulaÃ§Ã£o"
+          >
+            <span className={`inline-flex items-center justify-center w-5 h-5 rounded-full text-[11px] font-black transition-all ${
+              exportShowTaxa ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'
+            }`}>%</span>
+            <span>{exportShowTaxa ? 'Ocultar %' : 'Mostrar %'}</span>
+          </button>
 
           <button 
             onClick={handleExport}
@@ -983,7 +1039,7 @@ export default function App() {
                 src={logoUrl || "logo.png"} 
                 className="h-8 w-auto object-contain" 
                 alt="Logo" 
-                style={{ filter: "brightness(0) invert(1)" }}
+                style={!logoUrl ? { filter: "brightness(0) invert(1)" } : undefined}
               />
             </div>
             <div style={{ textAlign: 'right' }}>
@@ -1457,16 +1513,23 @@ export default function App() {
                           <input 
                             type="file"
                             accept="image/*"
-                            onChange={(e) => {
+                            onChange={async (e) => {
                               const file = e.target.files?.[0];
                               if (file) {
-                                const reader = new FileReader();
-                                reader.onloadend = () => {
-                                  if (typeof reader.result === 'string') {
-                                    setFormLogoUrl(reader.result);
-                                  }
-                                };
-                                reader.readAsDataURL(file);
+                                try {
+                                  const compressed = await compressLogoImage(file);
+                                  setFormLogoUrl(compressed);
+                                } catch (err) {
+                                  console.error("Erro ao comprimir imagem:", err);
+                                  // Fallback em caso de erro na compressÃ£o
+                                  const reader = new FileReader();
+                                  reader.onloadend = () => {
+                                    if (typeof reader.result === 'string') {
+                                      setFormLogoUrl(reader.result);
+                                    }
+                                  };
+                                  reader.readAsDataURL(file);
+                                }
                               }
                             }}
                             className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 cursor-pointer bg-white border border-slate-200 rounded-xl p-1 outline-none"
@@ -1475,12 +1538,12 @@ export default function App() {
                             <div className="flex items-center gap-3 bg-white p-3 border border-slate-200 rounded-xl shadow-sm">
                               <img 
                                 src={formLogoUrl} 
-                                alt="Pre-visualizacao do logotipo" 
+                                alt="PrÃ©-visualizaÃ§Ã£o do logotipo" 
                                 className="h-12 w-auto object-contain bg-slate-50 rounded p-1 border" 
                               />
                               <div className="flex-1 min-w-0">
                                 <p className="text-xs font-bold text-slate-500 truncate">Logotipo Selecionado</p>
-                                <p className="text-[10px] text-slate-400">Salvo na memoria local</p>
+                                <p className="text-[10px] text-slate-400">Salvo na memÃ³ria local/servidor</p>
                               </div>
                               <button 
                                 type="button"

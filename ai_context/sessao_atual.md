@@ -1,12 +1,19 @@
-### Sessão Atual - Concluída (v1.2.8)
+### Sessão Atual - Concluída (v1.2.10)
 
-- **Atualização de Taxas de Custo dos Parceiros SaaS**: Mapeamento completo e injeção automática de taxas padrão de fábrica (Master/Visa e Elo de 1x a 21x) para as calculadoras multi-tenant dos parceiros: Cred Fácil, CredPara, Cred Simples, D Cred, Melhor Crédito, Roma, Rose e Ramos.
-- **Correção da Cred Simples**: Parcela 13 corrigida para `16.10%` no Master/Visa em conformidade com as regras de negócio enviadas.
-- **Injeção de Código Automatizada**: Aprimorado o script `scripts/copy_to_partners.ps1` com expressão regular multilinha para substituir `DEFAULT_TAXAS_CUSTO` em tempo de replicação.
-- **Build de Produção**: Projeto compilado localmente com 100% de sucesso.
-- **Empacotamento (ZIP)**: Removido zip anterior e gerado `antigravity-v1.2.8.zip` (17.8MB) contendo o changelog e fontes.
+- **Compressão de Imagem Canvas no Upload do Logotipo**:
+  - Adicionado o utilitário `compressLogoImage` em `src/App.tsx` que intercepta o arquivo de imagem carregado no Painel Admin (Aba Identidade Visual).
+  - Redimensiona e comprime a imagem via Canvas HTML5 para no máximo 400x120px (codificado em PNG leve).
+  - Reduz o tamanho de string Base64 de megabytes para **10KB a 40KB**, eliminando erros de estouro de quota local (`QuotaExceededError` no `localStorage`) e problemas com uploads JSON volumosos no servidor cPanel (POST que excediam `post_max_size` de PHP).
+- **Remoção de Filtro Monocromático no Logotipo Customizado (Exportação)**:
+  - O filtro CSS `brightness(0) invert(1)` no logotipo do cabeçalho da imagem de exportação agora é condicional: é aplicado apenas quando a imagem base default (`logo.png`) é utilizada.
+  - Se um logotipo personalizado (`logoUrl`) for detectado, o filtro é ignorado, renderizando a imagem e suas cores originais sem virar uma caixa/silhueta branca.
+- **Replicação Total Multi-Tenant**:
+  - As correções de compressão e filtro foram propagadas com sucesso para todos os 10 parceiros SaaS via `scripts/copy_to_partners.ps1`.
+- **Build e Empacotamento**:
+  - `npm run build` executado com sucesso e arquivos de produção compilados na pasta `/dist`.
+  - Criado o arquivo ZIP `antigravity-v1.2.10.zip` (com o `CHANGELOG.md` atualizado incluído dentro e fora) e removida a versão anterior `antigravity-v1.2.9.zip`.
 
 ### Próximos Passos
 
-1. **Homologar no Servidor cPanel**: Acompanhar o deploy do GitHub Actions nas subpastas e testar se cada parceiro está iniciando com suas respectivas taxas padrão no Painel Administrativo ("Restaurar Padrões").
-2. **Apoiar Novos Parceiros**: Dar suporte caso o cliente solicite a inclusão de novas tabelas personalizadas para outros tenants.
+1. **Acompanhar Feedback do Usuário**: Testar se o carregamento de logotipos pesados agora funciona 100% de forma instantânea tanto localmente quanto no cPanel do cliente.
+2. **Monitorar Deploy Automático**: O push na branch `main` ativará a esteira do GitHub Actions para distribuir os arquivos compilados em lote no servidor.

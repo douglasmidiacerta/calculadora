@@ -1,5 +1,31 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
+## [1.2.9] - 2026-05-20
+
+### Modificado
+- **Identidade Visual — Upload de Logo em todos os Parceiros SaaS**:
+  - Substituído o campo de texto "URL da Logomarca" por um componente de upload de arquivo (`type="file"`) em todos os 10 parceiros SaaS (`credfacil`, `credpara`, `credsimples`, `d_cred`, `forcepay`, `melhorcredito`, `ramos`, `roma`, `rose`, `rtgroup`).
+  - O upload converte a imagem para Base64 via `FileReader` e salva em localStorage, mantendo total compatibilidade com o sistema atual.
+  - Adicionado preview do logotipo com thumbnail + botão de remoção (X) após seleção do arquivo.
+  - A instância principal `src/App.tsx` já possuía este comportamento — agora todos os parceiros estão padronizados.
+- **Botão "Mostrar % na imagem" redesenhado**:
+  - Visual atualizado: o botão agora funciona como toggle pill com fundo sólido verde quando ativo e cinza quando inativo.
+  - Badge circular com o símbolo `%` substituiu o checkbox quadrado anterior.
+  - Texto dinâmico: exibe "Mostrar %" quando desativo e "Ocultar %" quando ativo para melhor UX.
+
+## [1.2.8] - 2026-05-20
+
+### Adicionado
+- **Atualização de Taxas de Custo dos Parceiros SaaS**:
+  - Implementação e mapeamento completo das tabelas de custos adquirentes padrão de fábrica enviadas pelo usuário para todas as 8 instâncias SaaS de parceiros: Cred Fácil, CredPara, Cred Simples, D Cred, Melhor Crédito, Roma, Rose e Ramos.
+  - Correção na parcela 13 do Master/Visa na tabela de custos da Cred Simples, ajustando de `16.50%` para `16.10%` conforme a especificação comercial do usuário.
+  - As taxas de custo cobradas pela adquirente da calculadora base ("Empresta BH") e parceiros não descritos (como ForcePay, RT Group) permanecem isoladas e intactas.
+
+### Modificado
+- **Injeção de Código Automatizada no Script de Replicação**:
+  - Aprimoramento do script PowerShell `scripts/copy_to_partners.ps1` com lógica de injeção dinâmica de constantes no loop multi-tenant.
+  - O script agora localiza dinamicamente o bloco `const DEFAULT_TAXAS_CUSTO` no core mestre e o substitui de forma resiliente usando expressões regulares com correspondência multilinha, garantindo 100% de consistência sem requerer edits manuais pós-replicação.
+
 ## [1.2.7] - 2026-05-20
 
 ### Alterado
