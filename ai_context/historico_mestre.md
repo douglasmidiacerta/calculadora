@@ -284,6 +284,9 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Automação Completa de Replicação com Script PowerShell**:
     - Criação de um script PowerShell avançado em `scripts/copy_to_partners.ps1` no repositório.
     - O script automatiza o processo de cópia recursiva do core base para todos os parceiros em lote, realizando automaticamente a injeção programática dos respectivos ativos visuais e a substituição dinâmica das variáveis de marca em `App.tsx` (aba de título, copyrights do rodapé e no título do PNG exportado).
+  - **Remoção de Textos Administrativos do Cabeçalho**:
+    - Remoção dos textos "Simulador de Vendas" e "Cálculo de taxas e lucro líquido em tempo real" do `<header>` principal na raiz e em todos os parceiros SaaS.
+    - O design do simulador agora apresenta um visual muito mais limpo e focado no logotipo do parceiro, utilizando fallback elegante em formato de texto para manter a responsividade e consistência.
   - **Compilação Estática e Distribuição**:
     - Executados builds de produção locais em lote para todas as calculadoras (raiz, `saas/d_cred`, `saas/credpara` e `saas/melhor_credi`), validando bundles estáticos limpos e otimizados para deploy.
     - Remoção dos pacotes antigos e geração de novos pacotes de distribuição na raiz: `antigravity-v1.2.3.zip` (fontes) e `simulador-dist-v1.2.3.zip` (distribuição limpa com subpastas prontas para extração direta no cPanel).

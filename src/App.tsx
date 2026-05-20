@@ -564,7 +564,7 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 flex flex-col items-center p-4 md:p-8 font-sans text-slate-800">
       <header className="max-w-4xl w-full mb-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-3 justify-center sm:justify-start flex-wrap mb-1">
+          <div className="flex items-center gap-3 justify-center sm:justify-start flex-wrap">
             {!logoHeaderErro ? (
               <img 
                 src="logo.png" 
@@ -573,13 +573,12 @@ export default function App() {
                 alt="Logo" 
               />
             ) : (
-              <Calculator className="text-emerald-600" />
+              <div className="flex items-center gap-2">
+                <Calculator className="text-emerald-600" />
+                <span className="font-bold text-emerald-950">Calculadora</span>
+              </div>
             )}
-            <h1 className="text-3xl font-extrabold tracking-tight text-emerald-900">
-              Simulador de Vendas
-            </h1>
           </div>
-          <p className="text-slate-500 font-medium">Cálculo de taxas e lucro líquido em tempo real</p>
         </div>
         
         <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3">

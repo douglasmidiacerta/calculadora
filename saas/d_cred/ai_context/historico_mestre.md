@@ -285,5 +285,9 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
     - Criação de um script PowerShell avançado em `scripts/copy_to_partners.ps1` no repositório.
     - O script automatiza o processo de cópia recursiva do core base para todos os parceiros em lote, realizando automaticamente a injeção programática dos respectivos ativos visuais e a substituição dinâmica das variáveis de marca em `App.tsx` (aba de título, copyrights do rodapé e no título do PNG exportado).
   - **Compilação Estática e Distribuição**:
-    - Executados builds de produção em lote na calculadora raiz e nas pastas de parceiros (`npm run build`), gerando bundles estáticos otimizados.
-- **Status Final**: Versão 1.2.3 concluída com sucesso, com todos os ativos SaaS embutidos e testados em lote locais, pacotes ZIP atualizados na raiz do projeto e commitados com push para a branch `main` no GitHub.
+    - Executados builds de produção locais em lote para todas as calculadoras (raiz, `saas/d_cred`, `saas/credpara` e `saas/melhor_credi`), validando bundles estáticos limpos e otimizados para deploy.
+    - Remoção dos pacotes antigos e geração de novos pacotes de distribuição na raiz: `antigravity-v1.2.3.zip` (fontes) e `simulador-dist-v1.2.3.zip` (distribuição limpa com subpastas prontas para extração direta no cPanel).
+  - **Sincronização de Repositório e CI/CD**:
+    - Executada a replicação total para os parceiros SaaS, atualizando todas as dependências locais e metadados na versão `1.2.3`.
+    - Commits no Git e envio (push) das alterações para a branch `main` no repositório remoto, acionando a esteira do GitHub Actions para deploy automatizado de todas as instâncias em lote no cPanel.
+- **Status Final**: Versão 1.2.3 totalmente compilada, empacotada localmente e commitada com push no GitHub para deploy automatizado na calculadora raiz e nas três subpastas físicas de parceiros no cPanel.

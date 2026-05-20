@@ -21,6 +21,10 @@
    - Execução bem-sucedida do script localmente para sincronização de todas as calculadoras.
 4. **Validação e Compilação Estática**:
    - Executados builds de produção locais que compilaram a raiz e as três instâncias de parceiros com sucesso.
+5. **Remoção de Textos Administrativos do Cabeçalho**:
+   - Removidos os textos "Simulador de Vendas" e "Cálculo de taxas e lucro líquido em tempo real" do `<header>` principal em `src/App.tsx`.
+   - A alteração deixa o cabeçalho focado exclusivamente no logotipo/favicon da marca correspondente ou com o fallback discreto e responsivo em formato de texto.
+   - Replicação em lote executada com sucesso para os três parceiros SaaS, re-compilação local de todos os bundles locais de produção e geração dos pacotes ZIP raiz atualizados.
 
 ## Próximos Passos (Próxima Sessão)
 1. **Monitoramento e Validação Visual**:

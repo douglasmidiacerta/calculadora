@@ -23,6 +23,8 @@
    - Executados builds de produção locais que compilaram a raiz e as três instâncias de parceiros com sucesso.
 
 ## Próximos Passos (Próxima Sessão)
-1. **Validação em Produção**:
-   - Monitorar a esteira do GitHub Actions para certificar que o deploy FTP da raiz e de todos os parceiros termine com sucesso.
-   - Acessar os domínios finais no navegador para verificar visualmente a exibição perfeita dos novos favicons na aba e das logos na interface de cada parceiro.
+1. **Monitoramento e Validação Visual**:
+   - Acompanhar a conclusão da execução da esteira do GitHub Actions para garantir o deploy FTP de todas as calculadoras sem falhas no cPanel.
+   - Acessar no navegador cada URL final (ex: `dominio.com/calculadora/`, `dominio.com/calculadora/d_cred/`, `dominio.com/calculadora/credpara/`, `dominio.com/calculadora/melhor_credi/`) para validar o carregamento perfeito dos favicons reativos e logotipos premium.
+2. **Validação das Opções Administrativas**:
+   - Testar no login de "Dono" as restrições de visualização de Fatores e Custos e o switch do lucro líquido dele para confirmar a plena operação do SaaS.
