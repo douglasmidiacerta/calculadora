@@ -104,6 +104,37 @@ const compressLogoImage = (file: File): Promise<string> => {
   });
 };
 
+// Helper to dynamically mix colors to generate matching color palettes (whites for pastels, blacks for dark variants)
+const mixColor = (hex: string, mixHex: string, weight: number): string => {
+  try {
+    let c1 = hex.replace(/^#/, '');
+    let c2 = mixHex.replace(/^#/, '');
+    
+    if (c1.length === 3) c1 = c1[0] + c1[0] + c1[1] + c1[1] + c1[2] + c1[2];
+    if (c2.length === 3) c2 = c2[0] + c2[0] + c2[1] + c2[1] + c2[2] + c2[2];
+    
+    const r1 = parseInt(c1.substring(0, 2), 16);
+    const g1 = parseInt(c1.substring(2, 4), 16);
+    const b1 = parseInt(c1.substring(4, 6), 16);
+    
+    const r2 = parseInt(c2.substring(0, 2), 16);
+    const g2 = parseInt(c2.substring(2, 4), 16);
+    const b2 = parseInt(c2.substring(4, 6), 16);
+    
+    const r = Math.round(r1 * (1 - weight) + r2 * weight);
+    const g = Math.round(g1 * (1 - weight) + g2 * weight);
+    const b = Math.round(b1 * (1 - weight) + b2 * weight);
+    
+    const rs = r.toString(16).padStart(2, '0');
+    const gs = g.toString(16).padStart(2, '0');
+    const bs = b.toString(16).padStart(2, '0');
+    
+    return `#${rs}${gs}${bs}`;
+  } catch (e) {
+    return hex;
+  }
+};
+
 // --- STORAGE PREFIX FOR SAAS MULTI-TENANCY ISOLATION ---
 const STORAGE_PREFIX = "rose_";
 
@@ -230,6 +261,64 @@ export default function App() {
   const [nivelTabela, setNivelTabela] = useState("5");
   const [bandeira, setBandeira] = useState("Master/Visa");
   const exportRef = useRef<HTMLDivElement>(null);
+
+  // --- DYNAMIC INJECTED CSS FOR REAL-TIME AESTHETIC THEMING ---
+  const dynamicStyles = useMemo(() => {
+    return (
+      <style>{`
+        /* Sobrescritas de Cores baseadas na Cor Primária: ${primaryColor} */
+        
+        /* 1. Cores de Fundo (Backgrounds) */
+        .bg-emerald-800, .bg-primary-dark { background-color: ${mixColor(primaryColor, '#000000', 0.25)} !important; }
+        .bg-emerald-700, .bg-primary-medium-dark { background-color: ${mixColor(primaryColor, '#000000', 0.12)} !important; }
+        .bg-emerald-600, .bg-primary { background-color: ${primaryColor} !important; }
+        .hover\\:bg-emerald-700:hover, .hover\\:bg-primary-dark:hover { background-color: ${mixColor(primaryColor, '#000000', 0.15)} !important; }
+        .disabled\\:bg-emerald-400:disabled, .disabled\\:bg-primary-disabled:disabled { background-color: ${mixColor(primaryColor, '#ffffff', 0.5)} !important; }
+        .bg-emerald-950 { background-color: ${mixColor(primaryColor, '#000000', 0.5)} !important; }
+        
+        /* 2. Cores de Texto (Texts) */
+        .text-emerald-300, .text-primary-accent { color: ${mixColor(primaryColor, '#ffffff', 0.6)} !important; }
+        .text-emerald-100\\/60, .text-primary-sub { color: ${mixColor(primaryColor, '#ffffff', 0.75)} !important; }
+        .text-emerald-100\\/80 { color: ${mixColor(primaryColor, '#ffffff', 0.85)} !important; }
+        .text-emerald-400 { color: ${mixColor(primaryColor, '#ffffff', 0.45)} !important; }
+        .text-emerald-700, .text-primary-text-dark { color: ${mixColor(primaryColor, '#000000', 0.25)} !important; }
+        .text-emerald-600, .text-primary-text-medium { color: ${primaryColor} !important; }
+        .text-emerald-950 { color: ${mixColor(primaryColor, '#000000', 0.6)} !important; }
+        
+        /* 3. Focos, Bordas, Anéis e Sombras (Focus, Borders, Rings & Shadows) */
+        .focus\\:ring-emerald-500\\/10:focus, .focus\\:ring-primary\\/10:focus { box-shadow: 0 0 0 4px ${primaryColor}1a !important; }
+        .focus\\:border-emerald-500:focus, .focus\\:border-primary:focus { border-color: ${primaryColor} !important; }
+        .shadow-emerald-200 { --tw-shadow-color: ${primaryColor}33 !important; }
+        .hover\\:border-emerald-300:hover { border-color: ${mixColor(primaryColor, '#ffffff', 0.5)} !important; }
+        .hover\\:text-emerald-700:hover { color: ${mixColor(primaryColor, '#000000', 0.25)} !important; }
+        .border-emerald-700\\/50 { border-color: ${mixColor(primaryColor, '#000000', 0.2)}80 !important; }
+        .bg-emerald-900\\/40 { background-color: ${mixColor(primaryColor, '#000000', 0.45)}66 !important; }
+        .placeholder-emerald-300::placeholder { color: ${mixColor(primaryColor, '#ffffff', 0.5)} !important; }
+        .focus\\:border-emerald-400:focus { border-color: ${primaryColor} !important; }
+        .bg-emerald-700\\/50 { background-color: ${mixColor(primaryColor, '#ffffff', 0.2)}33 !important; }
+        .hover\\:bg-emerald-600\\/50:hover { background-color: ${mixColor(primaryColor, '#ffffff', 0.1)}4d !important; }
+        .focus\\:ring-emerald-400:focus { box-shadow: 0 0 0 2px ${primaryColor}80 !important; }
+        .text-emerald-200 { color: ${mixColor(primaryColor, '#ffffff', 0.7)} !important; }
+        
+        /* 4. Tabelas & Intercalações (Zebra Striping) */
+        .bg-emerald-50\\/30 { background-color: ${mixColor(primaryColor, '#ffffff', 0.94)}99 !important; }
+        .hover\\:bg-emerald-50\\/80:hover { background-color: ${mixColor(primaryColor, '#ffffff', 0.88)}cc !important; }
+        
+        .group:hover .group-hover\\:bg-emerald-100 { background-color: ${mixColor(primaryColor, '#ffffff', 0.85)} !important; }
+        .group:hover .group-hover\\:text-emerald-700 { color: ${mixColor(primaryColor, '#000000', 0.3)} !important; }
+        
+        .bg-emerald-500 { background-color: ${primaryColor} !important; }
+        
+        /* 5. Scrollbar Customização */
+        ::-webkit-scrollbar-thumb {
+          background-color: ${primaryColor} !important;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background-color: ${mixColor(primaryColor, '#000000', 0.15)} !important;
+        }
+      `}</style>
+    );
+  }, [primaryColor]);
 
   // --- CARREGAR CONFIGURAÇÕES DO SERVIDOR ---
   useEffect(() => {
@@ -673,6 +762,7 @@ export default function App() {
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-sans">
+        {dynamicStyles}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -767,6 +857,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center p-4 md:p-8 font-sans text-slate-800">
+      {dynamicStyles}
       <header className="max-w-4xl w-full mb-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 justify-center sm:justify-start flex-wrap">
@@ -1060,7 +1151,7 @@ export default function App() {
           style={{ 
             width: '480px', 
             height: 'max-content',
-            backgroundColor: '#f0f9f1', 
+            backgroundColor: mixColor(primaryColor, '#ffffff', 0.95), 
             padding: '24px 16px',
             fontFamily: 'Inter, system-ui, sans-serif',
             display: 'flex',
@@ -1070,7 +1161,7 @@ export default function App() {
         >
           {/* Header Summary */}
           <div style={{ 
-            backgroundColor: '#065f46', 
+            backgroundColor: mixColor(primaryColor, '#000000', 0.25), 
             borderRadius: '14px',
             padding: '12px 20px',
             color: 'white',
@@ -1095,7 +1186,7 @@ export default function App() {
               <div style={{ fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.12em', opacity: 0.9, marginBottom: '2px' }}>
                 {modoCalculo === 'valor' ? 'VALOR A RECEBER' : 'VALOR TOTAL A PASSAR'}
               </div>
-              <div style={{ fontSize: '28px', fontWeight: '900', color: '#6ee7b7' }}>
+              <div style={{ fontSize: '28px', fontWeight: '900', color: mixColor(primaryColor, '#ffffff', 0.85) }}>
                 {formatCurrency(parseFloat(valorDesejado))}
               </div>
             </div>
@@ -1105,7 +1196,7 @@ export default function App() {
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <table style={{ borderCollapse: 'separate', borderSpacing: '0 3px', width: '100%', tableLayout: 'fixed' }}>
               <thead>
-                <tr style={{ color: '#065f46', fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                <tr style={{ color: mixColor(primaryColor, '#000000', 0.25), fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                   <th style={{ padding: '4px 6px', textAlign: 'left', width: '15%' }}>Parc.</th>
                   <th style={{ padding: '4px 2px', textAlign: 'center', width: '32%' }}>Parcela (R$)</th>
                   <th style={{ padding: '4px 2px', textAlign: 'right', width: '30%' }}>{modoCalculo === 'valor' ? 'Total a Passar' : 'Total a Receber'}</th>
@@ -1114,7 +1205,7 @@ export default function App() {
               </thead>
               <tbody>
                 {simulacao.map((row, index) => {
-                  const rowBgColor = index % 2 === 0 ? '#ffffff' : '#eaf7ed';
+                  const rowBgColor = index % 2 === 0 ? '#ffffff' : mixColor(primaryColor, '#ffffff', 0.92);
                   return (
                     <tr key={row.parcelas}>
                       <td style={{ 
@@ -1122,7 +1213,7 @@ export default function App() {
                         textAlign: 'left', 
                         backgroundColor: rowBgColor, 
                         borderRadius: '8px 0 0 8px',
-                        color: '#065f46',
+                        color: mixColor(primaryColor, '#000000', 0.25),
                         fontWeight: '800',
                         fontSize: '11px',
                         borderLeft: '1px solid #e2e8f0',
@@ -1135,7 +1226,7 @@ export default function App() {
                         padding: '6px 4px', 
                         textAlign: 'center', 
                         backgroundColor: rowBgColor, 
-                        color: '#065f46', 
+                        color: mixColor(primaryColor, '#000000', 0.25), 
                         fontWeight: '700', 
                         fontSize: '11px',
                         borderTop: '1px solid #f1f5f9',
@@ -1160,7 +1251,7 @@ export default function App() {
                           padding: '6px 8px', 
                           textAlign: 'right', 
                           backgroundColor: rowBgColor, 
-                          color: '#047857', 
+                          color: primaryColor, 
                           fontWeight: '800', 
                           fontSize: '10px', 
                           borderRadius: '0 8px 8px 0',
@@ -1179,7 +1270,7 @@ export default function App() {
             </table>
           </div>
 
-          <div style={{ marginTop: '16px', paddingTop: '12px', textAlign: 'center', color: '#065f4688', fontSize: '11px', fontWeight: '600', borderTop: '2px solid #065f4611' }}>
+          <div style={{ marginTop: '16px', paddingTop: '12px', textAlign: 'center', color: mixColor(primaryColor, '#000000', 0.45) + '88', fontSize: '11px', fontWeight: '600', borderTop: '2px solid ' + mixColor(primaryColor, '#000000', 0.1) + '1a' }}>
             Gerado em {new Date().toLocaleDateString('pt-BR')} • Esse orçamento é válido para 7 dias
           </div>
         </div>
