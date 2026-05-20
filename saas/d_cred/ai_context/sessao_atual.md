@@ -1,13 +1,12 @@
-### Sessão Atual - Concluída (v1.2.6)
+### Sessão Atual - Concluída (v1.2.7)
 
-- **Compartilhamento WhatsApp**: Implementado botão de compartilhamento dinâmico e rico da simulação no WhatsApp, gerando texto estruturado (1x a 21x) e fallback de download de PNG com acionamento transparente da API.
-- **Resolução de Marca Dinâmica**: Marca extraída via `document.title` direto no React, garantindo imunidade a bugs em todas as instâncias multi-tenant.
-- **Replicação SaaS Automática**: Alterações replicadas e testadas com sucesso para todos os 9 parceiros configurados.
-- **Build de Produção**: Compilado com 100% de sucesso na raiz (`dist/`).
-- **Empacotamento Inteligente**: Apagados arquivos ZIP volumosos e gerado o pacote final `antigravity-v1.2.6.zip` de forma ultra enxuta (17MB, sem `node_modules` redundantes) com comandos `tar` de alto desempenho.
-- **Deploy Git**: Alterações integradas e sincronizadas via `git add`, `git commit` e `git push origin main` de sucesso, disparando a esteira CI/CD para deploy nos subdiretórios cPanel.
+- **Ajuste na Mensagem do WhatsApp**: Removida a frase final explicativa `"📱 A imagem detalhada da simulação foi baixada. Por favor, anexe-a..."` em `src/App.tsx` para deixar a proposta de compartilhamento mais comercial, limpa e profissional.
+- **Replicação SaaS v1.2.7**: Modificações sincronizadas em lote e com sucesso para as subpastas físicas de todos os 9 parceiros configurados.
+- **Build de Produção**: Bundle compilado de forma limpa na pasta `/dist`.
+- **Empacotamento Inteligente**: Gerado arquivo de distribuição leve `antigravity-v1.2.7.zip` (17MB) via comando `tar`, blindado contra inclusões de `node_modules`.
+- **Versionamento & Deploy**: Commit e push realizados na branch `main` no GitHub, acionando a esteira CI/CD FTP para publicação no cPanel em lote.
 
 ### Próximos Passos
 
-1. **Acompanhar Esteira de CI/CD**: Monitorar o deploy automatizado via GitHub Actions FTP para todas as pastas de parceiros SaaS.
-2. **Homologação e Testes**: Realizar simulações completas nos dispositivos físicos de homologação para certificar que o download do arquivo de imagem e a abertura da janela do WhatsApp com a mensagem formatada ocorrem sem atritos.
+1. **Acompanhar Deploy Contínuo**: Monitorar a esteira do GitHub Actions FTP para propagação em produção.
+2. **Homologação**: Testar a simulação no WhatsApp para validar que o texto comercial termina de forma limpa exatamente na validade de 7 dias.

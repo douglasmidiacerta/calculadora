@@ -1,5 +1,18 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
+## [1.2.8] - 2026-05-20
+
+### Adicionado
+- **Atualização de Taxas de Custo dos Parceiros SaaS**:
+  - Implementação e mapeamento completo das tabelas de custos adquirentes padrão de fábrica enviadas pelo usuário para todas as 8 instâncias SaaS de parceiros: Cred Fácil, CredPara, Cred Simples, D Cred, Melhor Crédito, Roma, Rose e Ramos.
+  - Correção na parcela 13 do Master/Visa na tabela de custos da Cred Simples, ajustando de `16.50%` para `16.10%` conforme a especificação comercial do usuário.
+  - As taxas de custo cobradas pela adquirente da calculadora base ("Empresta BH") e parceiros não descritos (como ForcePay, RT Group) permanecem isoladas e intactas.
+
+### Modificado
+- **Injeção de Código Automatizada no Script de Replicação**:
+  - Aprimoramento do script PowerShell `scripts/copy_to_partners.ps1` com lógica de injeção dinâmica de constantes no loop multi-tenant.
+  - O script agora localiza dinamicamente o bloco `const DEFAULT_TAXAS_CUSTO` no core mestre e o substitui de forma resiliente usando expressões regulares com correspondência multilinha, garantindo 100% de consistência sem requerer edits manuais pós-replicação.
+
 ## [1.2.7] - 2026-05-20
 
 ### Alterado

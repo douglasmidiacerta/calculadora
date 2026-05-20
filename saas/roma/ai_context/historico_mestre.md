@@ -336,3 +336,15 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Abertura e Conexão**: Conexão com a URL de API oficial do WhatsApp (`https://api.whatsapp.com/send?text=...`) contendo o texto da simulação codificado e download automático reativo da imagem em formato PNG no fallback para computadores ou celulares sem suporte nativo a compartilhamento de arquivos.
   - **Identidade Visual Reativa**: Extração automática do nome da marca ativa baseado no `document.title` da aba do navegador, tornando a mensagem de compartilhamento inteligente e compatível com todos os ambientes SaaS sem necessitar de substituição de strings adicionais no PowerShell.
 - **Status Final**: Versão 1.2.6 codificada, replicada em lote para as 9 instâncias multi-tenant de parceiros, compilada localmente com 100% de sucesso na pasta `/dist`, empacotada de forma enxuta em `antigravity-v1.2.6.zip` (17MB, excluindo `node_modules` desnecessários) e integrada com sucesso ao repositório Git com push enviado na branch `main` para ativação automática do deploy cPanel via GitHub Actions.
+
+---
+
+## [2026-05-20] - Remoção do Texto de Instrução de Anexo no WhatsApp (v1.2.7)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.2.7`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Remoção de Instrução**: Exclusão do aviso explicativo de celular `"📱 A imagem detalhada da simulação foi baixada. Por favor, anexe-a para enviar ao cliente!"` na mensagem final gerada para o WhatsApp em `src/App.tsx`.
+  - **Mensagem Limpa**: O encerramento da proposta de simulação de vendas comercial agora finaliza diretamente e de forma limpa na informação de validade da simulação de 7 dias, otimizando o aspecto estético do texto copiado para o cliente final.
+  - **SaaS Replicação & Re-build**: Modificações propagadas com sucesso para todas as instâncias de parceiros SaaS físicas.
+- **Status Final**: Versão 1.2.7 testada, compilada em lote e distribuída de forma enxuta via `antigravity-v1.2.7.zip` (17MB). Alterações commitadas e enviadas ao GitHub remoto na branch `main`, ativando o deploy FTP instantâneo nos parceiros do cPanel.

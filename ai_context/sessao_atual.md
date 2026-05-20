@@ -1,12 +1,12 @@
-### Sessão Atual - Concluída (v1.2.7)
+### Sessão Atual - Concluída (v1.2.8)
 
-- **Ajuste na Mensagem do WhatsApp**: Removida a frase final explicativa `"📱 A imagem detalhada da simulação foi baixada. Por favor, anexe-a..."` em `src/App.tsx` para deixar a proposta de compartilhamento mais comercial, limpa e profissional.
-- **Replicação SaaS v1.2.7**: Modificações sincronizadas em lote e com sucesso para as subpastas físicas de todos os 9 parceiros configurados.
-- **Build de Produção**: Bundle compilado de forma limpa na pasta `/dist`.
-- **Empacotamento Inteligente**: Gerado arquivo de distribuição leve `antigravity-v1.2.7.zip` (17MB) via comando `tar`, blindado contra inclusões de `node_modules`.
-- **Versionamento & Deploy**: Commit e push realizados na branch `main` no GitHub, acionando a esteira CI/CD FTP para publicação no cPanel em lote.
+- **Atualização de Taxas de Custo dos Parceiros SaaS**: Mapeamento completo e injeção automática de taxas padrão de fábrica (Master/Visa e Elo de 1x a 21x) para as calculadoras multi-tenant dos parceiros: Cred Fácil, CredPara, Cred Simples, D Cred, Melhor Crédito, Roma, Rose e Ramos.
+- **Correção da Cred Simples**: Parcela 13 corrigida para `16.10%` no Master/Visa em conformidade com as regras de negócio enviadas.
+- **Injeção de Código Automatizada**: Aprimorado o script `scripts/copy_to_partners.ps1` com expressão regular multilinha para substituir `DEFAULT_TAXAS_CUSTO` em tempo de replicação.
+- **Build de Produção**: Projeto compilado localmente com 100% de sucesso.
+- **Empacotamento (ZIP)**: Removido zip anterior e gerado `antigravity-v1.2.8.zip` (17.8MB) contendo o changelog e fontes.
 
 ### Próximos Passos
 
-1. **Acompanhar Deploy Contínuo**: Monitorar a esteira do GitHub Actions FTP para propagação em produção.
-2. **Homologação**: Testar a simulação no WhatsApp para validar que o texto comercial termina de forma limpa exatamente na validade de 7 dias.
+1. **Homologar no Servidor cPanel**: Acompanhar o deploy do GitHub Actions nas subpastas e testar se cada parceiro está iniciando com suas respectivas taxas padrão no Painel Administrativo ("Restaurar Padrões").
+2. **Apoiar Novos Parceiros**: Dar suporte caso o cliente solicite a inclusão de novas tabelas personalizadas para outros tenants.

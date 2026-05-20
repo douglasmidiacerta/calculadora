@@ -1,0 +1,164 @@
+name: Deploy Simulador no cPanel
+
+on:
+  push:
+    branches:
+      - main
+      - git-cpanel-integration-setup
+
+jobs:
+  web-deploy:
+    name: Build & Deploy via FTP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      # ---------------- CALCULADORA PRINCIPAL (BASE) ----------------
+      - name: Compilar Projeto Base
+        run: npm run build
+
+      - name: Deploy Projeto Base via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ./
+          state-name: .ftp-deploy-sync-state.json
+
+      # ---------------- PARCEIRO D CRED ----------------
+      - name: Compilar Parceiro D Cred
+        run: npm run build --prefix saas/d_cred
+
+      - name: Deploy D Cred via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/d_cred/dist/
+          server-dir: ./d_cred/
+          state-name: .ftp-deploy-sync-state-dcred.json
+
+      # ---------------- PARCEIRO CREDPARA ----------------
+      - name: Compilar Parceiro CredPara
+        run: npm run build --prefix saas/credpara
+
+      - name: Deploy CredPara via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/credpara/dist/
+          server-dir: ./credpara/
+          state-name: .ftp-deploy-sync-state-credpara.json
+
+      # ---------------- PARCEIRO MELHOR CREDITO ----------------
+      - name: Compilar Parceiro Melhor Credito
+        run: npm run build --prefix saas/melhorcredito
+
+      - name: Deploy Melhor Credito via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/melhorcredito/dist/
+          server-dir: ./melhorcredito/
+          state-name: .ftp-deploy-sync-state-melhorcredito.json
+
+      # ---------------- PARCEIRO CRED SIMPLES ----------------
+      - name: Compilar Parceiro Cred Simples
+        run: npm run build --prefix saas/credsimples
+
+      - name: Deploy Cred Simples via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/credsimples/dist/
+          server-dir: ./credsimples/
+          state-name: .ftp-deploy-sync-state-credsimples.json
+
+      # ---------------- PARCEIRO FORCEPAY ----------------
+      - name: Compilar Parceiro ForcePay
+        run: npm run build --prefix saas/forcepay
+
+      - name: Deploy ForcePay via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/forcepay/dist/
+          server-dir: ./forcepay/
+          state-name: .ftp-deploy-sync-state-forcepay.json
+
+      # ---------------- PARCEIRO ROMA ----------------
+      - name: Compilar Parceiro Roma
+        run: npm run build --prefix saas/roma
+
+      - name: Deploy Roma via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/roma/dist/
+          server-dir: ./roma/
+          state-name: .ftp-deploy-sync-state-roma.json
+
+      # ---------------- PARCEIRO CRED FACIL ----------------
+      - name: Compilar Parceiro Cred Facil
+        run: npm run build --prefix saas/credfacil
+
+      - name: Deploy Cred Facil via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/credfacil/dist/
+          server-dir: ./credfacil/
+          state-name: .ftp-deploy-sync-state-credfacil.json
+
+      # ---------------- PARCEIRO ROSE ----------------
+      - name: Compilar Parceiro Rose
+        run: npm run build --prefix saas/rose
+
+      - name: Deploy Rose via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/rose/dist/
+          server-dir: ./rose/
+          state-name: .ftp-deploy-sync-state-rose.json
+
+      # ---------------- PARCEIRO RT GROUP ----------------
+      - name: Compilar Parceiro RT Group
+        run: npm run build --prefix saas/rtgroup
+
+      - name: Deploy RT Group via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/rtgroup/dist/
+          server-dir: ./rtgroup/
+          state-name: .ftp-deploy-sync-state-rtgroup.json
