@@ -287,10 +287,14 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Remoção de Textos Administrativos do Cabeçalho**:
     - Remoção dos textos "Simulador de Vendas" e "Cálculo de taxas e lucro líquido em tempo real" do `<header>` principal na raiz e em todos os parceiros SaaS.
     - O design do simulador agora apresenta um visual muito mais limpo e focado no logotipo do parceiro, utilizando fallback elegante em formato de texto para manter a responsividade e consistência.
+  - **Integração de Logos Oficiais da Cred Certo**:
+    - O usuário forneceu os arquivos de logotipo e favicon oficiais da Cred Certo em formato WebP na raiz do projeto.
+    - Implementado um script temporário em PowerShell usando a biblioteca nativa `System.Drawing` e WIC para efetuar a decodificação do formato `.webp` e salvá-los como imagens `.png` de alta qualidade.
+    - Atualizados os caminhos oficiais em `saas_assets/cred_certo/` e injetados de forma dinâmica na pasta pública principal (`public/`) e nos bundles estáticos dos parceiros.
   - **Compilação Estática e Distribuição**:
     - Executados builds de produção locais em lote para todas as calculadoras (raiz, `saas/d_cred`, `saas/credpara` e `saas/melhor_credi`), validando bundles estáticos limpos e otimizados para deploy.
     - Remoção dos pacotes antigos e geração de novos pacotes de distribuição na raiz: `antigravity-v1.2.3.zip` (fontes) e `simulador-dist-v1.2.3.zip` (distribuição limpa com subpastas prontas para extração direta no cPanel).
   - **Sincronização de Repositório e CI/CD**:
     - Executada a replicação total para os parceiros SaaS, atualizando todas as dependências locais e metadados na versão `1.2.3`.
     - Commits no Git e envio (push) das alterações para a branch `main` no repositório remoto, acionando a esteira do GitHub Actions para deploy automatizado de todas as instâncias em lote no cPanel.
-- **Status Final**: Versão 1.2.3 totalmente compilada, empacotada localmente e commitada com push no GitHub para deploy automatizado na calculadora raiz e nas três subpastas físicas de parceiros no cPanel.
+- **Status Final**: Versão 1.2.3 totalmente compilada, empacotada localmente com os novos ativos oficiais de marca integrados e commitada com push no GitHub para deploy automatizado na calculadora raiz e nas três subpastas físicas de parceiros no cPanel.
