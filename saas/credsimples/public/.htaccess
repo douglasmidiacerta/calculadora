@@ -1,0 +1,12 @@
+# Desativa a listagem de arquivos das pastas para maior segurança
+Options -Indexes
+
+# Configuração amigável de roteamento Apache
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  
+  # Força a barra no final se o request for para um diretório real e não terminar com barra "/"
+  # Exemplo: /calculadora -> /calculadora/
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^(.*[^/])$ %{REQUEST_URI}/ [L,R=301]
+</IfModule>

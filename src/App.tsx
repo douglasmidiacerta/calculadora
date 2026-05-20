@@ -138,6 +138,15 @@ export default function App() {
   const [formShowLucroDono, setFormShowLucroDono] = useState<boolean>(true);
   const [formTipoTaxaExibida, setFormTipoTaxaExibida] = useState<"cliente" | "custo">("cliente");
 
+  // --- IDENTITY & CUSTOMIZATION ---
+  const [logoUrl, setLogoUrl] = useState<string>(() => loadLocalStorage('simulador_logo_url', ''));
+  const [primaryColor, setPrimaryColor] = useState<string>(() => loadLocalStorage('simulador_primary_color', '#059669'));
+  const [formLogoUrl, setFormLogoUrl] = useState<string>('');
+  const [formPrimaryColor, setFormPrimaryColor] = useState<string>('#059669');
+
+  // --- EXPORT SETTINGS ---
+  const [exportShowTaxa, setExportShowTaxa] = useState<boolean>(true);
+
   // --- CALCULATOR STATES ---
   const [valorDesejado, setValorDesejado] = useState("1000.00");
   const [modoCalculo, setModoCalculo] = useState<"valor" | "limite">("valor");
@@ -192,6 +201,14 @@ export default function App() {
             if (data.tipo_taxa_exibida !== undefined) {
               setTipoTaxaExibida(data.tipo_taxa_exibida);
               localStorage.setItem('simulador_tipo_taxa_exibida', JSON.stringify(data.tipo_taxa_exibida));
+            }
+            if (data.logo_url !== undefined) {
+              setLogoUrl(data.logo_url);
+              localStorage.setItem('simulador_logo_url', JSON.stringify(data.logo_url));
+            }
+            if (data.primary_color !== undefined) {
+              setPrimaryColor(data.primary_color);
+              localStorage.setItem('simulador_primary_color', JSON.stringify(data.primary_color));
             }
           }
         })
@@ -300,6 +317,8 @@ export default function App() {
     setFormShowLucroVendedor(showLucroVendedor);
     setFormShowLucroDono(showLucroDono);
     setFormTipoTaxaExibida(tipoTaxaExibida);
+    setFormLogoUrl(logoUrl);
+    setFormPrimaryColor(primaryColor);
     setAdminTab('geral');
     setShowAdminPanelModal(true);
   };
@@ -315,7 +334,9 @@ export default function App() {
       taxas_custo: formTaxasCusto,
       show_lucro_vendedor: formShowLucroVendedor,
       show_lucro_dono: formShowLucroDono,
-      tipo_taxa_exibida: formTipoTaxaExibida
+      tipo_taxa_exibida: formTipoTaxaExibida,
+      logo_url: formLogoUrl,
+      primary_color: formPrimaryColor
     };
 
     localStorage.setItem('simulador_fatores_normal', JSON.stringify(formFatoresBaseNormal));
@@ -328,6 +349,8 @@ export default function App() {
     localStorage.setItem('simulador_show_lucro_vendedor', JSON.stringify(formShowLucroVendedor));
     localStorage.setItem('simulador_show_lucro_dono', JSON.stringify(formShowLucroDono));
     localStorage.setItem('simulador_tipo_taxa_exibida', JSON.stringify(formTipoTaxaExibida));
+    localStorage.setItem('simulador_logo_url', JSON.stringify(formLogoUrl));
+    localStorage.setItem('simulador_primary_color', JSON.stringify(formPrimaryColor));
 
     setFatoresBaseNormalState(formFatoresBaseNormal);
     setFatoresBasePromoState(formFatoresBasePromo);
@@ -339,6 +362,8 @@ export default function App() {
     setShowLucroVendedor(formShowLucroVendedor);
     setShowLucroDono(formShowLucroDono);
     setTipoTaxaExibida(formTipoTaxaExibida);
+    setLogoUrl(formLogoUrl);
+    setPrimaryColor(formPrimaryColor);
 
     // Envia ao servidor
     fetch('api/config/', {
@@ -369,6 +394,8 @@ export default function App() {
       localStorage.removeItem('simulador_show_lucro_vendedor');
       localStorage.removeItem('simulador_show_lucro_dono');
       localStorage.removeItem('simulador_tipo_taxa_exibida');
+      localStorage.removeItem('simulador_logo_url');
+      localStorage.removeItem('simulador_primary_color');
 
       setFatoresBaseNormalState(DEFAULT_FATORES_BASE_NORMAL);
       setFatoresBasePromoState(DEFAULT_FATORES_BASE_PROMO);
@@ -380,6 +407,8 @@ export default function App() {
       setShowLucroVendedor(true);
       setShowLucroDono(true);
       setTipoTaxaExibida('cliente');
+      setLogoUrl('');
+      setPrimaryColor('#059669');
 
       // Restaura no servidor também
       const defaultsPayload = {
@@ -392,7 +421,9 @@ export default function App() {
         taxas_custo: DEFAULT_TAXAS_CUSTO,
         show_lucro_vendedor: true,
         show_lucro_dono: true,
-        tipo_taxa_exibida: 'cliente'
+        tipo_taxa_exibida: 'cliente',
+        logo_url: '',
+        primary_color: '#059669'
       };
 
       fetch('api/config/', {
@@ -476,7 +507,7 @@ export default function App() {
           <div className="bg-emerald-800 p-8 text-center text-white flex flex-col items-center justify-center">
             {!logoErro ? (
               <img 
-                src="logo.png" 
+                src={logoUrl || "logo.png"}
                 onError={() => setLogoErro(true)} 
                 className="h-14 w-auto object-contain mb-4 max-w-[240px]" 
                 alt="Logo" 
@@ -567,7 +598,7 @@ export default function App() {
           <div className="flex items-center gap-3 justify-center sm:justify-start flex-wrap">
             {!logoHeaderErro ? (
               <img 
-                src="logo.png" 
+                src={logoUrl || "logo.png"}
                 onError={() => setLogoHeaderErro(true)} 
                 className="h-10 w-auto object-contain max-w-[180px]" 
                 alt="Logo" 
@@ -583,9 +614,22 @@ export default function App() {
         
         <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3">
           
+          <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
+            <label className="text-xs font-bold text-slate-600 cursor-pointer flex items-center gap-2">
+              <input 
+                type="checkbox"
+                checked={exportShowTaxa}
+                onChange={(e) => setExportShowTaxa(e.target.checked)}
+                className="w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500"
+              />
+              Mostrar % na imagem
+            </label>
+          </div>
+
           <button 
             onClick={handleExport}
-            className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-lg shadow-emerald-200 transition-all active:scale-95 group text-sm"
+            style={{ backgroundColor: primaryColor }}
+            className="flex items-center gap-2 px-5 py-2.5 hover:brightness-110 text-white rounded-2xl font-bold shadow-lg transition-all active:scale-95 group text-sm"
           >
             <Share2 size={18} className="group-hover:rotate-12 transition-transform" />
             Gerar Imagem
@@ -628,7 +672,7 @@ export default function App() {
 
       <main className="max-w-4xl w-full bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
         {/* Input Configuration Section */}
-        <div className="bg-emerald-800 p-6 md:p-8 text-white">
+        <div className="p-6 md:p-8 text-white" style={{ backgroundColor: primaryColor }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             
             {/* Value Column */}
@@ -736,7 +780,7 @@ export default function App() {
                 <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">Valor da Parcela</th>
                 <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">{modoCalculo === 'valor' ? 'Total a Passar' : 'Total a Receber'}</th>
                 <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">
-                  {tipoTaxaExibida === 'cliente' ? 'Taxa Cliente (% ao mês)' : 'Taxa Máquina (Custo)'}
+                  {tipoTaxaExibida === 'cliente' ? '% a.m.' : 'Taxa Máquina (Custo)'}
                 </th>
                 {showLucroEfetivo && <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest text-right">Lucro Líquido</th>}
               </tr>
@@ -853,9 +897,12 @@ export default function App() {
               <div style={{ fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.12em', opacity: 0.9, marginBottom: '2px' }}>
                 SIMULAÇÃO: {bandeira.toUpperCase()}
               </div>
-              <div style={{ fontSize: '24px', fontWeight: '800' }}>
-                Empresta BH
-              </div>
+              <img 
+                src={logoUrl || "logo.png"} 
+                className="h-8 w-auto object-contain" 
+                alt="Logo" 
+                style={{ filter: "brightness(0) invert(1)" }}
+              />
             </div>
             <div style={{ textAlign: 'right' }}>
               <div style={{ fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.12em', opacity: 0.9, marginBottom: '2px' }}>
@@ -875,7 +922,7 @@ export default function App() {
                   <th style={{ padding: '4px 6px', textAlign: 'left', width: '15%' }}>Parc.</th>
                   <th style={{ padding: '4px 2px', textAlign: 'center', width: '32%' }}>Parcela (R$)</th>
                   <th style={{ padding: '4px 2px', textAlign: 'right', width: '30%' }}>{modoCalculo === 'valor' ? 'Total a Passar' : 'Total a Receber'}</th>
-                  <th style={{ padding: '4px 6px', textAlign: 'right', width: '23%' }}>Taxa (% ao mês)</th>
+                  {exportShowTaxa && <th style={{ padding: '4px 6px', textAlign: 'right', width: '23%' }}>% a.m.</th>}
                 </tr>
               </thead>
               <tbody>
@@ -921,21 +968,23 @@ export default function App() {
                       }}>
                         {(modoCalculo === 'valor' ? row.totalAPassar : row.valorLiquido).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
-                      <td style={{ 
-                        padding: '6px 8px', 
-                        textAlign: 'right', 
-                        backgroundColor: rowBgColor, 
-                        color: '#047857', 
-                        fontWeight: '800', 
-                        fontSize: '10px', 
-                        borderRadius: '0 8px 8px 0',
-                        whiteSpace: 'nowrap',
-                        borderRight: '1px solid #e2e8f0',
-                        borderTop: '1px solid #f1f5f9',
-                        borderBottom: '1px solid #f1f5f9'
-                      }}>
-                        {row.taxaDinamica}
-                      </td>
+                      {exportShowTaxa && (
+                        <td style={{ 
+                          padding: '6px 8px', 
+                          textAlign: 'right', 
+                          backgroundColor: rowBgColor, 
+                          color: '#047857', 
+                          fontWeight: '800', 
+                          fontSize: '10px', 
+                          borderRadius: '0 8px 8px 0',
+                          whiteSpace: 'nowrap',
+                          borderRight: '1px solid #e2e8f0',
+                          borderTop: '1px solid #f1f5f9',
+                          borderBottom: '1px solid #f1f5f9'
+                        }}>
+                          {row.taxaDinamica}
+                        </td>
+                      )}
                     </tr>
                   );
                 })}
@@ -1120,6 +1169,17 @@ export default function App() {
                   <CreditCard size={14} />
                   Custo de Máquina (Elo/Master/Visa)
                 </button>
+                <button
+                  onClick={() => setAdminTab('identidade')}
+                  className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                    adminTab === 'identidade' 
+                      ? 'bg-amber-600 text-white shadow-md' 
+                      : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  <Eye size={14} />
+                  Identidade Visual
+                </button>
               </div>
 
               {/* Conteúdo das Abas (Scrollable) */}
@@ -1298,8 +1358,51 @@ export default function App() {
                   </div>
                 )}
 
+                {/* ABA 4: IDENTIDADE VISUAL */}
+                {adminTab === 'identidade' && (
+                  <div className="space-y-6">
+                    <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 text-indigo-800 text-xs font-medium flex items-start gap-2.5">
+                      <Info size={16} className="shrink-0 mt-0.5" />
+                      <div>
+                        <strong>Personalização de Marca:</strong> Defina o logo e a cor principal do simulador para a sua operação. Caso deixe o logo em branco, o padrão será utilizado.
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase">URL da Logomarca</label>
+                        <input 
+                          type="text"
+                          value={formLogoUrl}
+                          onChange={(e) => setFormLogoUrl(e.target.value)}
+                          placeholder="Ex: https://meusite.com/logo.png"
+                          className="w-full bg-white border border-slate-200 rounded-xl py-2.5 px-4 text-sm font-medium text-slate-700 outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Cor Principal (HEX)</label>
+                        <div className="flex gap-4">
+                          <input 
+                            type="color"
+                            value={formPrimaryColor}
+                            onChange={(e) => setFormPrimaryColor(e.target.value)}
+                            className="w-12 h-12 rounded-lg cursor-pointer border-0 outline-none"
+                          />
+                          <input 
+                            type="text"
+                            value={formPrimaryColor}
+                            onChange={(e) => setFormPrimaryColor(e.target.value)}
+                            placeholder="#059669"
+                            className="flex-1 bg-white border border-slate-200 rounded-xl py-2.5 px-4 text-sm font-medium text-slate-700 outline-none focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* ABA 2: FATORES BASE */}
-                {adminTab === 'fatores' && (
+                {adminTab === 'fatores' && userRole === 'admin' && (
                   <div className="space-y-6">
                     <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 text-amber-800 text-xs font-medium flex items-start gap-2.5">
                       <Info size={16} className="shrink-0 mt-0.5" />
@@ -1361,9 +1464,14 @@ export default function App() {
                     </div>
                   </div>
                 )}
+                {adminTab === 'fatores' && userRole === 'dono' && (
+                  <div className="p-10 text-center text-slate-500 font-bold">
+                    <p>O gerenciamento de Fatores Base é restrito ao Administrador Global da plataforma.</p>
+                  </div>
+                )}
 
                 {/* ABA 3: CUSTOS DE MAQUINA */}
-                {adminTab === 'custos' && (
+                {adminTab === 'custos' && userRole === 'admin' && (
                   <div className="space-y-6">
                     <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-emerald-800 text-xs font-medium flex items-start gap-2.5">
                       <Info size={16} className="shrink-0 mt-0.5" />
@@ -1433,7 +1541,50 @@ export default function App() {
                     </div>
                   </div>
                 )}
-
+                {adminTab === 'custos' && userRole === 'dono' && (
+                  <div className="space-y-6">
+                    <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-emerald-800 text-xs font-medium flex items-start gap-2.5">
+                      <Info size={16} className="shrink-0 mt-0.5" />
+                      <div>
+                        <strong>Taxas Fixas de Custo de Máquina:</strong> Estas são as taxas reais de custo atreladas a você. Apenas leitura.
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 pb-1.5 border-b border-slate-100">Bandeira Master/Visa (Custo %)</h4>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {Array.from({ length: 21 }, (_, index) => {
+                            const p = index + 1;
+                            const taxaVal = formTaxasCusto["Master/Visa"] ? formTaxasCusto["Master/Visa"][p] : 0;
+                            return (
+                              <div key={p} className="bg-slate-50 border border-slate-100 rounded-xl p-2 flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-500">{p}x</span>
+                                <span className="text-xs font-bold text-slate-700">{taxaVal}%</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 pb-1.5 border-b border-slate-100">Bandeira Elo (Custo %)</h4>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {Array.from({ length: 21 }, (_, index) => {
+                            const p = index + 1;
+                            const taxaVal = formTaxasCusto["Elo"] ? formTaxasCusto["Elo"][p] : 0;
+                            return (
+                              <div key={p} className="bg-slate-50 border border-slate-100 rounded-xl p-2 flex items-center justify-between">
+                                <span className="text-xs font-bold text-slate-500">{p}x</span>
+                                <span className="text-xs font-bold text-slate-700">{taxaVal}%</span>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Rodapé de Ações */}

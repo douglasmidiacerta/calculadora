@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home1/ljonline/public_html/calculadora
+    - /bin/rsync -av --delete dist/ $DEPLOYPATH

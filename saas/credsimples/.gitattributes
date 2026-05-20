@@ -1,0 +1,2 @@
+# Forcar que o arquivo .cpanel.yml sempre use quebras de linha LF (Linux) para compatibilidade com o cPanel
+.cpanel.yml text eol=lf

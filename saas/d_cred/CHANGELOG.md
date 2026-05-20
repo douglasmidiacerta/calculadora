@@ -2,6 +2,15 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.2.4] - 2026-05-20
+
+### Adicionado
+- **Atualização da Calculadora Base para Empresta BH**:
+  - A marca base da calculadora raiz foi atualizada de "Cred Certo" para "Empresta BH".
+  - Logos e favicons da Empresta BH, originalmente em WebP e convertidos para PNG, foram incorporados com sucesso na pasta `public` da base.
+  - O script de replicação `copy_to_partners.ps1` foi atualizado para utilizar "Empresta BH" como âncora de busca para as personalizações dos demais parceiros SaaS, garantindo o correto encapsulamento sem conflitos de marca.
+
+
 ## [1.2.3] - 2026-05-20
 
 ### Adicionado

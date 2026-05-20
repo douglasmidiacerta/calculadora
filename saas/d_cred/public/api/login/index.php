@@ -60,7 +60,7 @@ try {
     $stmt->execute(['admin']);
     if ($stmt->fetchColumn() == 0) {
         $stmtInsert = $pdo->prepare("INSERT INTO usuarios (usuario, senha, role) VALUES (?, ?, ?)");
-        $stmtInsert->execute(['admin', '123456', 'dono']);
+        $stmtInsert->execute(['admin', '123456', 'admin']);
     }
 
 } catch (PDOException $e) {
@@ -114,7 +114,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     if ($username === 'admin' && $password === '123456') {
-        echo json_encode(['success' => true, 'token' => 'mock-jwt-token-php-fallback', 'role' => 'dono']);
+        echo json_encode(['success' => true, 'token' => 'mock-jwt-token-php-fallback', 'role' => 'admin']);
         exit;
     }
 

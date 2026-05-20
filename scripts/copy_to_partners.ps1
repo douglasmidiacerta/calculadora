@@ -4,7 +4,13 @@
 $partners = @{
     "d_cred"       = "D Cred"
     "credpara"     = "CredPara"
-    "melhor_credi" = "Melhor Credi"
+    "melhorcredito"= "Melhor Crédito"
+    "credsimples"  = "Cred Simples"
+    "forcepay"     = "ForcePay"
+    "roma"         = "Roma"
+    "credfacil"    = "Cred Fácil"
+    "rose"         = "Rose"
+    "rtgroup"      = "RT Group"
 }
 
 # Itens e diretórios que não devem ser replicados do core base para as pastas de parceiros
