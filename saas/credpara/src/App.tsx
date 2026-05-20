@@ -102,6 +102,9 @@ export default function App() {
   const [showLucroVendedor, setShowLucroVendedor] = useState<boolean>(() => 
     loadLocalStorage('simulador_show_lucro_vendedor', true)
   );
+  const [showLucroDono, setShowLucroDono] = useState<boolean>(() => 
+    loadLocalStorage('simulador_show_lucro_dono', true)
+  );
   const [tipoTaxaExibida, setTipoTaxaExibida] = useState<"cliente" | "custo">(() => 
     loadLocalStorage('simulador_tipo_taxa_exibida', 'cliente')
   );
@@ -125,6 +128,7 @@ export default function App() {
   const [formAcrescimoGeralPromo, setFormAcrescimoGeralPromo] = useState<number>(0);
   const [formTaxasCusto, setFormTaxasCusto] = useState<Record<string, Record<number, number>>>({ "Master/Visa": {}, "Elo": {} });
   const [formShowLucroVendedor, setFormShowLucroVendedor] = useState<boolean>(true);
+  const [formShowLucroDono, setFormShowLucroDono] = useState<boolean>(true);
   const [formTipoTaxaExibida, setFormTipoTaxaExibida] = useState<"cliente" | "custo">("cliente");
 
   // --- CALCULATOR STATES ---
@@ -173,6 +177,10 @@ export default function App() {
             if (data.show_lucro_vendedor !== undefined) {
               setShowLucroVendedor(data.show_lucro_vendedor);
               localStorage.setItem('simulador_show_lucro_vendedor', JSON.stringify(data.show_lucro_vendedor));
+            }
+            if (data.show_lucro_dono !== undefined) {
+              setShowLucroDono(data.show_lucro_dono);
+              localStorage.setItem('simulador_show_lucro_dono', JSON.stringify(data.show_lucro_dono));
             }
             if (data.tipo_taxa_exibida !== undefined) {
               setTipoTaxaExibida(data.tipo_taxa_exibida);
@@ -283,6 +291,7 @@ export default function App() {
       "Elo": { ...taxasCustoState["Elo"] }
     });
     setFormShowLucroVendedor(showLucroVendedor);
+    setFormShowLucroDono(showLucroDono);
     setFormTipoTaxaExibida(tipoTaxaExibida);
     setAdminTab('geral');
     setShowAdminPanelModal(true);
@@ -298,6 +307,7 @@ export default function App() {
       acrescimo_geral_promo: formAcrescimoGeralPromo,
       taxas_custo: formTaxasCusto,
       show_lucro_vendedor: formShowLucroVendedor,
+      show_lucro_dono: formShowLucroDono,
       tipo_taxa_exibida: formTipoTaxaExibida
     };
 
@@ -309,6 +319,7 @@ export default function App() {
     localStorage.setItem('simulador_acrescimo_geral_promo', JSON.stringify(formAcrescimoGeralPromo));
     localStorage.setItem('simulador_taxas_custo', JSON.stringify(formTaxasCusto));
     localStorage.setItem('simulador_show_lucro_vendedor', JSON.stringify(formShowLucroVendedor));
+    localStorage.setItem('simulador_show_lucro_dono', JSON.stringify(formShowLucroDono));
     localStorage.setItem('simulador_tipo_taxa_exibida', JSON.stringify(formTipoTaxaExibida));
 
     setFatoresBaseNormalState(formFatoresBaseNormal);
@@ -319,6 +330,7 @@ export default function App() {
     setAcrescimoGeralPromo(formAcrescimoGeralPromo);
     setTaxasCustoState(formTaxasCusto);
     setShowLucroVendedor(formShowLucroVendedor);
+    setShowLucroDono(formShowLucroDono);
     setTipoTaxaExibida(formTipoTaxaExibida);
 
     // Envia ao servidor
@@ -348,6 +360,7 @@ export default function App() {
       localStorage.removeItem('simulador_acrescimo_geral_promo');
       localStorage.removeItem('simulador_taxas_custo');
       localStorage.removeItem('simulador_show_lucro_vendedor');
+      localStorage.removeItem('simulador_show_lucro_dono');
       localStorage.removeItem('simulador_tipo_taxa_exibida');
 
       setFatoresBaseNormalState(DEFAULT_FATORES_BASE_NORMAL);
@@ -358,6 +371,7 @@ export default function App() {
       setAcrescimoGeralPromo(0.00);
       setTaxasCustoState(DEFAULT_TAXAS_CUSTO);
       setShowLucroVendedor(true);
+      setShowLucroDono(true);
       setTipoTaxaExibida('cliente');
 
       // Restaura no servidor também
@@ -370,6 +384,7 @@ export default function App() {
         acrescimo_geral_promo: 0.00,
         taxas_custo: DEFAULT_TAXAS_CUSTO,
         show_lucro_vendedor: true,
+        show_lucro_dono: true,
         tipo_taxa_exibida: 'cliente'
       };
 
@@ -439,9 +454,9 @@ export default function App() {
   ]);
 
   const showLucroEfetivo = useMemo(() => {
-    if (userRole === 'dono') return true;
+    if (userRole === 'dono') return showLucroDono;
     return showLucroVendedor;
-  }, [userRole, showLucroVendedor]);
+  }, [userRole, showLucroDono, showLucroVendedor]);
 
   if (!isAuthenticated) {
     return (
@@ -1113,6 +1128,23 @@ export default function App() {
 
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-1 border-t border-slate-100 pt-3">
                         <div>
+                          <h5 className="text-xs font-bold text-slate-700">Ativar Lucro Líquido no simulador do Dono</h5>
+                          <p className="text-[10px] text-slate-500 mt-0.5">Se ativado, exibe a coluna de Lucro Líquido (comissão) na tabela principal para o perfil Dono</p>
+                        </div>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input 
+                            type="checkbox" 
+                            checked={formShowLucroDono}
+                            onChange={(e) => setFormShowLucroDono(e.target.checked)}
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-slate-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-amber-500/20 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-600"></div>
+                          <span className="ml-3 text-xs font-bold text-slate-700">{formShowLucroDono ? "Ativado" : "Desativado"}</span>
+                        </label>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-1 border-t border-slate-100 pt-3">
+                        <div>
                           <h5 className="text-xs font-bold text-slate-700">Ver Taxa de Custo da Máquina</h5>
                           <p className="text-[10px] text-slate-500 mt-0.5">Se ativado, exibe a taxa real cobrada pela operadora em vez da taxa final cobrada do cliente</p>
                         </div>
@@ -1246,7 +1278,7 @@ export default function App() {
                     <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 text-amber-800 text-xs font-medium flex items-start gap-2.5">
                       <Info size={16} className="shrink-0 mt-0.5" />
                       <div>
-                        <strong>Aviso sobre os Fatores Base:</strong> Os fatores são representados em formato multiplicador decimal da adquirente (ex: `1.1208` corresponde a um custo de antecipação e parcelamento total de 12.08% no fator). Edite com atenção para manter a simulação correta.
+                        <strong>Taxas Fixas de Fatores Base:</strong> Estes são os fatores multiplicadores decimais fixados no sistema (ex: `1.1208` corresponde a 12.08% de custo). Eles são exibidos apenas para referência e não podem ser alterados pelo Dono.
                       </div>
                     </div>
 
@@ -1267,11 +1299,8 @@ export default function App() {
                                   type="number"
                                   step="0.0001"
                                   value={formFatoresBaseNormal[p] || 1}
-                                  onChange={(e) => {
-                                    const val = parseFloat(e.target.value) || 1;
-                                    setFormFatoresBaseNormal(prev => ({ ...prev, [p]: val }));
-                                  }}
-                                  className="w-20 bg-white border border-slate-200 rounded-lg py-1 px-1.5 text-xs font-bold text-slate-700 text-right outline-none focus:border-amber-500"
+                                  disabled={true}
+                                  className="w-20 bg-slate-100 border border-slate-200 rounded-lg py-1 px-1.5 text-xs font-bold text-slate-400 text-right outline-none cursor-not-allowed"
                                 />
                               </div>
                             );
@@ -1295,11 +1324,8 @@ export default function App() {
                                   type="number"
                                   step="0.0001"
                                   value={formFatoresBasePromo[p] || 1}
-                                  onChange={(e) => {
-                                    const val = parseFloat(e.target.value) || 1;
-                                    setFormFatoresBasePromo(prev => ({ ...prev, [p]: val }));
-                                  }}
-                                  className="w-20 bg-white border border-slate-200 rounded-lg py-1 px-1.5 text-xs font-bold text-slate-700 text-right outline-none focus:border-amber-500"
+                                  disabled={true}
+                                  className="w-20 bg-slate-100 border border-slate-200 rounded-lg py-1 px-1.5 text-xs font-bold text-slate-400 text-right outline-none cursor-not-allowed"
                                 />
                               </div>
                             );
@@ -1316,7 +1342,7 @@ export default function App() {
                     <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-emerald-800 text-xs font-medium flex items-start gap-2.5">
                       <Info size={16} className="shrink-0 mt-0.5" />
                       <div>
-                        <strong>Aviso sobre Taxas Custo (Máquina):</strong> Representam a taxa real cobrada pela operadora do cartão (em porcentagem %). Alterar estes valores afeta diretamente a coluna **Lucro Líquido** do simulador.
+                        <strong>Taxas Fixas de Custo de Máquina:</strong> Representam a taxa real fixa cobrada pela operadora do cartão (adquirente) em cada parcela (%). Elas são exibidas apenas para sua referência de custos e não podem ser alteradas.
                       </div>
                     </div>
 
@@ -1339,14 +1365,8 @@ export default function App() {
                                     type="number"
                                     step="0.01"
                                     value={taxaVal}
-                                    onChange={(e) => {
-                                      const val = parseFloat(e.target.value) || 0;
-                                      setFormTaxasCusto(prev => ({
-                                        ...prev,
-                                        "Master/Visa": { ...prev["Master/Visa"], [p]: val }
-                                      }));
-                                    }}
-                                    className="w-16 bg-white border border-slate-200 rounded-lg py-1 px-1.5 text-xs font-bold text-slate-700 text-right outline-none focus:border-amber-500 pr-5"
+                                    disabled={true}
+                                    className="w-16 bg-slate-100 border border-slate-200 rounded-lg py-1 px-1.5 text-xs font-bold text-slate-400 text-right outline-none cursor-not-allowed pr-5"
                                   />
                                   <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] font-bold text-slate-400">%</span>
                                 </div>
@@ -1374,14 +1394,8 @@ export default function App() {
                                     type="number"
                                     step="0.01"
                                     value={taxaVal}
-                                    onChange={(e) => {
-                                      const val = parseFloat(e.target.value) || 0;
-                                      setFormTaxasCusto(prev => ({
-                                        ...prev,
-                                        "Elo": { ...prev["Elo"], [p]: val }
-                                      }));
-                                    }}
-                                    className="w-16 bg-white border border-slate-200 rounded-lg py-1 px-1.5 text-xs font-bold text-slate-700 text-right outline-none focus:border-amber-500 pr-5"
+                                    disabled={true}
+                                    className="w-16 bg-slate-100 border border-slate-200 rounded-lg py-1 px-1.5 text-xs font-bold text-slate-400 text-right outline-none cursor-not-allowed pr-5"
                                   />
                                   <span className="absolute right-1 top-1/2 -translate-y-1/2 text-[9px] font-bold text-slate-400">%</span>
                                 </div>

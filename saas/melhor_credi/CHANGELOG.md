@@ -2,6 +2,43 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.2.0] - 2026-05-20
+
+### Adicionado
+- **Arquitetura Multi-Tenant SaaS em Subpastas**:
+  - Criação e isolamento do projeto para múltiplos parceiros em pastas individuais sob `saas/` (`saas/d_cred/`, `saas/credpara/`, `saas/melhor_credi/`).
+  - Script PowerShell de replicação limpa de atualizações (`scratch/copy_to_partners.ps1`) para copiar de forma inteligente os arquivos da raiz (base) para todas as subpastas ignorando bundles e caches.
+- **Gestão de Níveis de Acesso e Roles**:
+  - Definição do perfil **Dono da Empresa (`dono`)** com acesso administrativo completo automático e ao painel de configurações.
+  - Definição do perfil **Vendedor Comum (`vendedor`)** com visualização restrita, ocultação do botão "Admin" e controle dinâmico da coluna de "Lucro Líquido" (comissão) na tabela.
+- **Persistência de Taxas Sincronizada no Servidor**:
+  - Endpoint da API em PHP (`public/api/config/index.php`) e Express local (`server.ts` sob `/api/config`) para persistir configurações e taxas ativas no servidor no arquivo dinâmico `api/config/config.json`.
+  - As configurações são lidas no carregamento da aplicação logo após a autenticação, sincronizando as alterações salvas pelo Dono para todos os vendedores instantaneamente.
+- **Switch Administrativo de Liberação de Comissão**:
+  - Substituição do antigo switch de ocultar/mostrar do admin por um controle de maior granularidade: **"Liberar Tabela de Comissão para os Vendedores"**, que bloqueia ou libera o lucro/comissão no simulador para o perfil vendedor de forma remota no servidor.
+- **Personalização de Marcas para Parceiros**:
+  - Customização de marcas individuais no rodapé de copyright e no PNG gerado de exportação para cada parceiro ("D Cred", "CredPara" e "Melhor Credi").
+
+## [1.1.2] - 2026-05-19
+
+### Alterado
+- **Ajuste Fino do Destino de Deploy FTP**:
+  - Ajustada a propriedade `server-dir` no arquivo `.github/workflows/deploy.yml` de `/public_html/calculadora/` para `./`.
+  - Esta alteração permite compatibilidade total com contas FTP dedicadas criadas no cPanel que já estejam restritas ao diretório `/public_html/calculadora`, evitando problemas de permissão e estruturação incorreta de diretórios durante a sincronização automática.
+
+## [1.1.1] - 2026-05-19
+
+### Adicionado
+- **Pipeline de Integração e Deploy Contínuo (CI/CD) via GitHub Actions**:
+  - Criação do arquivo de workflow `.github/workflows/deploy.yml` pré-configurado.
+  - Implementação de build automático no ambiente do GitHub (`npm ci && npm run build`) e sincronização dos ativos otimizados da pasta `/dist` diretamente para o servidor cPanel via FTP utilizando a action `SamKirkland/FTP-Deploy-Action`. Isso elimina a necessidade de chaves SSH ou de clicar manualmente no botão do cPanel para efetuar os próximos deploys.
+
+## [1.1.0] - 2026-05-19
+
+### Adicionado
+- **Integração de Deploy Automatizado com cPanel (`.cpanel.yml`)**:
+  - Criação do arquivo de configuração `.cpanel.yml` na raiz do projeto. Ele instrui a engine de deploy do Git do cPanel a usar o `rsync` para sincronizar os arquivos compilados da pasta `dist/` diretamente na pasta de destino de publicação pública (ex: `/public_html/calculadora`), ignorando os arquivos de código-fonte e o histórico do Git no deploy final.
+
 ## [1.0.9] - 2026-05-19
 
 ### Adicionado
@@ -37,6 +74,7 @@ Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 - **Dropdowns e Cálculos Dinâmicos**:
   - Reescrita do cálculo da simulação (`simulacao`) para processar os fatores e acréscimos dinâmicos.
   - Atualização automática dos dropdowns do simulador para refletir as taxas de acréscimo customizadas do admin em tempo real.
+
 
 ## [1.0.6] - 2026-05-19
 

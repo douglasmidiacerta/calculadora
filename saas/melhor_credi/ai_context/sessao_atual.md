@@ -2,23 +2,38 @@
 
 ## Status da Sessão
 - **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
-- **Versão Atual**: `v1.0.9`
-- **Foco da Sessão**: Implementação de Zebra Striping (linhas intercaladas branco/verde) nas tabelas de simulação comum e de exportação de imagem.
+- **Versão Atual**: `v1.2.0`
+- **Foco da Sessão**: Implementação da Plataforma Multi-Tenant SaaS em Subpastas (`saas/d_cred`, `saas/credpara`, `saas/melhor_credi`), sincronização remota de taxas via API PHP (`config.json`), controle fino de níveis de acesso por Role (Dono vs Vendedor) com switch administrativo "Liberar Tabela de Comissão para os Vendedores".
 
 ---
 
 ## Atividades Realizadas
-1. **Estrutura de Contexto**: Sincronização de `CHANGELOG.md`, `ai_context/historico_mestre.md` e `ai_context/sessao_atual.md` para a versão `v1.0.9`.
-2. **Design Visual Aprimorado**:
-   - Adicionada estilização dinâmica intercalando as linhas da tabela comum (bg-white para par e bg-emerald-50/30 para ímpar) para leitura confortável na tela.
-   - Atualizado o mapeamento de exportação de imagem com `index` definindo `backgroundColor` dinâmico (branco `#ffffff` para par e verde suave `#eaf7ed` para ímpar) em todas as células de cada linha.
-3. **Persistência de Qualidade**: As modificações preservam toda a fidelidade do layout móvel de 480px, mantendo as bordas e fontes perfeitas.
-
----
+1. **Estrutura SaaS Organizada**:
+   - Criação e replicação isolada dos ambientes do simulador sob a pasta `saas/` para cada parceiro: `d_cred/`, `credpara/`, `melhor_credi/`.
+   - Implementado script PowerShell robusto (`scratch/copy_to_partners.ps1`) para realizar cópia limpa e sem recursões duplicadas de arquivos da raiz para os diretórios dos parceiros.
+2. **Personalização de Marcas**:
+   - Personalização individualizada de cada parceiro em suas respectivas subpastas. O nome do respectivo parceiro substitui a marca original em:
+     - Copyright no rodapé de login.
+     - Cabeçalho de exportação em imagem PNG para simulações de WhatsApp.
+3. **Controle de Roles & Nível de Permissão**:
+   - Vendedor Comum (`vendedor`): Interface limpa de simulação. Botão de engrenagem do Admin ocultado. Visibilidade da comissão (lucro líquido) controlada dinamicamente pelo servidor de forma centralizada.
+   - Dono da Empresa (`dono` / `admin` legado): Acesso completo ao painel admin, autenticação imediata e privilégio de edição.
+4. **Sincronização Remota de Taxas e Comissão**:
+   - Implementada API de sincronização baseada em PHP (`public/api/config/index.php`) gravando e lendo em `api/config/config.json`.
+   - Acoplamento no frontend `src/App.tsx` para realizar o fetch das taxas no servidor assim que qualquer usuário se autentica, garantindo que alterações salvas pelo Dono sejam instantaneamente propagadas aos vendedores.
+5. **Switch de Comissão Inteligente**:
+   - Atualizado o switch administrativo no frontend `src/App.tsx` para gerenciar a chave `formShowLucroVendedor`, adicionando a legenda "Liberar Tabela de Comissão para os Vendedores" com os status interativos de "Liberado/Bloqueado".
+6. **Compilação e Homologação**:
+   - Execução bem-sucedida do processo de build de produção (`npm run build`) na raiz e em todas as subpastas SaaS dos parceiros (`saas/d_cred`, `saas/credpara`, `saas/melhor_credi`), garantindo bundles estáveis, funcionais e livres de erros.
 
 ## Próximos Passos (Pendentes)
-1. **Deploy da v1.0.9 no cPanel**:
-   - Recomendar ao usuário que descarte os pacotes ZIP da v1.0.8 e envie/extraia o novo **`simulador-dist-v1.0.9.zip`** na subpasta do seu servidor.
-2. **Validação Visual**:
-   - Pedir ao usuário para testar a simulação e verificar a leitura intercalada no monitor.
-   - Pedir ao usuário para testar o botão "Gerar Imagem" e validar se a imagem baixada em PNG exibe as linhas de forma perfeitamente legível intercaladas em branco e verde clarinho.
+1. **Acompanhar a Execução do GitHub Actions**:
+   - Acessar a aba "Actions" no repositório do GitHub e verificar se o workflow "Deploy Simulador no cPanel" (disparado pelo nosso push) executa com sucesso (todas as etapas de compilação e deploy dos parceiros em verde).
+2. **Validar URLs de Produção**:
+   - Acessar individualmente as URLs dos simuladores no navegador para garantir que o redirecionamento de barra final e o carregamento relativo funcionam sem tela branca:
+     * Calculadora Principal: `https://credcertomg.com.br/calculadora/`
+     * D Cred: `https://credcertomg.com.br/calculadora/d_cred/`
+     * CredPara: `https://credcertomg.com.br/calculadora/credpara/`
+     * Melhor Credi: `https://credcertomg.com.br/calculadora/melhor_credi/`
+3. **Validar a Sincronização das Taxas e Comissão em Nuvem**:
+   - Logar com o usuário `dono` na calculadora principal, alterar as taxas/comissão, salvar as alterações e verificar se as mudanças aparecem em tempo real para um `vendedor` logado em outro navegador ou dispositivo.
