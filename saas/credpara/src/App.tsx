@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -66,6 +66,9 @@ const loadLocalStorage = <T,>(key: string, defaultValue: T): T => {
 };
 
 export default function App() {
+  const [logoErro, setLogoErro] = useState(false);
+  const [logoHeaderErro, setLogoHeaderErro] = useState(false);
+
   useEffect(() => {
     document.title = "CredPara - Calculadora";
   }, []);
@@ -143,7 +146,7 @@ export default function App() {
   const [bandeira, setBandeira] = useState("Master/Visa");
   const exportRef = useRef<HTMLDivElement>(null);
 
-  // --- CARREGAR CONFIGURAÇÕES DO SERVIDOR ---
+  // --- CARREGAR CONFIGURAÃ‡Ã•ES DO SERVIDOR ---
   useEffect(() => {
     if (isAuthenticated) {
       fetch('api/config/')
@@ -192,7 +195,7 @@ export default function App() {
             }
           }
         })
-        .catch(err => console.error("Erro ao carregar configurações do servidor:", err));
+        .catch(err => console.error("Erro ao carregar configuraÃ§Ãµes do servidor:", err));
     }
   }, [isAuthenticated]);
 
@@ -217,7 +220,7 @@ export default function App() {
         setUserRole(role);
         setIsAuthenticated(true);
 
-        // Se for dono ou admin, autentica automaticamente nas configurações administrativas
+        // Se for dono ou admin, autentica automaticamente nas configuraÃ§Ãµes administrativas
         if (role === 'dono') {
           setIsAdminAuthenticated(true);
           localStorage.setItem('admin_authenticated', 'true');
@@ -226,7 +229,7 @@ export default function App() {
           localStorage.removeItem('admin_authenticated');
         }
       } else {
-        setLoginError(data.message || "Credenciais inválidas");
+        setLoginError(data.message || "Credenciais invÃ¡lidas");
       }
     } catch (err) {
       setLoginError("Erro ao conectar ao servidor");
@@ -346,16 +349,16 @@ export default function App() {
     .then(res => res.json())
     .then(data => {
       if (!data.success) {
-        console.warn("Aviso: Configurações salvas localmente, mas falharam ao sincronizar com o servidor.");
+        console.warn("Aviso: ConfiguraÃ§Ãµes salvas localmente, mas falharam ao sincronizar com o servidor.");
       }
     })
-    .catch(err => console.error("Erro de sincronização com o servidor:", err));
+    .catch(err => console.error("Erro de sincronizaÃ§Ã£o com o servidor:", err));
 
     setShowAdminPanelModal(false);
   };
 
   const handleRestoreDefaults = () => {
-    if (window.confirm("Deseja realmente restaurar as taxas e opções originais de fábrica? Todas as suas alterações serão perdidas.")) {
+    if (window.confirm("Deseja realmente restaurar as taxas e opÃ§Ãµes originais de fÃ¡brica? Todas as suas alteraÃ§Ãµes serÃ£o perdidas.")) {
       localStorage.removeItem('simulador_fatores_normal');
       localStorage.removeItem('simulador_fatores_promo');
       localStorage.removeItem('simulador_acrescimos_normal');
@@ -378,7 +381,7 @@ export default function App() {
       setShowLucroDono(true);
       setTipoTaxaExibida('cliente');
 
-      // Restaura no servidor também
+      // Restaura no servidor tambÃ©m
       const defaultsPayload = {
         fatores_normal: DEFAULT_FATORES_BASE_NORMAL,
         fatores_promo: DEFAULT_FATORES_BASE_PROMO,
@@ -396,7 +399,7 @@ export default function App() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(defaultsPayload)
-      }).catch(err => console.error("Erro ao sincronizar restauração de padrões:", err));
+      }).catch(err => console.error("Erro ao sincronizar restauraÃ§Ã£o de padrÃµes:", err));
 
       setShowAdminPanelModal(false);
     }
@@ -470,17 +473,26 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-md w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
         >
-          <div className="bg-emerald-800 p-8 text-center text-white">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-700 mb-4 shadow-inner">
-              <Lock size={32} className="text-emerald-300" />
-            </div>
+          <div className="bg-emerald-800 p-8 text-center text-white flex flex-col items-center justify-center">
+            {!logoErro ? (
+              <img 
+                src="logo.png" 
+                onError={() => setLogoErro(true)} 
+                className="h-14 w-auto object-contain mb-4 max-w-[240px]" 
+                alt="Logo" 
+              />
+            ) : (
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-700 mb-4 shadow-inner">
+                <Lock size={32} className="text-emerald-300" />
+              </div>
+            )}
             <h2 className="text-2xl font-bold">Acesso Restrito</h2>
             <p className="text-emerald-100/60 text-sm mt-1">Identifique-se para acessar o simulador</p>
           </div>
 
           <form onSubmit={handleLogin} className="p-8 space-y-6">
             <div>
-              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-1">Usuário</label>
+              <label className="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2 px-1">UsuÃ¡rio</label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                   <User size={18} className="text-slate-400 group-focus-within:text-emerald-600 transition-colors" />
@@ -490,7 +502,7 @@ export default function App() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="w-full pl-11 rounded-xl border-2 border-slate-100 py-3.5 px-4 bg-slate-50 text-slate-800 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white transition-all outline-none font-medium"
-                  placeholder="Seu nome de usuário"
+                  placeholder="Seu nome de usuÃ¡rio"
                   required
                 />
               </div>
@@ -507,7 +519,7 @@ export default function App() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-11 rounded-xl border-2 border-slate-100 py-3.5 px-4 bg-slate-50 text-slate-800 focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 focus:bg-white transition-all outline-none font-medium"
-                  placeholder="••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                   required
                 />
               </div>
@@ -541,7 +553,7 @@ export default function App() {
           </form>
 
           <div className="p-6 bg-slate-50 text-center border-t border-slate-100">
-            <p className="text-slate-400 text-xs font-medium uppercase tracking-tighter">CredPara © {new Date().getFullYear()}</p>
+            <p className="text-slate-400 text-xs font-medium uppercase tracking-tighter">CredPara Â© {new Date().getFullYear()}</p>
           </div>
         </motion.div>
       </div>
@@ -552,11 +564,22 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 flex flex-col items-center p-4 md:p-8 font-sans text-slate-800">
       <header className="max-w-4xl w-full mb-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-emerald-900 flex items-center gap-2 justify-center sm:justify-start">
-            <Calculator className="text-emerald-600" />
-            Simulador de Vendas
-          </h1>
-          <p className="text-slate-500 font-medium">Cálculo de taxas e lucro líquido em tempo real</p>
+          <div className="flex items-center gap-3 justify-center sm:justify-start flex-wrap mb-1">
+            {!logoHeaderErro ? (
+              <img 
+                src="logo.png" 
+                onError={() => setLogoHeaderErro(true)} 
+                className="h-10 w-auto object-contain max-w-[180px]" 
+                alt="Logo" 
+              />
+            ) : (
+              <Calculator className="text-emerald-600" />
+            )}
+            <h1 className="text-3xl font-extrabold tracking-tight text-emerald-900">
+              Simulador de Vendas
+            </h1>
+          </div>
+          <p className="text-slate-500 font-medium">CÃ¡lculo de taxas e lucro lÃ­quido em tempo real</p>
         </div>
         
         <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3">
@@ -569,7 +592,7 @@ export default function App() {
             Gerar Imagem
           </button>
 
-          {/* Botão de Configurações Admin */}
+          {/* BotÃ£o de ConfiguraÃ§Ãµes Admin */}
           {userRole === 'dono' && (
             <button 
               onClick={() => {
@@ -632,14 +655,14 @@ export default function App() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-emerald-100/80 mb-1.5 uppercase">Modo de Simulação</label>
+                  <label className="block text-xs font-semibold text-emerald-100/80 mb-1.5 uppercase">Modo de SimulaÃ§Ã£o</label>
                   <select
                     value={modoCalculo}
                     onChange={(e) => setModoCalculo(e.target.value as "valor" | "limite")}
                     className="w-full rounded-xl border-0 py-2.5 px-4 bg-emerald-700/50 text-white font-semibold focus:ring-2 focus:ring-emerald-400 transition-colors cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236ee7b7%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E')] bg-[length:1em_1em] bg-[right_1rem_center] bg-no-repeat pr-10 hover:bg-emerald-600/50"
                   >
                     <option value="valor">Valor a Receber</option>
-                    <option value="limite">Limite do Cartão</option>
+                    <option value="limite">Limite do CartÃ£o</option>
                   </select>
                 </div>
 
@@ -673,7 +696,7 @@ export default function App() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-emerald-100/80 mb-1.5 uppercase">Nível do Acréscimo</label>
+                  <label className="block text-xs font-semibold text-emerald-100/80 mb-1.5 uppercase">NÃ­vel do AcrÃ©scimo</label>
                   <div className="relative">
                     <FileText size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-emerald-200" />
                     <select
@@ -714,9 +737,9 @@ export default function App() {
                 <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">Valor da Parcela</th>
                 <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">{modoCalculo === 'valor' ? 'Total a Passar' : 'Total a Receber'}</th>
                 <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">
-                  {tipoTaxaExibida === 'cliente' ? 'Taxa Cliente (% ao mês)' : 'Taxa Máquina (Custo)'}
+                  {tipoTaxaExibida === 'cliente' ? 'Taxa Cliente (% ao mÃªs)' : 'Taxa MÃ¡quina (Custo)'}
                 </th>
-                {showLucroEfetivo && <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest text-right">Lucro Líquido</th>}
+                {showLucroEfetivo && <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest text-right">Lucro LÃ­quido</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -739,7 +762,7 @@ export default function App() {
                         <span className="text-emerald-700 font-bold text-lg">{formatCurrency(row.valorParcela)}</span>
                         {row.parcelas > 18 && (
                           <span className="text-[10px] text-amber-600 font-semibold uppercase flex items-center gap-1">
-                            <Info size={10} /> Contingência
+                            <Info size={10} /> ContingÃªncia
                           </span>
                         )}
                       </div>
@@ -759,7 +782,7 @@ export default function App() {
                             {row.lucro >= 0 ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
                             {formatCurrency(row.lucro)}
                           </div>
-                          <span className="text-slate-400 text-[10px] font-medium">Margem Líquida</span>
+                          <span className="text-slate-400 text-[10px] font-medium">Margem LÃ­quida</span>
                         </div>
                       </td>
                     )}
@@ -780,16 +803,16 @@ export default function App() {
               </div>
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded-full bg-rose-500"></div>
-                <span>Prejuízo</span>
+                <span>PrejuÃ­zo</span>
               </div>
             </div>
-            <p className="font-medium italic">Simulação baseada nas taxas vigentes da adquirente.</p>
+            <p className="font-medium italic">SimulaÃ§Ã£o baseada nas taxas vigentes da adquirente.</p>
           </div>
         </div>
       </main>
       
       <footer className="mt-12 text-slate-400 text-sm font-medium">
-        &copy; {new Date().getFullYear()} Esse orçamento é válido para 7 dias. Todos os direitos reservados.
+        &copy; {new Date().getFullYear()} Esse orÃ§amento Ã© vÃ¡lido para 7 dias. Todos os direitos reservados.
       </footer>
 
       {/* --- EXPORTABLE AREA (MOBILE VERTICAL FORMAT - 480px) --- */}
@@ -829,7 +852,7 @@ export default function App() {
           }}>
             <div>
               <div style={{ fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.12em', opacity: 0.9, marginBottom: '2px' }}>
-                SIMULAÇÃO: {bandeira.toUpperCase()}
+                SIMULAÃ‡ÃƒO: {bandeira.toUpperCase()}
               </div>
               <div style={{ fontSize: '24px', fontWeight: '800' }}>
                 CredPara
@@ -853,7 +876,7 @@ export default function App() {
                   <th style={{ padding: '4px 6px', textAlign: 'left', width: '15%' }}>Parc.</th>
                   <th style={{ padding: '4px 2px', textAlign: 'center', width: '32%' }}>Parcela (R$)</th>
                   <th style={{ padding: '4px 2px', textAlign: 'right', width: '30%' }}>{modoCalculo === 'valor' ? 'Total a Passar' : 'Total a Receber'}</th>
-                  <th style={{ padding: '4px 6px', textAlign: 'right', width: '23%' }}>Taxa (% ao mês)</th>
+                  <th style={{ padding: '4px 6px', textAlign: 'right', width: '23%' }}>Taxa (% ao mÃªs)</th>
                 </tr>
               </thead>
               <tbody>
@@ -922,7 +945,7 @@ export default function App() {
           </div>
 
           <div style={{ marginTop: '16px', paddingTop: '12px', textAlign: 'center', color: '#065f4688', fontSize: '11px', fontWeight: '600', borderTop: '2px solid #065f4611' }}>
-            Gerado em {new Date().toLocaleDateString('pt-BR')} • Esse orçamento é válido para 7 dias
+            Gerado em {new Date().toLocaleDateString('pt-BR')} â€¢ Esse orÃ§amento Ã© vÃ¡lido para 7 dias
           </div>
         </div>
       </div>
@@ -953,7 +976,7 @@ export default function App() {
                   <Lock size={24} className="text-amber-200" />
                 </div>
                 <h3 className="text-xl font-bold">Acesso Administrativo</h3>
-                <p className="text-amber-100/60 text-xs mt-1">Insira a chave de segurança para configurar taxas</p>
+                <p className="text-amber-100/60 text-xs mt-1">Insira a chave de seguranÃ§a para configurar taxas</p>
               </div>
 
               <form onSubmit={(e) => {
@@ -968,7 +991,7 @@ export default function App() {
                     handleOpenAdminPanel();
                   }, 100);
                 } else {
-                  setAdminPasswordError("Chave de segurança incorreta");
+                  setAdminPasswordError("Chave de seguranÃ§a incorreta");
                 }
               }} className="p-6 space-y-4">
                 <div>
@@ -978,7 +1001,7 @@ export default function App() {
                     value={adminPasswordInput}
                     onChange={(e) => setAdminPasswordInput(e.target.value)}
                     className="w-full rounded-xl border-2 border-slate-100 py-3 px-4 bg-slate-50 text-slate-800 focus:ring-4 focus:ring-amber-500/10 focus:border-amber-500 focus:bg-white transition-all outline-none font-semibold text-center tracking-widest text-lg"
-                    placeholder="••••••••"
+                    placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                     required
                     autoFocus
                   />
@@ -1042,14 +1065,14 @@ export default function App() {
                       Painel Administrativo
                       <span className="text-[10px] bg-amber-500/20 text-amber-500 font-extrabold uppercase px-2 py-0.5 rounded-full tracking-wider">Modo Edit</span>
                     </h3>
-                    <p className="text-slate-400 text-xs mt-0.5">Configure acréscimos, tabelas de parcelamento e custos da máquina</p>
+                    <p className="text-slate-400 text-xs mt-0.5">Configure acrÃ©scimos, tabelas de parcelamento e custos da mÃ¡quina</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <button 
                     onClick={handleAdminLogout}
                     className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-rose-400 rounded-xl transition-all"
-                    title="Encerrar sessão de administrador"
+                    title="Encerrar sessÃ£o de administrador"
                   >
                     <Lock size={12} />
                     Sair Admin
@@ -1074,7 +1097,7 @@ export default function App() {
                   }`}
                 >
                   <Sliders size={14} />
-                  Opções & Acréscimos
+                  OpÃ§Ãµes & AcrÃ©scimos
                 </button>
                 <button
                   onClick={() => setAdminTab('fatores')}
@@ -1096,27 +1119,27 @@ export default function App() {
                   }`}
                 >
                   <CreditCard size={14} />
-                  Custo de Máquina (Elo/Master/Visa)
+                  Custo de MÃ¡quina (Elo/Master/Visa)
                 </button>
               </div>
 
-              {/* Conteúdo das Abas (Scrollable) */}
+              {/* ConteÃºdo das Abas (Scrollable) */}
               <div className="flex-1 overflow-y-auto p-6 space-y-6 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
                 
                 {/* ABA 1: GERAL & ACRESCIMOS */}
                 {adminTab === 'geral' && (
                   <div className="space-y-6">
-                    {/* Seção Visibilidade & Controles */}
+                    {/* SeÃ§Ã£o Visibilidade & Controles */}
                     <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 space-y-4">
                       <h4 className="text-sm font-bold text-slate-800 border-b border-slate-200 pb-2 flex items-center gap-2">
                         <Eye size={16} className="text-amber-600" />
-                        Opções de Exibição do Simulador
+                        OpÃ§Ãµes de ExibiÃ§Ã£o do Simulador
                       </h4>
                       
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-1">
                         <div>
-                          <h5 className="text-xs font-bold text-slate-700">Liberar Tabela de Comissão para os Vendedores</h5>
-                          <p className="text-[10px] text-slate-500 mt-0.5">Se ativado, os vendedores comuns terão acesso à visualização do Lucro Líquido (comissão) no simulador</p>
+                          <h5 className="text-xs font-bold text-slate-700">Liberar Tabela de ComissÃ£o para os Vendedores</h5>
+                          <p className="text-[10px] text-slate-500 mt-0.5">Se ativado, os vendedores comuns terÃ£o acesso Ã  visualizaÃ§Ã£o do Lucro LÃ­quido (comissÃ£o) no simulador</p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input 
@@ -1132,8 +1155,8 @@ export default function App() {
 
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-1 border-t border-slate-100 pt-3">
                         <div>
-                          <h5 className="text-xs font-bold text-slate-700">Ativar Lucro Líquido no simulador do Dono</h5>
-                          <p className="text-[10px] text-slate-500 mt-0.5">Se ativado, exibe a coluna de Lucro Líquido (comissão) na tabela principal para o perfil Dono</p>
+                          <h5 className="text-xs font-bold text-slate-700">Ativar Lucro LÃ­quido no simulador do Dono</h5>
+                          <p className="text-[10px] text-slate-500 mt-0.5">Se ativado, exibe a coluna de Lucro LÃ­quido (comissÃ£o) na tabela principal para o perfil Dono</p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input 
@@ -1149,7 +1172,7 @@ export default function App() {
 
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-1 border-t border-slate-100 pt-3">
                         <div>
-                          <h5 className="text-xs font-bold text-slate-700">Ver Taxa de Custo da Máquina</h5>
+                          <h5 className="text-xs font-bold text-slate-700">Ver Taxa de Custo da MÃ¡quina</h5>
                           <p className="text-[10px] text-slate-500 mt-0.5">Se ativado, exibe a taxa real cobrada pela operadora em vez da taxa final cobrada do cliente</p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
@@ -1165,15 +1188,15 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* Seção Acréscimos Gerais */}
+                    {/* SeÃ§Ã£o AcrÃ©scimos Gerais */}
                     <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5">
                       <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-200 pb-2">
                         <SlidersHorizontal size={16} className="text-amber-600" />
-                        Acréscimos Gerais (Aplica a todas as parcelas)
+                        AcrÃ©scimos Gerais (Aplica a todas as parcelas)
                       </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Acréscimo Geral - Tabela Normal (%)</label>
+                          <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase">AcrÃ©scimo Geral - Tabela Normal (%)</label>
                           <div className="relative">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">+</span>
                             <input 
@@ -1187,7 +1210,7 @@ export default function App() {
                           </div>
                         </div>
                         <div>
-                          <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase">Acréscimo Geral - Tabela Promo (%)</label>
+                          <label className="block text-xs font-bold text-slate-500 mb-1.5 uppercase">AcrÃ©scimo Geral - Tabela Promo (%)</label>
                           <div className="relative">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">+</span>
                             <input 
@@ -1203,14 +1226,14 @@ export default function App() {
                       </div>
                     </div>
 
-                    {/* Seção Acréscimos por Nível */}
+                    {/* SeÃ§Ã£o AcrÃ©scimos por NÃ­vel */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       
-                      {/* Acréscimos Normal */}
+                      {/* AcrÃ©scimos Normal */}
                       <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5">
                         <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-200 pb-2">
                           <Sliders size={16} className="text-indigo-600" />
-                          Acréscimos por Tabela (Normal)
+                          AcrÃ©scimos por Tabela (Normal)
                         </h4>
                         <div className="space-y-3">
                           {Array.from({ length: 5 }, (_, i) => {
@@ -1239,11 +1262,11 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* Acréscimos Promo */}
+                      {/* AcrÃ©scimos Promo */}
                       <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5">
                         <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-200 pb-2">
                           <Sliders size={16} className="text-emerald-600" />
-                          Acréscimos por Tabela (Promo)
+                          AcrÃ©scimos por Tabela (Promo)
                         </h4>
                         <div className="space-y-3">
                           {Array.from({ length: 5 }, (_, i) => {
@@ -1282,7 +1305,7 @@ export default function App() {
                     <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 text-amber-800 text-xs font-medium flex items-start gap-2.5">
                       <Info size={16} className="shrink-0 mt-0.5" />
                       <div>
-                        <strong>Taxas Fixas de Fatores Base:</strong> Estes são os fatores multiplicadores decimais fixados no sistema (ex: `1.1208` corresponde a 12.08% de custo). Eles são exibidos apenas para referência e não podem ser alterados pelo Dono.
+                        <strong>Taxas Fixas de Fatores Base:</strong> Estes sÃ£o os fatores multiplicadores decimais fixados no sistema (ex: `1.1208` corresponde a 12.08% de custo). Eles sÃ£o exibidos apenas para referÃªncia e nÃ£o podem ser alterados pelo Dono.
                       </div>
                     </div>
 
@@ -1346,7 +1369,7 @@ export default function App() {
                     <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-4 text-emerald-800 text-xs font-medium flex items-start gap-2.5">
                       <Info size={16} className="shrink-0 mt-0.5" />
                       <div>
-                        <strong>Taxas Fixas de Custo de Máquina:</strong> Representam a taxa real fixa cobrada pela operadora do cartão (adquirente) em cada parcela (%). Elas são exibidas apenas para sua referência de custos e não podem ser alteradas.
+                        <strong>Taxas Fixas de Custo de MÃ¡quina:</strong> Representam a taxa real fixa cobrada pela operadora do cartÃ£o (adquirente) em cada parcela (%). Elas sÃ£o exibidas apenas para sua referÃªncia de custos e nÃ£o podem ser alteradas.
                       </div>
                     </div>
 
@@ -1414,14 +1437,14 @@ export default function App() {
 
               </div>
 
-              {/* Rodapé de Ações */}
+              {/* RodapÃ© de AÃ§Ãµes */}
               <div className="bg-slate-50 px-6 py-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200">
                 <button
                   onClick={handleRestoreDefaults}
                   className="flex items-center gap-1.5 px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl text-xs transition-all active:scale-95"
                 >
                   <RotateCcw size={14} />
-                  Restaurar Padrões
+                  Restaurar PadrÃµes
                 </button>
 
                 <div className="flex gap-2">
@@ -1436,7 +1459,7 @@ export default function App() {
                     className="flex items-center gap-1.5 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition-all shadow-md shadow-emerald-100 active:scale-95"
                   >
                     <Save size={14} />
-                    Salvar Alterações
+                    Salvar AlteraÃ§Ãµes
                   </button>
                 </div>
               </div>

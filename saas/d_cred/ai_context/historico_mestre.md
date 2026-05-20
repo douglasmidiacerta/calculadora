@@ -249,3 +249,21 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Empacotamento de Distribuição**:
     - Geração de novos pacotes ZIP na raiz (`antigravity-v1.2.1.zip` e `simulador-dist-v1.2.1.zip`) contendo CHANGELOG.md e arquivos finais prontos para deploy no cPanel.
 - **Status Final**: Versão 1.2.1 concluída e compilada com sucesso, sincronizada nas quatro calculadoras e commitada no repositório remoto.
+
+---
+
+## [2026-05-20] - Favicons Customizados e Títulos de Abas Dinâmicos por Parceiro (v1.2.2)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.2.2`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Favicons Customizados por Pasta**:
+    - Inserida a tag de link `<link rel="icon" type="image/png" href="favicon.png" />` no `<head>` do arquivo `index.html` da raiz.
+    - Isso permite que o usuário adicione um arquivo de imagem `favicon.png` específico de cada marca dentro da sua pasta no cPanel para que o navegador exiba o favicon personalizado automaticamente.
+  - **Títulos de Abas Dinâmicos**:
+    - Adicionado hook `useEffect` nativo no início do componente `App` em `src/App.tsx` para definir o título da aba do navegador utilizando `document.title = "NomeParceiro - Calculadora";` assim que a aplicação é montada.
+    - O título é alterado dinamicamente para o parceiro correspondente ("D Cred - Calculadora", "CredPara - Calculadora", "Melhor Credi - Calculadora" e "Cred Certo - Calculadora").
+  - **Sincronização e Replicação SaaS**:
+    - Re-executado o script PowerShell de replicação para propagar as alterações no `index.html` e no core do simulador.
+    - Customização de todas as variáveis de marca e re-build de produção em lote na raiz e em todas as pastas SaaS.
+- **Status Final**: Versão 1.2.2 concluída com sucesso e distribuída em todas as instâncias SaaS.

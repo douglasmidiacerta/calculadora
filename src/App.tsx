@@ -66,6 +66,9 @@ const loadLocalStorage = <T,>(key: string, defaultValue: T): T => {
 };
 
 export default function App() {
+  const [logoErro, setLogoErro] = useState(false);
+  const [logoHeaderErro, setLogoHeaderErro] = useState(false);
+
   useEffect(() => {
     document.title = "Cred Certo - Calculadora";
   }, []);
@@ -470,10 +473,19 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           className="max-w-md w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden"
         >
-          <div className="bg-emerald-800 p-8 text-center text-white">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-700 mb-4 shadow-inner">
-              <Lock size={32} className="text-emerald-300" />
-            </div>
+          <div className="bg-emerald-800 p-8 text-center text-white flex flex-col items-center justify-center">
+            {!logoErro ? (
+              <img 
+                src="logo.png" 
+                onError={() => setLogoErro(true)} 
+                className="h-14 w-auto object-contain mb-4 max-w-[240px]" 
+                alt="Logo" 
+              />
+            ) : (
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-emerald-700 mb-4 shadow-inner">
+                <Lock size={32} className="text-emerald-300" />
+              </div>
+            )}
             <h2 className="text-2xl font-bold">Acesso Restrito</h2>
             <p className="text-emerald-100/60 text-sm mt-1">Identifique-se para acessar o simulador</p>
           </div>
@@ -552,10 +564,21 @@ export default function App() {
     <div className="min-h-screen bg-slate-50 flex flex-col items-center p-4 md:p-8 font-sans text-slate-800">
       <header className="max-w-4xl w-full mb-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-emerald-900 flex items-center gap-2 justify-center sm:justify-start">
-            <Calculator className="text-emerald-600" />
-            Simulador de Vendas
-          </h1>
+          <div className="flex items-center gap-3 justify-center sm:justify-start flex-wrap mb-1">
+            {!logoHeaderErro ? (
+              <img 
+                src="logo.png" 
+                onError={() => setLogoHeaderErro(true)} 
+                className="h-10 w-auto object-contain max-w-[180px]" 
+                alt="Logo" 
+              />
+            ) : (
+              <Calculator className="text-emerald-600" />
+            )}
+            <h1 className="text-3xl font-extrabold tracking-tight text-emerald-900">
+              Simulador de Vendas
+            </h1>
+          </div>
           <p className="text-slate-500 font-medium">Cálculo de taxas e lucro líquido em tempo real</p>
         </div>
         

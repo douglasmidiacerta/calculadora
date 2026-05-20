@@ -1,6 +1,0 @@
-{
-  "name": "Simulador de Vendas e Taxas",
-  "description": "Simulador de crédito e vendas com cálculo de taxas de máquininha, fatores multiplicadores e lucro líquido em tempo real.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
