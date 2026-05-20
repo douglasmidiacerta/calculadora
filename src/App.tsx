@@ -335,8 +335,7 @@ export default function App() {
       });
 
       messageText += `\n-------------------------------------------\n`;
-      messageText += `📅 _Simulação válida por 7 dias._\n`;
-      messageText += `📱 _A imagem detalhada da simulação foi baixada. Por favor, anexe-a para enviar ao cliente!_`;
+      messageText += `📅 _Simulação válida por 7 dias._`;
 
       const encodedMessage = encodeURIComponent(messageText);
 

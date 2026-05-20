@@ -1,5 +1,11 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
+## [1.2.7] - 2026-05-20
+
+### Alterado
+- **Ajuste na Mensagem do WhatsApp**:
+  - Removida a frase explicativa final `"📱 A imagem detalhada da simulação foi baixada. Por favor, anexe-a para enviar ao cliente!"` a pedido do usuário, deixando a mensagem de texto comercial de compartilhamento mais limpa e focada no orçamento.
+
 ## [1.2.6] - 2026-05-20
 
 ### Adicionado
