@@ -263,8 +263,30 @@ export default function App() {
               setStorageItem('simulador_acrescimo_geral_promo', JSON.stringify(data.acrescimo_geral_promo));
             }
             if (data.taxas_custo) {
-              setTaxasCustoState(data.taxas_custo);
-              setStorageItem('simulador_taxas_custo', JSON.stringify(data.taxas_custo));
+              // Se a taxa de custo no servidor for diferente da nossa taxa de custo padrão de fábrica,
+              // significa que o config.json do servidor tem taxas corrompidas ou herdadas de outro tenant.
+              // Como o custo de máquina é fixo e não editável pelo dono, nós ignoramos e restauramos o padrão local.
+              const serverVisa1 = data.taxas_custo["Master/Visa"]?.[1];
+              const defaultVisa1 = DEFAULT_TAXAS_CUSTO["Master/Visa"]?.[1];
+              if (serverVisa1 !== undefined && defaultVisa1 !== undefined && serverVisa1 !== defaultVisa1) {
+                console.warn("Detectadas taxas de custo divergentes no servidor. Restaurando padrões locais automaticamente.");
+                setTaxasCustoState(DEFAULT_TAXAS_CUSTO);
+                setStorageItem('simulador_taxas_custo', JSON.stringify(DEFAULT_TAXAS_CUSTO));
+                
+                // Corrige no servidor em background de forma transparente
+                const correctedPayload = {
+                  ...data,
+                  taxas_custo: DEFAULT_TAXAS_CUSTO
+                };
+                fetch('api/config/', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(correctedPayload)
+                }).catch(err => console.error("Erro ao autocorrigir taxas no servidor:", err));
+              } else {
+                setTaxasCustoState(data.taxas_custo);
+                setStorageItem('simulador_taxas_custo', JSON.stringify(data.taxas_custo));
+              }
             }
             if (data.show_lucro_vendedor !== undefined) {
               setShowLucroVendedor(data.show_lucro_vendedor);
