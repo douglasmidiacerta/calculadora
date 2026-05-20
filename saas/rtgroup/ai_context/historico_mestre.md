@@ -383,5 +383,17 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Compressão de Logotipo via Canvas**: Implementada a função `compressLogoImage` em `src/App.tsx` que redimensiona e comprime qualquer logotipo carregado para no máximo 400x120px, codificando-o em PNG leve (redução drástica de megabytes para 10KB-40KB). Isso previne estouros de cota no `localStorage` (`QuotaExceededError`) e rejeições por HTTP POST excedentes no cPanel.
   - **Filtro de Logotipo Customizado Inteligente**: Remoção do filtro fixo `brightness(0) invert(1)` na imagem exportada se houver logotipo personalizado ativo (`logoUrl` definido), permitindo a exibição em cores reais e evitando silhuetas ou retângulos brancos.
   - **Replicação Total Multi-Tenant**: Re-executado o script `scripts/copy_to_partners.ps1` propagando as correções do core base de forma homogênea para todos os parceiros SaaS físicos do projeto.
-- **Status Final**: Versão 1.2.10 testada e compilada com sucesso via `npm run build`. Nova distribuição compactada gerada (`antigravity-v1.2.10.zip`), arquivos antigos removidos, alterações commitadas e push realizado na branch `main` no GitHub.
+- **Status Final**: Versão 1.2.10 concluída e compilada com sucesso.
 
+---
+
+## [2026-05-20] - Isolamento de LocalStorage e Correção de Cálculo na CredPara (v1.2.11)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.2.11`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Correção de Cálculo de Lucro na CredPara**: Solucionado o bug reportado pelo usuário onde a simulação de R$ 1.198,00 no modo limite na CredPara exibia um lucro incorreto de R$ 162,18 em vez de R$ 129,11. A causa raiz foi o compartilhamento do `localStorage` entre subpastas do mesmo domínio no cPanel, fazendo com que o navegador aplicasse a taxa de custo da máquina padrão de 2.99% Master/Visa 1x da calculadora raiz em vez dos 5.75% específicos cadastrados para a CredPara.
+  - **Isolamento de Cache Multi-Tenant (LocalStorage)**: Criação de prefixo dinâmico de persistência local (`STORAGE_PREFIX`) injetado individualmente por parceiro SaaS (ex: `credpara_` para CredPara, `credfacil_` para Cred Fácil). Encapsulamento das leituras e gravações do localStorage nas funções abstratas `getStorageItem`, `setStorageItem` e `removeStorageItem` em `src/App.tsx`, eliminando vazamento de escopo e mistura de taxas e logotipos no lado do cliente.
+  - **Ajuste no Script de Replicação**: O script PowerShell `scripts/copy_to_partners.ps1` foi configurado para injetar automaticamente o prefixo do parceiro nas cópias em lote.
+  - **Build & Empacotamento**: Recompilação em lote executada. Criação do arquivo de distribuição final `antigravity-v1.2.11.zip` contendo os novos fontes e build, e remoção do zip obsoleto anterior.
+- **Status Final**: Versão 1.2.11 totalmente corrigida localmente, buildada na raiz e nos 10 tenants do SaaS, empacotada em arquivo ZIP na raiz, commitada e enviada via `git push origin main` para deploy automático via GitHub Actions para o servidor de produção cPanel.

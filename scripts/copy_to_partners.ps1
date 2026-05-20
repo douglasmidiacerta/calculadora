@@ -172,6 +172,9 @@ foreach ($partnerKey in $partners.Keys) {
         # Substitui o título dinâmico da aba do navegador no useEffect
         $content = $content.Replace('document.title = "Empresta BH - Calculadora";', "document.title = `"$partnerName - Calculadora`";")
         
+        # Substitui o prefixo de localStorage para isolamento de multi-tenancy SaaS
+        $content = $content.Replace('const STORAGE_PREFIX = "emprestabh_";', "const STORAGE_PREFIX = `"${partnerKey}_`";")
+        
         # Substitui a marca no copyright do rodapé
         $content = $content.Replace("Empresta BH $([char]0x00A9)", "$partnerName $([char]0x00A9)")
         

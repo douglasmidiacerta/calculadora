@@ -1,19 +1,18 @@
-### Sessão Atual - Concluída (v1.2.10)
+### Sessão Atual - Concluída (v1.2.11)
 
-- **Compressão de Imagem Canvas no Upload do Logotipo**:
-  - Adicionado o utilitário `compressLogoImage` em `src/App.tsx` que intercepta o arquivo de imagem carregado no Painel Admin (Aba Identidade Visual).
-  - Redimensiona e comprime a imagem via Canvas HTML5 para no máximo 400x120px (codificado em PNG leve).
-  - Reduz o tamanho de string Base64 de megabytes para **10KB a 40KB**, eliminando erros de estouro de quota local (`QuotaExceededError` no `localStorage`) e problemas com uploads JSON volumosos no servidor cPanel (POST que excediam `post_max_size` de PHP).
-- **Remoção de Filtro Monocromático no Logotipo Customizado (Exportação)**:
-  - O filtro CSS `brightness(0) invert(1)` no logotipo do cabeçalho da imagem de exportação agora é condicional: é aplicado apenas quando a imagem base default (`logo.png`) é utilizada.
-  - Se um logotipo personalizado (`logoUrl`) for detectado, o filtro é ignorado, renderizando a imagem e suas cores originais sem virar uma caixa/silhueta branca.
+- **Correção Crítica de Vazamento de Cache (Multi-Tenant LocalStorage)**:
+  - Identificada falha de cálculo na CredPara (retornando lucro de R$ 162,18 em simulação de R$ 1.198,00 quando deveria retornar R$ 129,11).
+  - A causa raiz foi o compartilhamento do `localStorage` entre subpastas do mesmo domínio de origem no cPanel (ex: `dominio.com/calculadora/` e `dominio.com/calculadora/credpara/`). O navegador lia a taxa padrão de 2.99% Master/Visa 1x do core base persistida no localStorage em vez dos 5.75% cadastrados na CredPara.
+  - Implementada a constante `STORAGE_PREFIX` dinamicamente em cada tenant (ex: `credpara_` para a CredPara, `d_cred_` para a D Cred, etc.).
+  - Encapsuladas todas as chamadas de armazenamento nas funções seguras `getStorageItem`, `setStorageItem` e `removeStorageItem` em `src/App.tsx`, isolando os caches por completo.
+  - Ajustado o script `scripts/copy_to_partners.ps1` para injetar o prefixo do parceiro correspondente em lote.
 - **Replicação Total Multi-Tenant**:
-  - As correções de compressão e filtro foram propagadas com sucesso para todos os 10 parceiros SaaS via `scripts/copy_to_partners.ps1`.
+  - Executado o script de replicação `copy_to_partners.ps1` para sincronizar a correção em todas as 10 pastas de parceiros SaaS.
 - **Build e Empacotamento**:
-  - `npm run build` executado com sucesso e arquivos de produção compilados na pasta `/dist`.
-  - Criado o arquivo ZIP `antigravity-v1.2.10.zip` (com o `CHANGELOG.md` atualizado incluído dentro e fora) e removida a versão anterior `antigravity-v1.2.9.zip`.
+  - `npm run build` executado com sucesso e arquivos de produção compilados na pasta `/dist` na raiz e nos tenants.
+  - Criado o arquivo ZIP `antigravity-v1.2.11.zip` e removida a versão anterior `antigravity-v1.2.10.zip`.
 
 ### Próximos Passos
 
-1. **Acompanhar Feedback do Usuário**: Testar se o carregamento de logotipos pesados agora funciona 100% de forma instantânea tanto localmente quanto no cPanel do cliente.
-2. **Monitorar Deploy Automático**: O push na branch `main` ativará a esteira do GitHub Actions para distribuir os arquivos compilados em lote no servidor.
+1. **Acompanhar Deploy Automático**: O push na branch `main` no GitHub ativará a esteira do GitHub Actions para distribuir os arquivos compilados em lote no servidor do cliente.
+2. **Confirmação do Usuário**: Solicitar ao usuário que faça o teste prático na calculadora CredPara (limpando o cache com Ctrl + F5 para apagar resíduos do localStorage compartilhado anteriormente) e verifique se o lucro agora está correto (R$ 129,11).

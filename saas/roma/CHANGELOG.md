@@ -1,5 +1,14 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
+## [1.2.11] - 2026-05-20
+
+### Corrigido
+- **Cálculo de Lucro Incorreto por Vazamento de Cache (Multi-Tenant LocalStorage)**:
+  - Correção crítica no vazamento de cache do `localStorage` entre tenants. Como todas as calculadoras SaaS rodam no mesmo domínio em subpastas no cPanel (ex: `dominio.com/calculadora/` e `dominio.com/calculadora/credpara/`), o navegador compartilhava o mesmo espaço do `localStorage`. Isso fazia com que ao acessar a calculadora CredPara, o sistema utilizasse as taxas de custo da máquina do adquirente padrão da raiz (2.99% Master/Visa 1x) em vez de usar as taxas corretas cadastradas para a CredPara (5.75%).
+  - Implementação de um prefixo de persistência local dinâmico (`STORAGE_PREFIX`) individual por tenant (ex: `credpara_` para a CredPara, `d_cred_` para a D Cred, etc.).
+  - Encapsulamento de todas as operações de gravação e leitura (`getStorageItem`, `setStorageItem`, `removeStorageItem`) para aplicar automaticamente o prefixo correspondente, garantindo isolamento lógico de cache e taxas 100% segregadas no lado do cliente.
+  - Ajuste no script de replicação programática para injetar dinamicamente o prefixo correto no `App.tsx` de cada parceiro em lote.
+
 ## [1.2.10] - 2026-05-20
 
 ### Adicionado

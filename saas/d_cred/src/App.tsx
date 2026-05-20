@@ -104,10 +104,37 @@ const compressLogoImage = (file: File): Promise<string> => {
   });
 };
 
+// --- STORAGE PREFIX FOR SAAS MULTI-TENANCY ISOLATION ---
+const STORAGE_PREFIX = "d_cred_";
+
+const getStorageItem = (key: string): string | null => {
+  try {
+    return localStorage.getItem(STORAGE_PREFIX + key);
+  } catch (e) {
+    return null;
+  }
+};
+
+const setStorageItem = (key: string, value: string): void => {
+  try {
+    localStorage.setItem(STORAGE_PREFIX + key, value);
+  } catch (e) {
+    // Safely ignore QuotaExceededError or other storage failures
+  }
+};
+
+const removeStorageItem = (key: string): void => {
+  try {
+    localStorage.removeItem(STORAGE_PREFIX + key);
+  } catch (e) {
+    // Ignore
+  }
+};
+
 // Helper for local storage
 const loadLocalStorage = <T,>(key: string, defaultValue: T): T => {
   try {
-    const saved = localStorage.getItem(key);
+    const saved = getStorageItem(key);
     return saved ? JSON.parse(saved) : defaultValue;
   } catch (e) {
     return defaultValue;
@@ -122,13 +149,13 @@ export default function App() {
     document.title = "D Cred - Calculadora";
   }, []);
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('auth_token'));
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!getStorageItem('auth_token'));
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [userRole, setUserRole] = useState<string>(() => 
-    localStorage.getItem('user_role') || 'vendedor'
+    getStorageItem('user_role') || 'vendedor'
   );
 
   // --- DYNAMIC TAXES & CONTROLS STATES ---
@@ -167,7 +194,7 @@ export default function App() {
 
   // --- ADMIN AUTH & POPUPS ---
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => 
-    !!localStorage.getItem('admin_authenticated')
+    !!getStorageItem('admin_authenticated')
   );
   const [showAdminPasswordModal, setShowAdminPasswordModal] = useState(false);
   const [showAdminPanelModal, setShowAdminPanelModal] = useState(false);
@@ -213,51 +240,51 @@ export default function App() {
           if (data && Object.keys(data).length > 0) {
             if (data.fatores_normal) {
               setFatoresBaseNormalState(data.fatores_normal);
-              localStorage.setItem('simulador_fatores_normal', JSON.stringify(data.fatores_normal));
+              setStorageItem('simulador_fatores_normal', JSON.stringify(data.fatores_normal));
             }
             if (data.fatores_promo) {
               setFatoresBasePromoState(data.fatores_promo);
-              localStorage.setItem('simulador_fatores_promo', JSON.stringify(data.fatores_promo));
+              setStorageItem('simulador_fatores_promo', JSON.stringify(data.fatores_promo));
             }
             if (data.acrescimos_normal) {
               setAcrescimosNormalState(data.acrescimos_normal);
-              localStorage.setItem('simulador_acrescimos_normal', JSON.stringify(data.acrescimos_normal));
+              setStorageItem('simulador_acrescimos_normal', JSON.stringify(data.acrescimos_normal));
             }
             if (data.acrescimos_promo) {
               setAcrescimosPromoState(data.acrescimos_promo);
-              localStorage.setItem('simulador_acrescimos_promo', JSON.stringify(data.acrescimos_promo));
+              setStorageItem('simulador_acrescimos_promo', JSON.stringify(data.acrescimos_promo));
             }
             if (data.acrescimo_geral_normal !== undefined) {
               setAcrescimoGeralNormal(data.acrescimo_geral_normal);
-              localStorage.setItem('simulador_acrescimo_geral_normal', JSON.stringify(data.acrescimo_geral_normal));
+              setStorageItem('simulador_acrescimo_geral_normal', JSON.stringify(data.acrescimo_geral_normal));
             }
             if (data.acrescimo_geral_promo !== undefined) {
               setAcrescimoGeralPromo(data.acrescimo_geral_promo);
-              localStorage.setItem('simulador_acrescimo_geral_promo', JSON.stringify(data.acrescimo_geral_promo));
+              setStorageItem('simulador_acrescimo_geral_promo', JSON.stringify(data.acrescimo_geral_promo));
             }
             if (data.taxas_custo) {
               setTaxasCustoState(data.taxas_custo);
-              localStorage.setItem('simulador_taxas_custo', JSON.stringify(data.taxas_custo));
+              setStorageItem('simulador_taxas_custo', JSON.stringify(data.taxas_custo));
             }
             if (data.show_lucro_vendedor !== undefined) {
               setShowLucroVendedor(data.show_lucro_vendedor);
-              localStorage.setItem('simulador_show_lucro_vendedor', JSON.stringify(data.show_lucro_vendedor));
+              setStorageItem('simulador_show_lucro_vendedor', JSON.stringify(data.show_lucro_vendedor));
             }
             if (data.show_lucro_dono !== undefined) {
               setShowLucroDono(data.show_lucro_dono);
-              localStorage.setItem('simulador_show_lucro_dono', JSON.stringify(data.show_lucro_dono));
+              setStorageItem('simulador_show_lucro_dono', JSON.stringify(data.show_lucro_dono));
             }
             if (data.tipo_taxa_exibida !== undefined) {
               setTipoTaxaExibida(data.tipo_taxa_exibida);
-              localStorage.setItem('simulador_tipo_taxa_exibida', JSON.stringify(data.tipo_taxa_exibida));
+              setStorageItem('simulador_tipo_taxa_exibida', JSON.stringify(data.tipo_taxa_exibida));
             }
             if (data.logo_url !== undefined) {
               setLogoUrl(data.logo_url);
-              localStorage.setItem('simulador_logo_url', JSON.stringify(data.logo_url));
+              setStorageItem('simulador_logo_url', JSON.stringify(data.logo_url));
             }
             if (data.primary_color !== undefined) {
               setPrimaryColor(data.primary_color);
-              localStorage.setItem('simulador_primary_color', JSON.stringify(data.primary_color));
+              setStorageItem('simulador_primary_color', JSON.stringify(data.primary_color));
             }
           }
         })
@@ -280,19 +307,19 @@ export default function App() {
       const data = await response.json();
 
       if (data.success) {
-        localStorage.setItem('auth_token', data.token);
+        setStorageItem('auth_token', data.token);
         const role = data.role || 'vendedor';
-        localStorage.setItem('user_role', role);
+        setStorageItem('user_role', role);
         setUserRole(role);
         setIsAuthenticated(true);
 
         // Se for dono ou admin, autentica automaticamente nas configurações administrativas
         if (role === 'dono') {
           setIsAdminAuthenticated(true);
-          localStorage.setItem('admin_authenticated', 'true');
+          setStorageItem('admin_authenticated', 'true');
         } else {
           setIsAdminAuthenticated(false);
-          localStorage.removeItem('admin_authenticated');
+          removeStorageItem('admin_authenticated');
         }
       } else {
         setLoginError(data.message || "Credenciais inválidas");
@@ -305,9 +332,9 @@ export default function App() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user_role');
-    localStorage.removeItem('admin_authenticated');
+    removeStorageItem('auth_token');
+    removeStorageItem('user_role');
+    removeStorageItem('admin_authenticated');
     setIsAuthenticated(false);
     setIsAdminAuthenticated(false);
   };
@@ -460,18 +487,18 @@ export default function App() {
       primary_color: formPrimaryColor
     };
 
-    localStorage.setItem('simulador_fatores_normal', JSON.stringify(formFatoresBaseNormal));
-    localStorage.setItem('simulador_fatores_promo', JSON.stringify(formFatoresBasePromo));
-    localStorage.setItem('simulador_acrescimos_normal', JSON.stringify(formAcrescimosNormal));
-    localStorage.setItem('simulador_acrescimos_promo', JSON.stringify(formAcrescimosPromo));
-    localStorage.setItem('simulador_acrescimo_geral_normal', JSON.stringify(formAcrescimoGeralNormal));
-    localStorage.setItem('simulador_acrescimo_geral_promo', JSON.stringify(formAcrescimoGeralPromo));
-    localStorage.setItem('simulador_taxas_custo', JSON.stringify(formTaxasCusto));
-    localStorage.setItem('simulador_show_lucro_vendedor', JSON.stringify(formShowLucroVendedor));
-    localStorage.setItem('simulador_show_lucro_dono', JSON.stringify(formShowLucroDono));
-    localStorage.setItem('simulador_tipo_taxa_exibida', JSON.stringify(formTipoTaxaExibida));
-    localStorage.setItem('simulador_logo_url', JSON.stringify(formLogoUrl));
-    localStorage.setItem('simulador_primary_color', JSON.stringify(formPrimaryColor));
+    setStorageItem('simulador_fatores_normal', JSON.stringify(formFatoresBaseNormal));
+    setStorageItem('simulador_fatores_promo', JSON.stringify(formFatoresBasePromo));
+    setStorageItem('simulador_acrescimos_normal', JSON.stringify(formAcrescimosNormal));
+    setStorageItem('simulador_acrescimos_promo', JSON.stringify(formAcrescimosPromo));
+    setStorageItem('simulador_acrescimo_geral_normal', JSON.stringify(formAcrescimoGeralNormal));
+    setStorageItem('simulador_acrescimo_geral_promo', JSON.stringify(formAcrescimoGeralPromo));
+    setStorageItem('simulador_taxas_custo', JSON.stringify(formTaxasCusto));
+    setStorageItem('simulador_show_lucro_vendedor', JSON.stringify(formShowLucroVendedor));
+    setStorageItem('simulador_show_lucro_dono', JSON.stringify(formShowLucroDono));
+    setStorageItem('simulador_tipo_taxa_exibida', JSON.stringify(formTipoTaxaExibida));
+    setStorageItem('simulador_logo_url', JSON.stringify(formLogoUrl));
+    setStorageItem('simulador_primary_color', JSON.stringify(formPrimaryColor));
 
     setFatoresBaseNormalState(formFatoresBaseNormal);
     setFatoresBasePromoState(formFatoresBasePromo);
@@ -507,18 +534,18 @@ export default function App() {
 
   const handleRestoreDefaults = () => {
     if (window.confirm("Deseja realmente restaurar as taxas e opções originais de fábrica? Todas as suas alterações serão perdidas.")) {
-      localStorage.removeItem('simulador_fatores_normal');
-      localStorage.removeItem('simulador_fatores_promo');
-      localStorage.removeItem('simulador_acrescimos_normal');
-      localStorage.removeItem('simulador_acrescimos_promo');
-      localStorage.removeItem('simulador_acrescimo_geral_normal');
-      localStorage.removeItem('simulador_acrescimo_geral_promo');
-      localStorage.removeItem('simulador_taxas_custo');
-      localStorage.removeItem('simulador_show_lucro_vendedor');
-      localStorage.removeItem('simulador_show_lucro_dono');
-      localStorage.removeItem('simulador_tipo_taxa_exibida');
-      localStorage.removeItem('simulador_logo_url');
-      localStorage.removeItem('simulador_primary_color');
+      removeStorageItem('simulador_fatores_normal');
+      removeStorageItem('simulador_fatores_promo');
+      removeStorageItem('simulador_acrescimos_normal');
+      removeStorageItem('simulador_acrescimos_promo');
+      removeStorageItem('simulador_acrescimo_geral_normal');
+      removeStorageItem('simulador_acrescimo_geral_promo');
+      removeStorageItem('simulador_taxas_custo');
+      removeStorageItem('simulador_show_lucro_vendedor');
+      removeStorageItem('simulador_show_lucro_dono');
+      removeStorageItem('simulador_tipo_taxa_exibida');
+      removeStorageItem('simulador_logo_url');
+      removeStorageItem('simulador_primary_color');
 
       setFatoresBaseNormalState(DEFAULT_FATORES_BASE_NORMAL);
       setFatoresBasePromoState(DEFAULT_FATORES_BASE_PROMO);
@@ -562,7 +589,7 @@ export default function App() {
   };
 
   const handleAdminLogout = () => {
-    localStorage.removeItem('admin_authenticated');
+    removeStorageItem('admin_authenticated');
     setIsAdminAuthenticated(false);
     setShowAdminPanelModal(false);
   };
@@ -1169,7 +1196,7 @@ export default function App() {
                 e.preventDefault();
                 if (adminPasswordInput === "3x51ELCO") {
                   setIsAdminAuthenticated(true);
-                  localStorage.setItem('admin_authenticated', 'true');
+                  setStorageItem('admin_authenticated', 'true');
                   setShowAdminPasswordModal(false);
                   setAdminPasswordInput("");
                   setAdminPasswordError("");
