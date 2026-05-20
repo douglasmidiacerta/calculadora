@@ -2,6 +2,16 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.2.1] - 2026-05-20
+
+### Adicionado
+- **Configuração de Lucro Líquido do Dono**:
+  - Adicionada opção dedicada nas Opções de Exibição do Simulador (Aba 1) para o Dono ativar/desativar a exibição da coluna de Lucro Líquido em seu próprio simulador (sincronizada via JSON remoto no servidor pela flag `show_lucro_dono` / `showLucroDono`).
+- **Restrição de Acesso a Taxas e Custos de Máquina**:
+  - Bloqueada a edição dos inputs decimais da **Aba 2 (Fatores Base)** e da **Aba 3 (Custo de Máquina)** no Painel Administrativo para o Dono, apresentando-os estritamente como visualização/somente-leitura. Os inputs agora contam com desabilitação nativa (`disabled`) e estilização suave e harmônica em tom cinza desativado para indicação visual clara de visualização-técnica.
+- **Replicação SaaS Automática**:
+  - Sincronização e compilação do código base em todas as instâncias de parceiros (`saas/d_cred/`, `saas/credpara/`, `saas/melhor_credi/`), garantindo que todos contem com o painel admin 100% atualizado e seus respectivos bundles de produção otimizados.
+
 ## [1.2.0] - 2026-05-20
 
 ### Adicionado

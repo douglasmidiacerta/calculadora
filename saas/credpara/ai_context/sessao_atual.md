@@ -2,38 +2,28 @@
 
 ## Status da Sessão
 - **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
-- **Versão Atual**: `v1.2.0`
-- **Foco da Sessão**: Implementação da Plataforma Multi-Tenant SaaS em Subpastas (`saas/d_cred`, `saas/credpara`, `saas/melhor_credi`), sincronização remota de taxas via API PHP (`config.json`), controle fino de níveis de acesso por Role (Dono vs Vendedor) com switch administrativo "Liberar Tabela de Comissão para os Vendedores".
+- **Versão Atual**: `v1.2.1`
+- **Foco da Sessão**: Restrição de edição de Fatores Base e Custos de Máquina no painel administrativo do Dono para visualização técnica somente-leitura e controle de exibição de lucro no próprio simulador do Dono.
 
 ---
 
 ## Atividades Realizadas
-1. **Estrutura SaaS Organizada**:
-   - Criação e replicação isolada dos ambientes do simulador sob a pasta `saas/` para cada parceiro: `d_cred/`, `credpara/`, `melhor_credi/`.
-   - Implementado script PowerShell robusto (`scratch/copy_to_partners.ps1`) para realizar cópia limpa e sem recursões duplicadas de arquivos da raiz para os diretórios dos parceiros.
-2. **Personalização de Marcas**:
-   - Personalização individualizada de cada parceiro em suas respectivas subpastas. O nome do respectivo parceiro substitui a marca original em:
-     - Copyright no rodapé de login.
-     - Cabeçalho de exportação em imagem PNG para simulações de WhatsApp.
-3. **Controle de Roles & Nível de Permissão**:
-   - Vendedor Comum (`vendedor`): Interface limpa de simulação. Botão de engrenagem do Admin ocultado. Visibilidade da comissão (lucro líquido) controlada dinamicamente pelo servidor de forma centralizada.
-   - Dono da Empresa (`dono` / `admin` legado): Acesso completo ao painel admin, autenticação imediata e privilégio de edição.
-4. **Sincronização Remota de Taxas e Comissão**:
-   - Implementada API de sincronização baseada em PHP (`public/api/config/index.php`) gravando e lendo em `api/config/config.json`.
-   - Acoplamento no frontend `src/App.tsx` para realizar o fetch das taxas no servidor assim que qualquer usuário se autentica, garantindo que alterações salvas pelo Dono sejam instantaneamente propagadas aos vendedores.
-5. **Switch de Comissão Inteligente**:
-   - Atualizado o switch administrativo no frontend `src/App.tsx` para gerenciar a chave `formShowLucroVendedor`, adicionando a legenda "Liberar Tabela de Comissão para os Vendedores" com os status interativos de "Liberado/Bloqueado".
-6. **Compilação e Homologação**:
-   - Execução bem-sucedida do processo de build de produção (`npm run build`) na raiz e em todas as subpastas SaaS dos parceiros (`saas/d_cred`, `saas/credpara`, `saas/melhor_credi`), garantindo bundles estáveis, funcionais e livres de erros.
+1. **Restrição das Taxas Administrativas**:
+   - Aba 2 (Fatores Base) e Aba 3 (Custo de Máquina) agora estão com todos os inputs decimais de 1x a 21x bloqueados para edição (`disabled={true}`).
+   - Estilização moderna e harmônica aplicada em cinza desativado (`bg-slate-100 border border-slate-200 text-slate-400 cursor-not-allowed`) para deixar claro que são dados técnicos fixados para visualização técnica do Dono.
+   - Atualizados os cabeçalhos explicativos das Abas 2 e 3 para adequar à natureza somente-leitura destas tabelas.
+2. **Switch de Exibição do Lucro do Dono**:
+   - Validação da flag `show_lucro_dono` / `showLucroDono` no React, no local storage e na sincronização remota via API.
+   - Switch reativo na Aba 1 de Opções de Exibição do Simulador permitindo ao Dono ocultar/exibir a coluna de Lucro Líquido no simulador do seu próprio usuário logado.
+3. **Replicação SaaS Multi-Tenant Concluída**:
+   - Sincronização automática do novo core atualizado para todos os parceiros (`saas/d_cred`, `saas/credpara`, `saas/melhor_credi`) utilizando o script PowerShell `scratch/copy_to_partners.ps1`.
+   - Re-aplicação das marcas de copyright e imagens específicas de cada parceiro.
+   - Execução bem-sucedida de `npm run build` para o projeto raiz e todas as subpastas SaaS, gerando bundles otimizados, limpos e sem erros.
+4. **Empacotamento de Distribuição**:
+   - Remoção dos ZIPs antigos e geração dos novos pacotes compactados de entrega na raiz: `antigravity-v1.2.1.zip` e `simulador-dist-v1.2.1.zip`.
 
-## Próximos Passos (Pendentes)
-1. **Acompanhar a Execução do GitHub Actions**:
-   - Acessar a aba "Actions" no repositório do GitHub e verificar se o workflow "Deploy Simulador no cPanel" (disparado pelo nosso push) executa com sucesso (todas as etapas de compilação e deploy dos parceiros em verde).
-2. **Validar URLs de Produção**:
-   - Acessar individualmente as URLs dos simuladores no navegador para garantir que o redirecionamento de barra final e o carregamento relativo funcionam sem tela branca:
-     * Calculadora Principal: `https://credcertomg.com.br/calculadora/`
-     * D Cred: `https://credcertomg.com.br/calculadora/d_cred/`
-     * CredPara: `https://credcertomg.com.br/calculadora/credpara/`
-     * Melhor Credi: `https://credcertomg.com.br/calculadora/melhor_credi/`
-3. **Validar a Sincronização das Taxas e Comissão em Nuvem**:
-   - Logar com o usuário `dono` na calculadora principal, alterar as taxas/comissão, salvar as alterações e verificar se as mudanças aparecem em tempo real para um `vendedor` logado em outro navegador ou dispositivo.
+## Próximos Passos (Próxima Sessão)
+1. **Verificar Esteira de CI/CD (GitHub Actions)**:
+   - Acompanhar o pipeline de build/deploy após o push para a branch `main` no GitHub.
+2. **Validação em Produção**:
+   - Validar as URLs de produção cPanel para garantir o correto funcionamento das restrições e exibições.

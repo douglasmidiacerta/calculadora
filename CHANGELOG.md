@@ -2,6 +2,16 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.2.2] - 2026-05-20
+
+### Adicionado
+- **Favicon de Marca Personalizável**:
+  - Inserida tag de referência de ícone `<link rel="icon" type="image/png" href="favicon.png" />` no `<head>` do `index.html` raiz. Isso permite que você coloque uma imagem customizada de ícone em cada pasta correspondente no cPanel, e o navegador a renderize automaticamente como favicon específico.
+- **Título de Aba Dinâmico por Parceiro**:
+  - Implementado carregamento dinâmico do título da aba do navegador utilizando `useEffect` e `document.title` diretamente no ciclo de vida do componente do React em `src/App.tsx`. O título agora muda de forma limpa e imediata para `<Nome do Parceiro> - Calculadora` (ex: "D Cred - Calculadora" ou "CredPara - Calculadora").
+- **Replicação SaaS & Compilação Completa**:
+  - Re-executado o script de sincronização PowerShell e compilado novamente os bundles estáticos de produção na raiz e em todas as pastas SaaS (`d_cred/`, `credpara/`, `melhor_credi/`), mantendo a homogeneidade absoluta do ecossistema.
+
 ## [1.2.1] - 2026-05-20
 
 ### Adicionado

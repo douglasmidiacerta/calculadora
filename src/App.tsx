@@ -66,6 +66,10 @@ const loadLocalStorage = <T,>(key: string, defaultValue: T): T => {
 };
 
 export default function App() {
+  useEffect(() => {
+    document.title = "Cred Certo - Calculadora";
+  }, []);
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('auth_token'));
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

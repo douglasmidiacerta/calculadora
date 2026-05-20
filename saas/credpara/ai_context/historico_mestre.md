@@ -227,3 +227,25 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Personalização de Marcas**: Customização e aplicação das marcas ("D Cred", "CredPara" e "Melhor Credi") no copyright do rodapé e nos PNGs de exportação gerados por cada parceiro.
   - **Sincronização da Esteira de CI/CD (GitHub Actions)**: Integração de todas as calculadoras SaaS em tarefas sequenciais do arquivo `.github/workflows/deploy.yml`. Cada parceiro possui seu cache de deploy FTP (`state-name`) isolado, evitando que sobrescrevam uns aos outros no servidor cPanel.
 - **Status Final**: Versão 1.2.0 compilada localmente e empacotada em novos pacotes ZIP (`antigravity-v1.2.0.zip` e `simulador-dist-v1.2.0.zip`). O arquivo de workflow do GitHub Actions foi commitado e enviado ao repositório remoto (`git push origin main`), ativando com sucesso o deploy contínuo das quatro calculadoras físicas para o cPanel em produção.
+
+---
+
+## [2026-05-20] - Restrições Administrativas e Controle de Exibição de Lucro do Dono (v1.2.1)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.2.1`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Acesso Somente-Leitura de Fatores e Custos**:
+    - Alteração da Aba 2 (Fatores Base) e da Aba 3 (Custo de Máquina) no Painel Administrativo.
+    - Bloqueio completo da edição dos inputs decimais (1x a 21x) de Fatores Base (Normal/Promo) e Custos de Máquina (Master/Visa e Elo) para o Dono, apresentando as taxas ativas estritamente em modo de visualização.
+    - Aplicação nativa de `disabled={true}` nos inputs correspondentes e estilização em cinza suave (`bg-slate-100 border border-slate-200 text-slate-400 cursor-not-allowed`) para manter a clareza e harmonia com o layout.
+    - Ajuste dos cabeçalhos explicativos e caixas de aviso no topo de ambas as abas indicando que são taxas de referência fixadas pelo sistema.
+  - **Switch de Lucro Líquido do Dono**:
+    - Inclusão de switch reativo nas Opções de Exibição do Simulador (Aba 1) sob a flag `show_lucro_dono` / `showLucroDono` para ativar/desativar a coluna de Lucro Líquido no simulador do Dono, permitindo ocultar a comissão ao simular de seu próprio usuário.
+  - **Replicação SaaS Multi-Tenant**:
+    - Sincronização automática do core atualizado para todos os parceiros (`saas/d_cred/`, `saas/credpara/`, `saas/melhor_credi/`) via script PowerShell (`scratch/copy_to_partners.ps1`).
+    - Personalização das marcas e copyrights específicos para cada parceiro nos arquivos compilados.
+    - Execução do build de produção em todas as instâncias SaaS, validando bundles limpos e otimizados para deploy.
+  - **Empacotamento de Distribuição**:
+    - Geração de novos pacotes ZIP na raiz (`antigravity-v1.2.1.zip` e `simulador-dist-v1.2.1.zip`) contendo CHANGELOG.md e arquivos finais prontos para deploy no cPanel.
+- **Status Final**: Versão 1.2.1 concluída e compilada com sucesso, sincronizada nas quatro calculadoras e commitada no repositório remoto.
