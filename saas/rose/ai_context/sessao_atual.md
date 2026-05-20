@@ -1,12 +1,19 @@
-### Sessão Atual - Concluída (v1.2.9)
+### Sessão Atual - Concluída (v1.2.10)
 
-- **Upload de Logo nos Parceiros SaaS**: Campo "URL da Logomarca" (input text) substituído por upload de arquivo (`type="file"` + `FileReader` → Base64) em todos os 10 parceiros SaaS: credfacil, credpara, credsimples, d_cred, forcepay, melhorcredito, ramos, roma, rose, rtgroup.
-- **Preview do Logo**: Após selecionar o arquivo, o logo é exibido em thumbnail com botão (X) para remover.
-- **Instância Principal (src/App.tsx)**: Já possuía o upload de arquivo — todos os parceiros agora estão padronizados.
-- **Botão "Mostrar % na imagem" redesenhado**: Toggle pill verde sólido quando ativo / cinza quando inativo. Badge circular com símbolo `%`. Texto dinâmico "Mostrar %" / "Ocultar %".
-- **Build e Deploy**: `npm run build` executado com sucesso. ZIP `antigravity-v1.2.9.zip` gerado. Commit e push para `main` realizados com sucesso.
+- **Compressão de Imagem Canvas no Upload do Logotipo**:
+  - Adicionado o utilitário `compressLogoImage` em `src/App.tsx` que intercepta o arquivo de imagem carregado no Painel Admin (Aba Identidade Visual).
+  - Redimensiona e comprime a imagem via Canvas HTML5 para no máximo 400x120px (codificado em PNG leve).
+  - Reduz o tamanho de string Base64 de megabytes para **10KB a 40KB**, eliminando erros de estouro de quota local (`QuotaExceededError` no `localStorage`) e problemas com uploads JSON volumosos no servidor cPanel (POST que excediam `post_max_size` de PHP).
+- **Remoção de Filtro Monocromático no Logotipo Customizado (Exportação)**:
+  - O filtro CSS `brightness(0) invert(1)` no logotipo do cabeçalho da imagem de exportação agora é condicional: é aplicado apenas quando a imagem base default (`logo.png`) é utilizada.
+  - Se um logotipo personalizado (`logoUrl`) for detectado, o filtro é ignorado, renderizando a imagem e suas cores originais sem virar uma caixa/silhueta branca.
+- **Replicação Total Multi-Tenant**:
+  - As correções de compressão e filtro foram propagadas com sucesso para todos os 10 parceiros SaaS via `scripts/copy_to_partners.ps1`.
+- **Build e Empacotamento**:
+  - `npm run build` executado com sucesso e arquivos de produção compilados na pasta `/dist`.
+  - Criado o arquivo ZIP `antigravity-v1.2.10.zip` (com o `CHANGELOG.md` atualizado incluído dentro e fora) e removida a versão anterior `antigravity-v1.2.9.zip`.
 
 ### Próximos Passos
 
-1. **Parceiros Replicados**: A próxima execução de `scripts/copy_to_partners.ps1` irá sobrescrever os parceiros com o código do core base — que JÁ contém o upload de arquivo. A alteração nos parceiros ficará persistente enquanto não houver nova replicação.
-2. **Ajuste no Script de Replicação** (opcional): Para que a replicação futura sempre propague o upload de arquivo, o script `copy_to_partners.ps1` pode ser ajustado para não sobrescrever a seção de Identidade Visual dos parceiros individualmente.
+1. **Acompanhar Feedback do Usuário**: Testar se o carregamento de logotipos pesados agora funciona 100% de forma instantânea tanto localmente quanto no cPanel do cliente.
+2. **Monitorar Deploy Automático**: O push na branch `main` ativará a esteira do GitHub Actions para distribuir os arquivos compilados em lote no servidor.

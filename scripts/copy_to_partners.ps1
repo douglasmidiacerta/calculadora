@@ -4,11 +4,11 @@
 $partners = @{
     "d_cred"       = "D Cred"
     "credpara"     = "CredPara"
-    "melhorcredito"= "Melhor Crédito"
+    "melhorcredito"= "Melhor Cr$([char]0x00E9)dito"
     "credsimples"  = "Cred Simples"
     "forcepay"     = "ForcePay"
     "roma"         = "Roma"
-    "credfacil"    = "Cred Fácil"
+    "credfacil"    = "Cred F$([char]0x00E1)cil"
     "rose"         = "Rose"
     "rtgroup"      = "RT Group"
     "ramos"        = "Ramos"
@@ -167,13 +167,13 @@ foreach ($partnerKey in $partners.Keys) {
     $appFile = "$destFolder/src/App.tsx"
     if (Test-Path $appFile) {
         Write-Host "   - Customizando strings de marca no App.tsx..." -ForegroundColor DarkGray
-        $content = Get-Content -Path $appFile -Raw
+        $content = [System.IO.File]::ReadAllText($appFile, [System.Text.Encoding]::UTF8)
         
         # Substitui o título dinâmico da aba do navegador no useEffect
         $content = $content.Replace('document.title = "Empresta BH - Calculadora";', "document.title = `"$partnerName - Calculadora`";")
         
         # Substitui a marca no copyright do rodapé
-        $content = $content.Replace('Empresta BH ©', "$partnerName ©")
+        $content = $content.Replace("Empresta BH $([char]0x00A9)", "$partnerName $([char]0x00A9)")
         
         # Substitui a marca no título do PNG exportado usando regex com lookbehind para máxima precisão
         $content = $content -replace '(?<=fontSize:\s*''24px'',\s*fontWeight:\s*''800''\s*\}\}>\s*\r?\n\s*)Empresta BH', $partnerName

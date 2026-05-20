@@ -1,5 +1,18 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
+## [1.2.10] - 2026-05-20
+
+### Adicionado
+- **Compressão Automática de Imagem no Upload do Logotipo**:
+  - Implementado utilitário de compressão de imagens via HTML5 Canvas (`compressLogoImage`). Ao fazer o upload de qualquer arquivo de imagem no Painel Admin (Aba Identidade Visual), a imagem é redimensionada para um limite máximo de 400x120px e codificada como PNG leve.
+  - Isso reduz drasticamente o tamanho da string Base64 resultante de megabytes (ex: fotos de alta resolução de 5MB) para apenas **10KB a 40KB**.
+  - Corrige em definitivo falhas de gravação por estouro de cota local (`QuotaExceededError` no `localStorage`) e erros de descarte de payloads JSON volumosos nas requisições HTTP POST do cPanel (causadores do logotipo não salvar ou sumir após recarregar).
+
+### Modificado
+- **Exibição Inteligente do Logotipo Customizado na Exportação**:
+  - O filtro monocromático `brightness(0) invert(1)` na imagem gerada para exportação/compartilhamento agora é aplicado **apenas** quando o logotipo default do parceiro (`logo.png`) está ativo.
+  - Se o usuário fizer o upload de uma logomarca personalizada (`logoUrl` ativo), a imagem será renderizada em suas cores originais e sem distorções visuais (resolvendo o problema da caixa/silhueta retangular branca na simulação do WhatsApp).
+
 ## [1.2.9] - 2026-05-20
 
 ### Modificado

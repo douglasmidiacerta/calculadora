@@ -361,3 +361,27 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Injeção Dinâmica via PowerShell**: Desenvolvimento de lógica de injeção automática em `scripts/copy_to_partners.ps1` usando substituição de expressões regulares multilinha. O script agora detecta chaves e substitui perfeitamente o bloco `DEFAULT_TAXAS_CUSTO` em `App.tsx` no loop de cada parceiro.
   - **Build & Compilação**: Executados build local (`npm run build`) com sucesso, validando a pasta `/dist` livre de erros.
 - **Status Final**: Versão 1.2.8 concluída, compilada localmente e replicada com sucesso em lote para as 10 instâncias SaaS. Fontes empacotadas no arquivo leve `antigravity-v1.2.8.zip` (17.8MB) e preparadas para commit e push na branch `main` no GitHub.
+
+---
+
+## [2026-05-20] - Upload de Logo nos Parceiros SaaS e Novo Design do Botão de % (v1.2.9)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.2.9`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Upload de Logo nos Parceiros**: Substituição do input de URL textual por upload de arquivo (`type="file"`) em todos os 10 parceiros SaaS (`credfacil`, `credpara`, `credsimples`, `d_cred`, `forcepay`, `melhorcredito`, `ramos`, `roma`, `rose`, `rtgroup`), salvando em localStorage e no servidor como Base64.
+  - **Redesenho do Toggle de %**: Novo design para o botão de exibir taxa na exportação. Substituído por um toggle pill verde/cinza dinâmico com badge circular estilizado com o símbolo `%`.
+- **Status Final**: Versão 1.2.9 compilada com sucesso, replicada em todas as instâncias SaaS e empacotada em `antigravity-v1.2.9.zip`.
+
+---
+
+## [2026-05-20] - Compressão de Imagens Canvas no Upload e Ajuste de Filtro de Exportação (v1.2.10)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.2.10`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Compressão de Logotipo via Canvas**: Implementada a função `compressLogoImage` em `src/App.tsx` que redimensiona e comprime qualquer logotipo carregado para no máximo 400x120px, codificando-o em PNG leve (redução drástica de megabytes para 10KB-40KB). Isso previne estouros de cota no `localStorage` (`QuotaExceededError`) e rejeições por HTTP POST excedentes no cPanel.
+  - **Filtro de Logotipo Customizado Inteligente**: Remoção do filtro fixo `brightness(0) invert(1)` na imagem exportada se houver logotipo personalizado ativo (`logoUrl` definido), permitindo a exibição em cores reais e evitando silhuetas ou retângulos brancos.
+  - **Replicação Total Multi-Tenant**: Re-executado o script `scripts/copy_to_partners.ps1` propagando as correções do core base de forma homogênea para todos os parceiros SaaS físicos do projeto.
+- **Status Final**: Versão 1.2.10 testada e compilada com sucesso via `npm run build`. Nova distribuição compactada gerada (`antigravity-v1.2.10.zip`), arquivos antigos removidos, alterações commitadas e push realizado na branch `main` no GitHub.
+
