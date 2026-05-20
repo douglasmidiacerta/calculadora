@@ -26,11 +26,14 @@
 6. **Compilação e Homologação**:
    - Execução bem-sucedida do processo de build de produção (`npm run build`) na raiz e em todas as subpastas SaaS dos parceiros (`saas/d_cred`, `saas/credpara`, `saas/melhor_credi`), garantindo bundles estáveis, funcionais e livres de erros.
 
----
-
 ## Próximos Passos (Pendentes)
-1. **Implantação dos Bundles nos Parceiros**:
-   - Orientar o usuário a realizar o deploy dos arquivos compilados presentes nas respectivas pastas `dist/` ou através dos novos pacotes ZIP.
-2. **Validação de Sincronização em Produção**:
-   - Pedir ao usuário para realizar o teste de autenticação com o login `dono` em um aparelho e alterar as taxas ou a liberação da comissão.
-   - Acessar com o login `vendedor` em outro aparelho/navegador e verificar se as taxas e a coluna de comissão se adaptam em tempo real segundo o configurado pelo Dono no servidor.
+1. **Acompanhar a Execução do GitHub Actions**:
+   - Acessar a aba "Actions" no repositório do GitHub e verificar se o workflow "Deploy Simulador no cPanel" (disparado pelo nosso push) executa com sucesso (todas as etapas de compilação e deploy dos parceiros em verde).
+2. **Validar URLs de Produção**:
+   - Acessar individualmente as URLs dos simuladores no navegador para garantir que o redirecionamento de barra final e o carregamento relativo funcionam sem tela branca:
+     * Calculadora Principal: `https://credcertomg.com.br/calculadora/`
+     * D Cred: `https://credcertomg.com.br/calculadora/d_cred/`
+     * CredPara: `https://credcertomg.com.br/calculadora/credpara/`
+     * Melhor Credi: `https://credcertomg.com.br/calculadora/melhor_credi/`
+3. **Validar a Sincronização das Taxas e Comissão em Nuvem**:
+   - Logar com o usuário `dono` na calculadora principal, alterar as taxas/comissão, salvar as alterações e verificar se as mudanças aparecem em tempo real para um `vendedor` logado em outro navegador ou dispositivo.
