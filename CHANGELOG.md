@@ -1,5 +1,13 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
+## [1.3.1] - 2026-05-20
+
+### Corrigido
+- **Cor do Valor da Parcela e Taxas na Tabela do Simulador**:
+  - Correção na cor antiga verde/emerald persistente no Valor da Parcela, na Taxa do Cliente (% a.m.) e no Lucro Vendedor Positivo.
+  - Substituição das classes estáticas do Tailwind CSS nos elementos de exibição crítica da tabela do simulador por propriedades de estilo inline dinâmicas (`style={{ color: ... }}`) baseadas na função de mesclagem `mixColor` e no estado reativo `primaryColor`.
+  - Esta alteração blinda em definitivo a renderização dos textos contra comportamentos de variáveis globais do Tailwind CSS v4 e caches persistentes em navegadores móveis e desktop, garantindo 100% de consistência de marca instantânea no ecossistema multi-tenant.
+
 ## [1.3.0] - 2026-05-20
 
 ### Adicionado

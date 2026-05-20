@@ -1,5 +1,15 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
+## [1.3.0] - 2026-05-20
+
+### Adicionado
+- **Identidade Visual Dinâmica e Reativa de Cores**:
+  - Implementação de lógica reativa e matemática de cores usando a função `mixColor` para mesclagem de canais RGB a partir de qualquer cor HEX primária escolhida pelo Dono no Painel Administrativo.
+  - Injeção reativa de uma tag `<style>` com seletores do Tailwind CSS sobrescritas com `!important` (`dynamicStyles`), permitindo atualizar dinamicamente toda a paleta de cores da interface (tela de login, botões, inputs, focos, tabelas, zebras, scrollbars e cabeçalhos) sem quebrar o layout e de forma centralizada.
+  - Exportação de imagem PNG da simulação 100% dinâmica, gerando o layout detalhado com a cor primária da marca para o cliente final ao clicar em "Gerar Imagem" e ao clicar no botão "WhatsApp".
+  - Preservação da experiência de usuário (UX) com a cor verde tradicional do WhatsApp (`#25D366`) mantida estritamente no botão de ação da tela do simulador, enquanto a imagem PNG gerada por este botão herda 100% da nova cor da marca.
+  - Replicação automatizada de toda a lógica para as instâncias de parceiros SaaS multi-tenant (`saas/*`, exceto ForcePay).
+
 ## [1.2.11] - 2026-05-20
 
 ### Corrigido

@@ -1,28 +1,14 @@
-### Sessão Atual - Concluída (v1.2.11)
+### Sessão Atual - Concluída (v1.3.0)
 
-- **Correção Crítica de Vazamento de Cache (Multi-Tenant LocalStorage)**:
-  - Identificada falha de cálculo na CredPara (retornando lucro de R$ 162,18 em simulação de R$ 1.198,00 quando deveria retornar R$ 129,11).
-  - A causa raiz foi o compartilhamento do `localStorage` entre subpastas do mesmo domínio de origem no cPanel (ex: `dominio.com/calculadora/` e `dominio.com/calculadora/credpara/`). O navegador lia a taxa padrão de 2.99% Master/Visa 1x do core base persistida no localStorage em vez dos 5.75% cadastrados na CredPara.
-  - Implementada a constante `STORAGE_PREFIX` dinamicamente em cada tenant (ex: `credpara_` para a CredPara, `d_cred_` para a D Cred, etc.).
-  - Encapsuladas todas as chamadas de armazenamento nas funções seguras `getStorageItem`, `setStorageItem` e `removeStorageItem` em `src/App.tsx`, isolando os caches por completo.
-  - Ajustado o script `scripts/copy_to_partners.ps1` para injetar o prefixo do parceiro correspondente em lote.
-- **Exclusão da ForcePay a Pedido do Usuário**:
-  - Conforme solicitado, a calculadora **ForcePay** foi mantida fora dessa nova alteração de isolamento do LocalStorage.
-  - O código de `saas/forcepay/src/App.tsx` foi revertido para o commit anterior ao isolamento, restaurando o uso nativo e compartilhado do `localStorage` sem prefixos.
-  - A **ForcePay** foi removida da lista de parceiros do script de cópia `scripts/copy_to_partners.ps1`, garantindo que futuras replicações em lote não sobrescrevam as configurações dela.
-- **Limpeza do Repositório e Otimização Massiva de Tamanho (ZIP)**:
-  - Identificado que o diretório temporário `scratch/temp_install` (e sua pasta `node_modules` gerada anteriormente para conversão de imagens) estava sendo propagado recursivamente para cada um dos 10 parceiros do SaaS por não estar na lista de exclusão do script de replicação.
-  - Removido o diretório `scratch/temp_install` da raiz do projeto.
-  - Removidos de forma recursiva os diretórios `scratch/` de dentro de todos os subprojetos `saas/*`.
-  - Adicionada a pasta `"scratch"` no `$excludeList` do script `scripts/copy_to_partners.ps1` para impedir cópias recursivas futuras.
-  - Re-executado o script de replicação em lote de parceiros com sucesso.
-  - Regenerado o pacote de distribuição local `antigravity-v1.2.11.zip` via script PowerShell `make_zip.ps1`.
-  - **Resultado**: Redução de mais de **80%** no tamanho do ZIP final de backup do projeto (de **102.4MB** para apenas **19.3MB**), garantindo extrema agilidade na esteira e deploys no cPanel.
-- **Build e Deploy Contínuo**:
-  - `npm run build` executado na raiz com sucesso e arquivos de produção compilados na pasta `/dist`.
-  - Git commit e git push enviados com sucesso para a branch `main`, ativando o pipeline do GitHub Actions para compilação em lote e deploy FTP isolado de todos os parceiros no servidor cPanel.
+- **Identidade Visual Dinâmica e Reativa de Cores**:
+  - **Função de Cálculo de Cores (`mixColor`)**: Implementada uma lógica matemática precisa para mesclar canais RGB no topo de `src/App.tsx`. A partir de qualquer tom HEX primário selecionado no Painel Administrativo, ela gera tons escuros elegantes (para textos e cabeçalhos) e tons pastel suaves (para zebras de tabelas e fundos) de forma robusta.
+  - **Injeção Dinâmica Reativa (`dynamicStyles`)**: Criada injeção reativa via tag `<style>` com as classes compiladas do Tailwind CSS sobrescritas usando `!important`. Isso permite redefinir de forma síncrona botões, inputs, bordas, zebras, focos e cabeçalhos em toda a interface do simulador e tela de login sem alterar as classes estáticas no JSX.
+  - **Exportação 100% Dinâmica no PNG**: Alterados todos os tons de verde estáticos inline na imagem exportada (`exportRef`) por cores geradas em tempo de execução via `mixColor` baseando-se no `primaryColor`. Dessa forma, o PNG gerado pelo botão "Gerar Imagem" ou "WhatsApp" herda a identidade completa do parceiro.
+  - **Preservação de UX no Botão WhatsApp**: O botão do WhatsApp no simulador preserva sua cor tradicional reconhecida (`#25D366`), mas o PNG gerado por ele é personalizado em conformidade com a nova paleta.
+  - **Replicação SaaS em Lote**: Executada replicação automática para os 9 parceiros ativos SaaS (`saas/*`, exceto ForcePay) via script `copy_to_partners.ps1`.
+  - **Build de Produção & Empacotamento**: Processo de build global de produção executado com 100% de sucesso. Arquivos empacotados de forma limpa em `antigravity-v1.3.0.zip`.
 
 ### Próximos Passos
 
-1. **Confirmação do Usuário**: Solicitar ao usuário que faça o teste prático na calculadora CredPara (limpando o cache com Ctrl + F5 para apagar resíduos do localStorage compartilhado anteriormente) e verifique se o lucro agora está correto (R$ 129,11).
-2. **Validação da ForcePay**: Verificar se a ForcePay continua acessando e compartilhando dados globais normalmente, sem interferência das outras marcas.
+1. **Deploy e Monitoramento**: Executar o commit e push para a branch `main` para disparar a esteira do CI/CD no GitHub Actions para o servidor de produção cPanel.
+2. **Homologação pelo Cliente**: Solicitar ao usuário a validação das cores dinâmicas no painel, testando a geração e compartilhamento das imagens customizadas.

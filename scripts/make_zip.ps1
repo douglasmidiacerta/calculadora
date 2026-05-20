@@ -11,5 +11,5 @@ foreach ($item in Get-ChildItem .) {
     if (-not $skip) { $items += $item.FullName }
 }
 
-Compress-Archive -Path $items -DestinationPath 'antigravity-v1.3.0.zip' -Force
-Write-Host "ZIP antigravity-v1.3.0.zip gerado com sucesso!" -ForegroundColor Green
+Compress-Archive -Path $items -DestinationPath 'antigravity-v1.3.1.zip' -Force
+Write-Host "ZIP antigravity-v1.3.1.zip gerado com sucesso!" -ForegroundColor Green

@@ -397,3 +397,18 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Ajuste no Script de Replicação**: O script PowerShell `scripts/copy_to_partners.ps1` foi configurado para injetar automaticamente o prefixo do parceiro nas cópias em lote.
   - **Build & Empacotamento**: Recompilação em lote executada. Criação do arquivo de distribuição final `antigravity-v1.2.11.zip` contendo os novos fontes e build, e remoção do zip obsoleto anterior.
 - **Status Final**: Versão 1.2.11 totalmente corrigida localmente, buildada na raiz e nos 10 tenants do SaaS, empacotada em arquivo ZIP na raiz, commitada e enviada via `git push origin main` para deploy automático via GitHub Actions para o servidor de produção cPanel.
+
+---
+
+## [2026-05-20] - Identidade Visual Dinâmica e Reativa de Cores (v1.3.0)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.3.0`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Função de Cálculo de Cores (`mixColor`)**: Implementada uma lógica matemática precisa para mesclar canais RGB no topo de `src/App.tsx`. A partir de qualquer tom HEX primário selecionado no Painel Administrativo, ela gera tons escuros elegantes (para textos e cabeçalhos) e tons pastel suaves (para zebras de tabelas e fundos) de forma robusta.
+  - **Injeção Dinâmica Reativa (`dynamicStyles`)**: Criada injeção reativa via tag `<style>` com as classes compiladas do Tailwind CSS sobrescritas usando `!important`. Isso permite redefinir de forma síncrona botões, inputs, bordas, zebras, focos e cabeçalhos em toda a interface do simulador e tela de login sem alterar as classes estáticas no JSX.
+  - **Exportação 100% Dinâmica no PNG**: Alterados todos os tons de verde estáticos inline na imagem exportada (`exportRef`) por cores geradas em tempo de execução via `mixColor` baseando-se no `primaryColor`. Dessa forma, o PNG gerado pelo botão "Gerar Imagem" ou "WhatsApp" herda a identidade completa do parceiro.
+  - **Preservação de UX no Botão WhatsApp**: O botão do WhatsApp no simulador preserva sua cor tradicional reconhecida (`#25D366`), mas o PNG gerado por ele é personalizado em conformidade com a nova paleta.
+  - **Replicação SaaS em Lote**: Executada replicação automática para os 9 parceiros ativos SaaS (`saas/*`, exceto ForcePay) via script `copy_to_partners.ps1`.
+  - **Build de Produção & Empacotamento**: Processo de build global de produção executado com 100% de sucesso. Arquivos empacotados de forma limpa em `antigravity-v1.3.0.zip`.
+- **Status Final**: Versão 1.3.0 totalmente implementada, compilada em lote para todas as calculadoras físicas, empacotada em arquivo ZIP na raiz, commitada e enviada via `git push origin main` para deploy automático via GitHub Actions para o servidor de produção cPanel.

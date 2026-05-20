@@ -870,8 +870,8 @@ export default function App() {
               />
             ) : (
               <div className="flex items-center gap-2">
-                <Calculator className="text-emerald-600" />
-                <span className="font-bold text-emerald-950">Calculadora</span>
+                <Calculator style={{ color: primaryColor }} />
+                <span className="font-bold" style={{ color: mixColor(primaryColor, '#000000', 0.6) }}>Calculadora</span>
               </div>
             )}
           </div>
@@ -1080,7 +1080,7 @@ export default function App() {
                     </td>
                     <td className="py-4 px-6">
                       <div className="flex flex-col">
-                        <span className="text-emerald-700 font-bold text-lg">{formatCurrency(row.valorParcela)}</span>
+                        <span className="font-bold text-lg" style={{ color: mixColor(primaryColor, '#000000', 0.25) }}>{formatCurrency(row.valorParcela)}</span>
                         {row.parcelas > 18 && (
                           <span className="text-[10px] text-amber-600 font-semibold uppercase flex items-center gap-1">
                             <Info size={10} /> Contingência
@@ -1092,14 +1092,14 @@ export default function App() {
                       <span className="text-slate-800 font-semibold">{formatCurrency(modoCalculo === 'valor' ? row.totalAPassar : row.valorLiquido)}</span>
                     </td>
                     <td className="py-4 px-6">
-                      <span className={`font-bold ${tipoTaxaExibida === 'cliente' ? 'text-emerald-700' : 'text-amber-600'}`}>
+                      <span className="font-bold" style={{ color: tipoTaxaExibida === 'cliente' ? mixColor(primaryColor, '#000000', 0.25) : '#d97706' }}>
                         {row.taxaDinamica}
                       </span>
                     </td>
                     {showLucroEfetivo && (
                       <td className="py-4 px-6 text-right">
                         <div className={`flex flex-col items-end gap-1`}>
-                          <div className={`inline-flex items-center gap-1.5 font-bold text-lg ${row.lucro >= 0 ? 'text-emerald-600' : 'text-rose-500'}`}>
+                          <div className="inline-flex items-center gap-1.5 font-bold text-lg" style={{ color: row.lucro >= 0 ? primaryColor : '#f43f5e' }}>
                             {row.lucro >= 0 ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
                             {formatCurrency(row.lucro)}
                           </div>
@@ -1602,7 +1602,7 @@ export default function App() {
                       {/* Acréscimos Promo */}
                       <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5">
                         <h4 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2 border-b border-slate-200 pb-2">
-                          <Sliders size={16} className="text-emerald-600" />
+                          <Sliders size={16} style={{ color: primaryColor }} />
                           Acréscimos por Tabela (Promo)
                         </h4>
                         <div className="space-y-3">
