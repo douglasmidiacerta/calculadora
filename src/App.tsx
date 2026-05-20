@@ -70,7 +70,7 @@ export default function App() {
   const [logoHeaderErro, setLogoHeaderErro] = useState(false);
 
   useEffect(() => {
-    document.title = "Cred Certo - Calculadora";
+    document.title = "Empresta BH - Calculadora";
   }, []);
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('auth_token'));
@@ -553,7 +553,7 @@ export default function App() {
           </form>
 
           <div className="p-6 bg-slate-50 text-center border-t border-slate-100">
-            <p className="text-slate-400 text-xs font-medium uppercase tracking-tighter">Cred Certo © {new Date().getFullYear()}</p>
+            <p className="text-slate-400 text-xs font-medium uppercase tracking-tighter">Empresta BH © {new Date().getFullYear()}</p>
           </div>
         </motion.div>
       </div>
@@ -854,7 +854,7 @@ export default function App() {
                 SIMULAÇÃO: {bandeira.toUpperCase()}
               </div>
               <div style={{ fontSize: '24px', fontWeight: '800' }}>
-                Cred Certo
+                Empresta BH
               </div>
             </div>
             <div style={{ textAlign: 'right' }}>

@@ -56,13 +56,13 @@ foreach ($partnerKey in $partners.Keys) {
         $content = Get-Content -Path $appFile -Raw
         
         # Substitui o título dinâmico da aba do navegador no useEffect
-        $content = $content.Replace('document.title = "Cred Certo - Calculadora";', "document.title = `"$partnerName - Calculadora`";")
+        $content = $content.Replace('document.title = "Empresta BH - Calculadora";', "document.title = `"$partnerName - Calculadora`";")
         
         # Substitui a marca no copyright do rodapé
-        $content = $content.Replace('Cred Certo ©', "$partnerName ©")
+        $content = $content.Replace('Empresta BH ©', "$partnerName ©")
         
         # Substitui a marca no título do PNG exportado usando regex com lookbehind para máxima precisão
-        $content = $content -replace '(?<=fontSize:\s*''24px'',\s*fontWeight:\s*''800''\s*\}\}>\s*\r?\n\s*)Cred Certo', $partnerName
+        $content = $content -replace '(?<=fontSize:\s*''24px'',\s*fontWeight:\s*''800''\s*\}\}>\s*\r?\n\s*)Empresta BH', $partnerName
         
         # Grava as modificações de volta no arquivo
         [System.IO.File]::WriteAllText($appFile, $content, [System.Text.Encoding]::UTF8)

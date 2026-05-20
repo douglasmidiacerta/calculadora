@@ -25,6 +25,11 @@
    - Removidos os textos "Simulador de Vendas" e "Cálculo de taxas e lucro líquido em tempo real" do `<header>` principal em `src/App.tsx`.
    - A alteração deixa o cabeçalho focado exclusivamente no logotipo/favicon da marca correspondente ou com o fallback discreto e responsivo em formato de texto.
    - Replicação em lote executada com sucesso para os três parceiros SaaS, re-compilação local de todos os bundles locais de produção e geração dos pacotes ZIP raiz atualizados.
+6. **Integração de Logos Oficiais em Tempo Real**:
+   - O usuário forneceu os arquivos oficiais de marca em formato WebP na raiz (`credcerto20-20logo...webp` e `miniatura-logo...webp`).
+   - Implementada a conversão 100% nativa e automatizada de WebP para PNG (`logo.png` e `favicon.png`) via script PowerShell e assembly `System.Drawing`.
+   - Copiados os novos ativos oficiais para `saas_assets/cred_certo/` e `public/` da calculadora principal (raiz).
+   - Executada a replicação e re-compilação total de todos os builds de produção locais e atualizados os pacotes ZIP raiz de distribuição.
 
 ## Próximos Passos (Próxima Sessão)
 1. **Monitoramento e Validação Visual**:

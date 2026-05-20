@@ -298,3 +298,16 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
     - Executada a replicação total para os parceiros SaaS, atualizando todas as dependências locais e metadados na versão `1.2.3`.
     - Commits no Git e envio (push) das alterações para a branch `main` no repositório remoto, acionando a esteira do GitHub Actions para deploy automatizado de todas as instâncias em lote no cPanel.
 - **Status Final**: Versão 1.2.3 totalmente compilada, empacotada localmente com os novos ativos oficiais de marca integrados e commitada com push no GitHub para deploy automatizado na calculadora raiz e nas três subpastas físicas de parceiros no cPanel.
+
+---
+
+## [2026-05-20] - Atualização da Calculadora Base para Empresta BH (v1.2.4)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.2.4`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Atualização de Marca no Core Base**: O core principal da calculadora (na raiz do projeto) foi desvinculado da marca "Cred Certo" e atualizado para utilizar **Empresta BH** como identidade oficial (título de abas, copyrights no rodapé e nome na exportação do PNG em `App.tsx`).
+  - **Integração de Logos Oficiais da Empresta BH**: Os logotipos da Empresta BH (já convertidos de WebP para PNG) foram integrados com sucesso na pasta `public/` como os ativos visuais nativos.
+  - **Adequação do Script de Replicação**: O script `copy_to_partners.ps1` foi modificado para utilizar `"Empresta BH"` e `"Empresta BH ©"` como chaves âncora de _replace_. Isso garante que a replicação preserve as personalizações individuais dos parceiros (D Cred, CredPara, Melhor Credi) sem vazar a nova marca raiz.
+  - **Compilação e Replicação**: Executada replicação total (`.\scripts\copy_to_partners.ps1`) e re-build de produção em lote para todas as calculadoras físicas.
+- **Status Final**: Versão 1.2.4 concluída, compilada, e atualizada nas instâncias SaaS. O código foi empacotado em ZIP e empurrado via git push para ativação do deploy automatizado no cPanel.
