@@ -267,3 +267,23 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
     - Re-executado o script PowerShell de replicação para propagar as alterações no `index.html` e no core do simulador.
     - Customização de todas as variáveis de marca e re-build de produção em lote na raiz e em todas as pastas SaaS.
 - **Status Final**: Versão 1.2.2 concluída com sucesso e distribuída em todas as instâncias SaaS.
+
+---
+
+## [2026-05-20] - Identidade Visual SaaS, Logotipos e Favicons Reais por IA e Automação de Replicação (v1.2.3)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.2.3`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Logotipos e Favicons Gerados com IA**:
+    - Geração de 8 ativos de alta fidelidade visual (4 logos e 4 favicons) para as marcas **Cred Certo**, **D Cred**, **CredPara** e **Melhor Credi** utilizando a inteligência artificial de imagens, criando layouts premium e harmoniosos ("wow at first glance").
+    - Criação do diretório centralizado `saas_assets/` com pastas exclusivas para os ativos de cada parceiro, e cópia das imagens correspondentes da Cred Certo base para o diretório `public/` da raiz do core.
+  - **Exibição Dinâmica e Resiliente de Logo no React**:
+    - Adicionado suporte reativo a carregamento de imagens em `src/App.tsx` usando estados de erro `logoErro` e `logoHeaderErro` com a tag `<img src="logo.png" />`.
+    - Implementação de fallback inteligente: se a imagem de logotipo estiver ausente em qualquer pasta física (erro 404), o React exibe os componentes vetorizados originais do Lucide React de forma transparente (Lock na tela de login e Calculator no cabeçalho do simulador), blindando a aplicação contra quebras visuais.
+  - **Automação Completa de Replicação com Script PowerShell**:
+    - Criação de um script PowerShell avançado em `scripts/copy_to_partners.ps1` no repositório.
+    - O script automatiza o processo de cópia recursiva do core base para todos os parceiros em lote, realizando automaticamente a injeção programática dos respectivos ativos visuais e a substituição dinâmica das variáveis de marca em `App.tsx` (aba de título, copyrights do rodapé e no título do PNG exportado).
+  - **Compilação Estática e Distribuição**:
+    - Executados builds de produção em lote na calculadora raiz e nas pastas de parceiros (`npm run build`), gerando bundles estáticos otimizados.
+- **Status Final**: Versão 1.2.3 concluída com sucesso, com todos os ativos SaaS embutidos e testados em lote locais, pacotes ZIP atualizados na raiz do projeto e commitados com push para a branch `main` no GitHub.

@@ -2,6 +2,18 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.2.3] - 2026-05-20
+
+### Adicionado
+- **Logotipos e Favicons Reais Gerados por IA**:
+  - Geração de 8 ativos de alta fidelidade visual (4 logotipos e 4 favicons) para as marcas **Cred Certo**, **D Cred**, **CredPara** e **Melhor Credi** utilizando a ferramenta de geração por inteligência artificial, conferindo ao ecossistema multi-tenant uma experiência estética premium ("wow at first glance").
+- **Fallback Inteligente no React (`App.tsx`)**:
+  - Implementação de um sistema resiliente de exibição de logotipo no React com detecção de erro (`onError`). Caso o arquivo `logo.png` esteja ausente em qualquer pasta (ex: erro 404), o simulador renderiza de forma transparente e elegante o ícone tradicional (cadeado na tela de login e calculadora no cabeçalho), evitando a quebra de layout de página.
+- **Estruturação de Ativos SaaS (`saas_assets/`)**:
+  - Criação de pasta centralizada `saas_assets/` contendo as subpastas `cred_certo/`, `d_cred/`, `credpara/` e `melhor_credi/` para armazenar de forma segura os ativos exclusivos de cada parceiro, protegendo as marcas de perdas durante processos de compilação ou replicação.
+- **Script de Replicação Totalmente Automatizado (`scripts/copy_to_partners.ps1`)**:
+  - Re-estruturação do script PowerShell de replicação, agora localizado no repositório. O script automatiza a limpeza, a cópia recursiva do core base, a injeção programática dos favicons e logos customizados e a substituição dinâmica de strings de marca em `App.tsx` (barra de título, copyrights e exportação do PNG) de todas as instâncias SaaS em lote.
+
 ## [1.2.2] - 2026-05-20
 
 ### Adicionado
