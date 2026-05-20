@@ -312,4 +312,27 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Compilação e Replicação**: Executada replicação total (`.\scripts\copy_to_partners.ps1`) e re-build de produção em lote para todas as calculadoras físicas.
 - **Status Final**: Versão 1.2.4 concluída, compilada, e atualizada nas instâncias SaaS. O código foi empacotado em ZIP e empurrado via git push para ativação do deploy automatizado no cPanel.
 
-- **[1.2.5]** (adcb4157): Funcionalidades de restrição Admin vs Dono (fatores e custos de máquina), personalização visual de marca (Cor primária dinâmica e logo) e deploy de novos parceiros SaaS.
+---
+
+## [2026-05-20] - Restrições Administrativas, Identidade Visual e Expansão SaaS (v1.2.5)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.2.5`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Permissões do Painel**: Bloqueio completo da aba "Fatores Base" para o perfil `dono`, restringindo o acesso exclusivamente ao `admin`, e alteração da aba "Custos da Máquina" para modo somente-leitura para o `dono`.
+  - **Identidade Visual Dinâmica**: Desenvolvimento de aba dedicada no Painel Administrativo para upload de URL do logotipo e definição dinâmica de cor primária em formato HEX. Integração desses estados dinâmicos no visual da página e no cabeçalho do PNG exportado.
+  - **Otimização da Tabela**: A coluna "Taxa Cliente" foi renomeada para "% a.m.", e adicionado toggle na tela para que o vendedor ative/desative a exibição dessa coluna na imagem gerada.
+  - **Novos Parceiros SaaS**: O script de replicação em lote PowerShell e a esteira de deploy no GitHub Actions foram atualizados com 8 novas marcas (como `roma`, `credfacil`, `rose`, etc.) para deploy automático e isolado.
+- **Status Final**: Versão 1.2.5 concluída e implantada com sucesso.
+
+---
+
+## [2026-05-20] - Compartilhamento Estruturado da Simulação no WhatsApp e Identidade Dinâmica (v1.2.6)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.2.6`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Compartilhamento Dinâmico no WhatsApp**: Desenvolvimento de gerador de mensagem estruturada com as opções de parcelamento de 1x a 21x da simulação de vendas (com valores das parcelas e valores totais), bandeira de cartão, modo de cálculo (Valor ou Limite) e tabela ativa.
+  - **Abertura e Conexão**: Conexão com a URL de API oficial do WhatsApp (`https://api.whatsapp.com/send?text=...`) contendo o texto da simulação codificado e download automático reativo da imagem em formato PNG no fallback para computadores ou celulares sem suporte nativo a compartilhamento de arquivos.
+  - **Identidade Visual Reativa**: Extração automática do nome da marca ativa baseado no `document.title` da aba do navegador, tornando a mensagem de compartilhamento inteligente e compatível com todos os ambientes SaaS sem necessitar de substituição de strings adicionais no PowerShell.
+- **Status Final**: Versão 1.2.6 codificada, replicada para todas as instâncias SaaS e empacotada em arquivo ZIP pronta para deploy.

@@ -1,6 +1,16 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
-Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
+## [1.2.6] - 2026-05-20
+
+### Adicionado
+- **Compartilhamento Dinâmico no WhatsApp**:
+  - Geração de mensagem estruturada e formatada em texto rico contendo o resumo da simulação (Bandeira, Tabela, Modo, Valor de Referência e as opções de parcelamento de 1x a 21x).
+  - Abertura dinâmica da URL oficial do WhatsApp (`https://api.whatsapp.com/send?text=...`) contendo a simulação, compatível com dispositivos móveis (abertura do app) e computadores (WhatsApp Web / Desktop).
+  - Download reativo automático do arquivo de imagem PNG da simulação no fallback para envio direto.
+
+### Modificado
+- **Lógica de Identidade Visual Reativa**:
+  - A marca parceira correspondente (ex: Empresta BH, D Cred, CredPara, etc.) é extraída dinamicamente com base no `document.title` da aba, permitindo o correto compartilhamento multi-tenant de forma resiliente sem requerer modificações no script de replicação PowerShell.
 
 ## [1.2.5] - 2026-05-20
 
