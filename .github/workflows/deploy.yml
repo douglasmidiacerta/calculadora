@@ -23,10 +23,11 @@ jobs:
       - name: Instalar Dependências
         run: npm ci
 
-      - name: Compilar Projeto (Build)
+      # ---------------- CALCULADORA PRINCIPAL (BASE) ----------------
+      - name: Compilar Projeto Base
         run: npm run build
 
-      - name: Deploy dos arquivos compilados via FTP
+      - name: Deploy Projeto Base via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -35,3 +36,45 @@ jobs:
           local-dir: ./dist/
           server-dir: ./
           state-name: .ftp-deploy-sync-state.json
+
+      # ---------------- PARCEIRO D CRED ----------------
+      - name: Compilar Parceiro D Cred
+        run: npm run build --prefix saas/d_cred
+
+      - name: Deploy D Cred via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/d_cred/dist/
+          server-dir: ./d_cred/
+          state-name: .ftp-deploy-sync-state-dcred.json
+
+      # ---------------- PARCEIRO CREDPARA ----------------
+      - name: Compilar Parceiro CredPara
+        run: npm run build --prefix saas/credpara
+
+      - name: Deploy CredPara via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/credpara/dist/
+          server-dir: ./credpara/
+          state-name: .ftp-deploy-sync-state-credpara.json
+
+      # ---------------- PARCEIRO MELHOR CREDI ----------------
+      - name: Compilar Parceiro Melhor Credi
+        run: npm run build --prefix saas/melhor_credi
+
+      - name: Deploy Melhor Credi via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/melhor_credi/dist/
+          server-dir: ./melhor_credi/
+          state-name: .ftp-deploy-sync-state-melhorcredi.json
