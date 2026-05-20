@@ -1,28 +1,36 @@
 # Sessão Atual - Checkpoint de Desenvolvimento
 
 ## Status da Sessão
-- **ID da Conversa**: `a43a6e45-cf0f-4176-8482-cb8a25a09748`
-- **Versão Atual**: `v1.1.2`
-- **Foco da Sessão**: Ajuste fino do diretório do servidor FTP para suportar a conta FTP dedicada criada pelo usuário.
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão Atual**: `v1.2.0`
+- **Foco da Sessão**: Implementação da Plataforma Multi-Tenant SaaS em Subpastas (`saas/d_cred`, `saas/credpara`, `saas/melhor_credi`), sincronização remota de taxas via API PHP (`config.json`), controle fino de níveis de acesso por Role (Dono vs Vendedor) com switch administrativo "Liberar Tabela de Comissão para os Vendedores".
 
 ---
 
 ## Atividades Realizadas
-1. **Estrutura de Contexto**: Sincronização do projeto sob a versão `v1.1.2` e atualização do `CHANGELOG.md` e dos arquivos do diretório `/ai_context`.
-2. **Ajuste Fino de Deploy FTP (`deploy.yml`)**:
-   - Alterada a propriedade `server-dir` de `/public_html/calculadora/` para `./` no pipeline. Isso faz com que a esteira funcione perfeitamente com a conta FTP dedicada criada pelo usuário (que já loga trancada na pasta `/public_html/calculadora`).
-3. **Gerenciamento de Versão**:
-   - Atualizado o `package.json` definindo a versão como `1.1.2`.
-4. **Build e Teste**:
-   - Compilação realizada com sucesso, validando a ausência de quebras no bundle.
+1. **Estrutura SaaS Organizada**:
+   - Criação e replicação isolada dos ambientes do simulador sob a pasta `saas/` para cada parceiro: `d_cred/`, `credpara/`, `melhor_credi/`.
+   - Implementado script PowerShell robusto (`scratch/copy_to_partners.ps1`) para realizar cópia limpa e sem recursões duplicadas de arquivos da raiz para os diretórios dos parceiros.
+2. **Personalização de Marcas**:
+   - Personalização individualizada de cada parceiro em suas respectivas subpastas. O nome do respectivo parceiro substitui a marca original em:
+     - Copyright no rodapé de login.
+     - Cabeçalho de exportação em imagem PNG para simulações de WhatsApp.
+3. **Controle de Roles & Nível de Permissão**:
+   - Vendedor Comum (`vendedor`): Interface limpa de simulação. Botão de engrenagem do Admin ocultado. Visibilidade da comissão (lucro líquido) controlada dinamicamente pelo servidor de forma centralizada.
+   - Dono da Empresa (`dono` / `admin` legado): Acesso completo ao painel admin, autenticação imediata e privilégio de edição.
+4. **Sincronização Remota de Taxas e Comissão**:
+   - Implementada API de sincronização baseada em PHP (`public/api/config/index.php`) gravando e lendo em `api/config/config.json`.
+   - Acoplamento no frontend `src/App.tsx` para realizar o fetch das taxas no servidor assim que qualquer usuário se autentica, garantindo que alterações salvas pelo Dono sejam instantaneamente propagadas aos vendedores.
+5. **Switch de Comissão Inteligente**:
+   - Atualizado o switch administrativo no frontend `src/App.tsx` para gerenciar a chave `formShowLucroVendedor`, adicionando a legenda "Liberar Tabela de Comissão para os Vendedores" com os status interativos de "Liberado/Bloqueado".
+6. **Compilação e Homologação**:
+   - Execução bem-sucedida do processo de build de produção (`npm run build`) na raiz e em todas as subpastas SaaS dos parceiros (`saas/d_cred`, `saas/credpara`, `saas/melhor_credi`), garantindo bundles estáveis, funcionais e livres de erros.
 
 ---
 
 ## Próximos Passos (Pendentes)
-1. **Executar Build e Empacotamento v1.1.2**:
-   - Apagar os pacotes ZIP da versão anterior (`v1.1.1`) e gerar os novos pacotes `antigravity-v1.1.2.zip` e `simulador-dist-v1.1.2.zip`.
-2. **Atualização do Repositório (Git)**:
-   - Commit das alterações locais e push para a branch `git-cpanel-integration-setup` e depois na `main` no GitHub para acionar o pipeline com o novo diretório configurado.
-3. **Instruções ao Usuário para Testar**:
-   - Explicar ao usuário que agora que a conta foi criada e o pipeline atualizado, a esteira do Actions já começará a rodar e a calculadora estará publicada na URL dele automaticamente.
-
+1. **Implantação dos Bundles nos Parceiros**:
+   - Orientar o usuário a realizar o deploy dos arquivos compilados presentes nas respectivas pastas `dist/` ou através dos novos pacotes ZIP.
+2. **Validação de Sincronização em Produção**:
+   - Pedir ao usuário para realizar o teste de autenticação com o login `dono` em um aparelho e alterar as taxas ou a liberação da comissão.
+   - Acessar com o login `vendedor` em outro aparelho/navegador e verificar se as taxas e a coluna de comissão se adaptam em tempo real segundo o configurado pelo Dono no servidor.
