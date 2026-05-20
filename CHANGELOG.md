@@ -1,5 +1,18 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
+## [1.2.9] - 2026-05-20
+
+### Modificado
+- **Identidade Visual — Upload de Logo em todos os Parceiros SaaS**:
+  - Substituído o campo de texto "URL da Logomarca" por um componente de upload de arquivo (`type="file"`) em todos os 10 parceiros SaaS (`credfacil`, `credpara`, `credsimples`, `d_cred`, `forcepay`, `melhorcredito`, `ramos`, `roma`, `rose`, `rtgroup`).
+  - O upload converte a imagem para Base64 via `FileReader` e salva em localStorage, mantendo total compatibilidade com o sistema atual.
+  - Adicionado preview do logotipo com thumbnail + botão de remoção (X) após seleção do arquivo.
+  - A instância principal `src/App.tsx` já possuía este comportamento — agora todos os parceiros estão padronizados.
+- **Botão "Mostrar % na imagem" redesenhado**:
+  - Visual atualizado: o botão agora funciona como toggle pill com fundo sólido verde quando ativo e cinza quando inativo.
+  - Badge circular com o símbolo `%` substituiu o checkbox quadrado anterior.
+  - Texto dinâmico: exibe "Mostrar %" quando desativo e "Ocultar %" quando ativo para melhor UX.
+
 ## [1.2.8] - 2026-05-20
 
 ### Adicionado
