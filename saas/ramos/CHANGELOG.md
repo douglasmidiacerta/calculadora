@@ -8,6 +8,7 @@
   - Implementação de um prefixo de persistência local dinâmico (`STORAGE_PREFIX`) individual por tenant (ex: `credpara_` para a CredPara, `d_cred_` para a D Cred, etc.).
   - Encapsulamento de todas as operações de gravação e leitura (`getStorageItem`, `setStorageItem`, `removeStorageItem`) para aplicar automaticamente o prefixo correspondente, garantindo isolamento lógico de cache e taxas 100% segregadas no lado do cliente.
   - Ajuste no script de replicação programática para injetar dinamicamente o prefixo correto no `App.tsx` de cada parceiro em lote.
+  - **Exclusão da ForcePay**: Conforme solicitação do usuário, a calculadora parceira **ForcePay** foi excluída desta modificação e do isolamento do localStorage, preservando seu comportamento original nativo de compartilhamento global.
 
 ## [1.2.10] - 2026-05-20
 

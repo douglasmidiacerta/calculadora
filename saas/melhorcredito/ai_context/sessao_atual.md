@@ -6,8 +6,12 @@
   - Implementada a constante `STORAGE_PREFIX` dinamicamente em cada tenant (ex: `credpara_` para a CredPara, `d_cred_` para a D Cred, etc.).
   - Encapsuladas todas as chamadas de armazenamento nas funções seguras `getStorageItem`, `setStorageItem` e `removeStorageItem` em `src/App.tsx`, isolando os caches por completo.
   - Ajustado o script `scripts/copy_to_partners.ps1` para injetar o prefixo do parceiro correspondente em lote.
+- **Exclusão da ForcePay a Pedido do Usuário**:
+  - Conforme solicitado, a calculadora **ForcePay** foi mantida fora dessa nova alteração de isolamento do LocalStorage.
+  - O código de `saas/forcepay/src/App.tsx` foi revertido para o commit anterior ao isolamento (`ae8805e`), restaurando o uso nativo e compartilhado do `localStorage` sem prefixos.
+  - A **ForcePay** foi removida da lista de parceiros do script de cópia `scripts/copy_to_partners.ps1`, garantindo que futuras replicações em lote não sobrescrevam as configurações dela.
 - **Replicação Total Multi-Tenant**:
-  - Executado o script de replicação `copy_to_partners.ps1` para sincronizar a correção em todas as 10 pastas de parceiros SaaS.
+  - Executado o script de replicação `copy_to_partners.ps1` para sincronizar a correção em todas as outras 9 pastas de parceiros SaaS.
 - **Build e Empacotamento**:
   - `npm run build` executado com sucesso e arquivos de produção compilados na pasta `/dist` na raiz e nos tenants.
   - Criado o arquivo ZIP `antigravity-v1.2.11.zip` e removida a versão anterior `antigravity-v1.2.10.zip`.

@@ -6,7 +6,6 @@ $partners = @{
     "credpara"     = "CredPara"
     "melhorcredito"= "Melhor Cr$([char]0x00E9)dito"
     "credsimples"  = "Cred Simples"
-    "forcepay"     = "ForcePay"
     "roma"         = "Roma"
     "credfacil"    = "Cred F$([char]0x00E1)cil"
     "rose"         = "Rose"
@@ -129,6 +128,7 @@ $excludeList = @(
     "saas", 
     "saas_assets", 
     "scripts", 
+    "scratch",
     ".env", 
     ".env.example", 
     "metadata.json", 
