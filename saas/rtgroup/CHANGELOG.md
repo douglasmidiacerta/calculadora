@@ -2,6 +2,20 @@
 
 Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
 
+## [1.2.5] - 2026-05-20
+
+### Adicionado
+- **Identidade Visual Dinâmica**: Adição de campos para URL do Logo e Cor Primária no painel de administração (Aba Identidade Visual).
+- **Personalização de Exportação**: Adicionado toggle para exibir/ocultar a coluna `% a.m.` na imagem exportada.
+- **Novos Parceiros SaaS**: Expansão do sistema multi-tenant com a criação automatizada dos ambientes para `credsimples`, `melhorcredito`, `forcepay`, `roma`, `credfacil`, `rose`, e `rtgroup`.
+
+### Modificado
+- **Tabela de Simulação**: A coluna 'Taxa Cliente' foi renomeada de forma enxuta para '% a.m.'.
+- **Painel Administrativo (Dono)**:
+  - O perfil `dono` agora tem acesso apenas leitura aos "Custos de Máquina" e é bloqueado nos "Fatores Base", acessíveis exclusivamente pelo `admin`.
+- **API de Login**: Correção no retorno do script de autenticação em PHP para garantir que o usuário `admin` receba o role `admin` (e não mais `dono`), permitindo o acesso às abas restritas no frontend.
+- **Script de Deploy SaaS**: O script `copy_to_partners.ps1` foi atualizado para englobar todos os 8 novos parceiros na automação de cópia de arquivos.
+
 ## [1.2.4] - 2026-05-20
 
 ### Adicionado

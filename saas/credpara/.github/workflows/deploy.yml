@@ -65,16 +65,100 @@ jobs:
           server-dir: ./credpara/
           state-name: .ftp-deploy-sync-state-credpara.json
 
-      # ---------------- PARCEIRO MELHOR CREDI ----------------
-      - name: Compilar Parceiro Melhor Credi
-        run: npm run build --prefix saas/melhor_credi
+      # ---------------- PARCEIRO MELHOR CREDITO ----------------
+      - name: Compilar Parceiro Melhor Credito
+        run: npm run build --prefix saas/melhorcredito
 
-      - name: Deploy Melhor Credi via FTP
+      - name: Deploy Melhor Credito via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./saas/melhor_credi/dist/
-          server-dir: ./melhor_credi/
-          state-name: .ftp-deploy-sync-state-melhorcredi.json
+          local-dir: ./saas/melhorcredito/dist/
+          server-dir: ./melhorcredito/
+          state-name: .ftp-deploy-sync-state-melhorcredito.json
+
+      # ---------------- PARCEIRO CRED SIMPLES ----------------
+      - name: Compilar Parceiro Cred Simples
+        run: npm run build --prefix saas/credsimples
+
+      - name: Deploy Cred Simples via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/credsimples/dist/
+          server-dir: ./credsimples/
+          state-name: .ftp-deploy-sync-state-credsimples.json
+
+      # ---------------- PARCEIRO FORCEPAY ----------------
+      - name: Compilar Parceiro ForcePay
+        run: npm run build --prefix saas/forcepay
+
+      - name: Deploy ForcePay via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/forcepay/dist/
+          server-dir: ./forcepay/
+          state-name: .ftp-deploy-sync-state-forcepay.json
+
+      # ---------------- PARCEIRO ROMA ----------------
+      - name: Compilar Parceiro Roma
+        run: npm run build --prefix saas/roma
+
+      - name: Deploy Roma via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/roma/dist/
+          server-dir: ./roma/
+          state-name: .ftp-deploy-sync-state-roma.json
+
+      # ---------------- PARCEIRO CRED FACIL ----------------
+      - name: Compilar Parceiro Cred Facil
+        run: npm run build --prefix saas/credfacil
+
+      - name: Deploy Cred Facil via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/credfacil/dist/
+          server-dir: ./credfacil/
+          state-name: .ftp-deploy-sync-state-credfacil.json
+
+      # ---------------- PARCEIRO ROSE ----------------
+      - name: Compilar Parceiro Rose
+        run: npm run build --prefix saas/rose
+
+      - name: Deploy Rose via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/rose/dist/
+          server-dir: ./rose/
+          state-name: .ftp-deploy-sync-state-rose.json
+
+      # ---------------- PARCEIRO RT GROUP ----------------
+      - name: Compilar Parceiro RT Group
+        run: npm run build --prefix saas/rtgroup
+
+      - name: Deploy RT Group via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./saas/rtgroup/dist/
+          server-dir: ./rtgroup/
+          state-name: .ftp-deploy-sync-state-rtgroup.json

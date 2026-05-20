@@ -492,7 +492,7 @@ export default function App() {
   ]);
 
   const showLucroEfetivo = useMemo(() => {
-    if (userRole === 'dono') return showLucroDono;
+    if (userRole === 'dono' || userRole === 'admin') return showLucroDono;
     return showLucroVendedor;
   }, [userRole, showLucroDono, showLucroVendedor]);
 
@@ -636,7 +636,7 @@ export default function App() {
           </button>
 
           {/* Botão de Configurações Admin */}
-          {userRole === 'dono' && (
+          {(userRole === 'dono' || userRole === 'admin') && (
             <button 
               onClick={() => {
                 if (isAdminAuthenticated) {

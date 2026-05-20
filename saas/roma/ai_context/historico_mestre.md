@@ -311,3 +311,5 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Adequação do Script de Replicação**: O script `copy_to_partners.ps1` foi modificado para utilizar `"Empresta BH"` e `"Empresta BH ©"` como chaves âncora de _replace_. Isso garante que a replicação preserve as personalizações individuais dos parceiros (D Cred, CredPara, Melhor Credi) sem vazar a nova marca raiz.
   - **Compilação e Replicação**: Executada replicação total (`.\scripts\copy_to_partners.ps1`) e re-build de produção em lote para todas as calculadoras físicas.
 - **Status Final**: Versão 1.2.4 concluída, compilada, e atualizada nas instâncias SaaS. O código foi empacotado em ZIP e empurrado via git push para ativação do deploy automatizado no cPanel.
+
+- **[1.2.5]** (adcb4157): Funcionalidades de restrição Admin vs Dono (fatores e custos de máquina), personalização visual de marca (Cor primária dinâmica e logo) e deploy de novos parceiros SaaS.
