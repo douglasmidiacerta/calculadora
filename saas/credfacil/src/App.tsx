@@ -509,7 +509,7 @@ export default function App() {
       messageText += `💳 *Bandeira:* ${bandeira}\n`;
       messageText += `📊 *Tabela:* ${tipoTabela === 'normal' ? 'Normal' : 'Oferta (Promo)'} (Tabela ${nivelTabela})\n`;
       messageText += `💵 *Modo:* ${modoCalculo === 'valor' ? 'Valor Solicitado' : 'Limite Disponível'}\n`;
-      messageText += `💰 *Valor de Referência:* ${formatCurrency(parseFloat(modoCalculo === 'valor' ? valorDesejado : limiteCartao))}\n`;
+      messageText += `💰 *Valor de Referência:* ${formatCurrency(parseFloat(valorDesejado))}\n`;
       messageText += `-------------------------------------------\n\n`;
       messageText += `*Opções de Parcelamento:*\n`;
 

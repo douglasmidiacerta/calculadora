@@ -412,3 +412,29 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Replicação SaaS em Lote**: Executada replicação automática para os 9 parceiros ativos SaaS (`saas/*`, exceto ForcePay) via script `copy_to_partners.ps1`.
   - **Build de Produção & Empacotamento**: Processo de build global de produção executado com 100% de sucesso. Arquivos empacotados de forma limpa em `antigravity-v1.3.0.zip`.
 - **Status Final**: Versão 1.3.0 totalmente implementada, compilada em lote para todas as calculadoras físicas, empacotada em arquivo ZIP na raiz, commitada e enviada via `git push origin main` para deploy automático via GitHub Actions para o servidor de produção cPanel.
+
+---
+
+## [2026-05-20] - Estilos Inline Reativos para Valor da Parcela e Taxas (v1.3.1)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.3.1`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Estilos Inline Dinâmicos**: Substituição das classes utilitárias de texto do Tailwind CSS (`text-emerald-700`, `text-emerald-600`) nos elementos críticos da tabela de resultados do simulador (Valor da Parcela, Taxa Cliente e Lucro Positivo) por estilos reativos directos em JSX (`style={{ color: ... }}`) baseados na cor de tema `primaryColor`.
+  - **Blindagem contra Tailwind v4 e Caches**: A mudança contorna conflitos de especificidade, o escopo de variáveis globais do Tailwind CSS v4 e caches persistentes em navegadores móveis, garantindo reatividade de cores instantânea.
+  - **Refinamento de Ícones Auxiliares**: Adaptação do ícone Calculator no Header e Sliders no painel administrativo para usarem a cor primária dinamicamente.
+  - **Replicação SaaS Automática**: Propagação homogênea do novo core base em lote para os 9 parceiros ativos SaaS (`saas/*`, exceto ForcePay) com o script PowerShell.
+  - **Build & Zip**: Compilação local e empacotamento completo em `antigravity-v1.3.1.zip` sem dependências desnecessárias.
+- **Status Final**: Versão 1.3.1 totalmente testada, buildada localmente, replicada para parceiros SaaS, empacotada e commitada com git push na branch `main` para deploy automatizado via FTP na nuvem cPanel.
+
+---
+
+## [2026-05-21] - Correção Crítica no WhatsApp e Estabilidade Multi-Tenant (v1.3.2)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.3.2`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Correção Crítica de ReferenceError no WhatsApp**: Substituição da variável inexistente `limiteCartao` por `valorDesejado` em `src/App.tsx` (linha 512). A ausência dessa variável causava um erro fatal silencioso de Javascript que impedia o processamento e abertura da URL do WhatsApp.
+  - **Propagação Automática em Lote**: Execução do script PowerShell `scripts/copy_to_partners.ps1` que propagou a correção de forma 100% homogênea para todas as subpastas dos inquilinos SaaS (`saas/*`), incluindo o `CHANGELOG.md` e o `package.json` atualizados.
+  - **Build de Produção e Empacotamento**: Executado o build de produção global local com sucesso absoluto. Fontes e ativos compactados no pacote de entrega `antigravity-v1.3.2.zip`, apagando o zip obsoleto anterior.
+- **Status Final**: Versão v1.3.2 totalmente corrigida, buildada localmente, replicada nas instâncias SaaS, empacotada em arquivo ZIP, commitada e enviada via `git push origin main --force` para o repositório remoto para atualização imediata do servidor cPanel via pipeline do GitHub Actions.

@@ -426,3 +426,15 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Replicação SaaS Automática**: Propagação homogênea do novo core base em lote para os 9 parceiros ativos SaaS (`saas/*`, exceto ForcePay) com o script PowerShell.
   - **Build & Zip**: Compilação local e empacotamento completo em `antigravity-v1.3.1.zip` sem dependências desnecessárias.
 - **Status Final**: Versão 1.3.1 totalmente testada, buildada localmente, replicada para parceiros SaaS, empacotada e commitada com git push na branch `main` para deploy automatizado via FTP na nuvem cPanel.
+
+---
+
+## [2026-05-21] - Correção Crítica no WhatsApp e Estabilidade Multi-Tenant (v1.3.2)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.3.2`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Correção Crítica de ReferenceError no WhatsApp**: Substituição da variável inexistente `limiteCartao` por `valorDesejado` em `src/App.tsx` (linha 512). A ausência dessa variável causava um erro fatal silencioso de Javascript que impedia o processamento e abertura da URL do WhatsApp.
+  - **Propagação Automática em Lote**: Execução do script PowerShell `scripts/copy_to_partners.ps1` que propagou a correção de forma 100% homogênea para todas as subpastas dos inquilinos SaaS (`saas/*`), incluindo o `CHANGELOG.md` e o `package.json` atualizados.
+  - **Build de Produção e Empacotamento**: Executado o build de produção global local com sucesso absoluto. Fontes e ativos compactados no pacote de entrega `antigravity-v1.3.2.zip`, apagando o zip obsoleto anterior.
+- **Status Final**: Versão v1.3.2 totalmente corrigida, buildada localmente, replicada nas instâncias SaaS, empacotada em arquivo ZIP, commitada e enviada via `git push origin main --force` para o repositório remoto para atualização imediata do servidor cPanel via pipeline do GitHub Actions.

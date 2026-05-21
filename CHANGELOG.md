@@ -1,5 +1,13 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
+## [1.3.2] - 2026-05-21
+
+### Corrigido
+- **Compartilhamento no WhatsApp**:
+  - Correção de um bug crítico (ReferenceError) causado pelo uso da variável inexistente `limiteCartao` na formatação da mensagem do WhatsApp, que causava a interrupção silenciosa da execução ao clicar no botão "WhatsApp".
+  - A formatação agora utiliza corretamente a variável de referência `valorDesejado` em ambos os modos de simulação (Valor Solicitado ou Limite do Cartão).
+  - Replicação automática e instantânea desta correção para todas as instâncias SaaS dos parceiros comerciais (`saas/*`).
+
 ## [1.3.1] - 2026-05-20
 
 ### Corrigido

@@ -1,12 +1,12 @@
-### Sessão Atual - Concluída (v1.3.1)
+### Sessão Atual - Concluída (v1.3.2)
 
-- **Correção da Cor do Valor da Parcela e Taxas na Tabela**:
-  - **Estilos Inline Reativos**: Implementados estilos inline robustos `style={{ color: ... }}` em `src/App.tsx` para o Valor da Parcela, Taxa Cliente (% a.m.) e Lucro Positivo do Vendedor. Isso contorna de vez a rigidez de resolução de classes de tema do Tailwind CSS v4 e caches locais de navegadores.
-  - **Ajustes Visuais Adicionais**: Alteração do ícone de Calculator no cabeçalho e do Sliders no painel administrativo para usarem `style={{ color: primaryColor }}` diretamente.
-  - **Replicação SaaS em Lote**: Novo core propagado com total sucesso para todos os 9 parceiros ativos SaaS (`saas/*`, exceto ForcePay) usando o script automatizado PowerShell.
-  - **Build de Produção & Empacotamento**: Processo de build global local executado com sucesso e fontes agregados em `antigravity-v1.3.1.zip` (com o changelog atualizado).
+- **Correção Crítica no Compartilhamento do WhatsApp**:
+  - **Causa Raiz**: Identificado um erro de runtime (`ReferenceError: limiteCartao is not defined`) na linha 512 de `src/App.tsx` (introduzido originalmente na v1.2.6). O script quebrava silenciosamente ao tentar montar o texto de simulação ao clicar no botão "WhatsApp", interrompendo a rotina e impedindo o redirecionamento.
+  - **Solução**: Substituída a variável inexistente `limiteCartao` pelo estado correto e global `valorDesejado` na interpolação do texto de compartilhamento (operador ternário). Agora, a simulação emite os dados numéricos de referência perfeitamente em ambos os modos (Valor Solicitado ou Limite).
+  - **Replicação Multi-Tenant SaaS**: Correção replicada homogeneamente em lote para todas as 10 instâncias SaaS (`saas/*`) usando o script PowerShell `scripts/copy_to_partners.ps1`.
+  - **Build e Empacotamento**: Executado o build de produção global e fontes compactados no novo arquivo `antigravity-v1.3.2.zip`.
 
 ### Próximos Passos
 
-1. **Commit e Deploy (CI/CD)**: Efetuar git commit e git push para o repositório remoto para acionar o build automático e deploy FTP no cPanel via GitHub Actions.
-2. **Validação**: Solicitar ao usuário a conferência das cores dinâmicas no simulador raiz e nos sub-SaaS após atualização da nuvem.
+1. **Validação em Lote**: Solicitar que o cliente valide o botão de compartilhar WhatsApp nas calculadoras do servidor cPanel após a conclusão do deploy automático.
+2. **Monitoramento do GitHub Actions**: Acompanhar se o pipeline de CI/CD do repositório remoto roda sem falhas e atualiza as 10 pastas físicas no cPanel.

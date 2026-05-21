@@ -1,5 +1,21 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
+## [1.3.2] - 2026-05-21
+
+### Corrigido
+- **Compartilhamento no WhatsApp**:
+  - Correção de um bug crítico (ReferenceError) causado pelo uso da variável inexistente `limiteCartao` na formatação da mensagem do WhatsApp, que causava a interrupção silenciosa da execução ao clicar no botão "WhatsApp".
+  - A formatação agora utiliza corretamente a variável de referência `valorDesejado` em ambos os modos de simulação (Valor Solicitado ou Limite do Cartão).
+  - Replicação automática e instantânea desta correção para todas as instâncias SaaS dos parceiros comerciais (`saas/*`).
+
+## [1.3.1] - 2026-05-20
+
+### Corrigido
+- **Cor do Valor da Parcela e Taxas na Tabela do Simulador**:
+  - Correção na cor antiga verde/emerald persistente no Valor da Parcela, na Taxa do Cliente (% a.m.) e no Lucro Vendedor Positivo.
+  - Substituição das classes estáticas do Tailwind CSS nos elementos de exibição crítica da tabela do simulador por propriedades de estilo inline dinâmicas (`style={{ color: ... }}`) baseadas na função de mesclagem `mixColor` e no estado reativo `primaryColor`.
+  - Esta alteração blinda em definitivo a renderização dos textos contra comportamentos de variáveis globais do Tailwind CSS v4 e caches persistentes em navegadores móveis e desktop, garantindo 100% de consistência de marca instantânea no ecossistema multi-tenant.
+
 ## [1.3.0] - 2026-05-20
 
 ### Adicionado
