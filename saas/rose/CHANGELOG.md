@@ -1,11 +1,22 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
+## [1.3.3] - 2026-05-21
+
+### Alterado
+- **Opções Padrão de Exibição**:
+  - Configurado as opções visuais no simulador para estarem desativadas por padrão:
+    1. *Liberar Tabela de Comissão para os Vendedores* (desativado por padrão / bloqueado).
+    2. *Ativar Lucro Líquido no simulador do Dono* (desativado por padrão).
+    3. *Ver Taxa de Custo da Máquina* (desativado por padrão, exibindo a "Taxa do Cliente").
+  - Essa mudança garante maior segurança e confidencialidade na visualização de margens ao inicializar novos parceiros no ecossistema SaaS.
+  - Ajuste estendido ao comportamento de restauração de padrões de fábrica.
+
 ## [1.3.2] - 2026-05-21
 
 ### Corrigido
 - **Compartilhamento no WhatsApp**:
   - Correção de um bug crítico (ReferenceError) causado pelo uso da variável inexistente `limiteCartao` na formatação da mensagem do WhatsApp, que causava a interrupção silenciosa da execução ao clicar no botão "WhatsApp".
-  - A formatação agora utiliza corretamente a variável de referência `valorDesejado` em ambos os modos de simulação (Valor Solicitado ou Limite do Cartão).
+  - A formatação agora utiliza corretamente a variável de referência `valorDesejado` in ambos os modos de simulação (Valor Solicitado ou Limite do Cartão).
   - Replicação automática e instantânea desta correção para todas as instâncias SaaS dos parceiros comerciais (`saas/*`).
 
 ## [1.3.1] - 2026-05-20

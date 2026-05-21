@@ -438,3 +438,17 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **Propagação Automática em Lote**: Execução do script PowerShell `scripts/copy_to_partners.ps1` que propagou a correção de forma 100% homogênea para todas as subpastas dos inquilinos SaaS (`saas/*`), incluindo o `CHANGELOG.md` e o `package.json` atualizados.
   - **Build de Produção e Empacotamento**: Executado o build de produção global local com sucesso absoluto. Fontes e ativos compactados no pacote de entrega `antigravity-v1.3.2.zip`, apagando o zip obsoleto anterior.
 - **Status Final**: Versão v1.3.2 totalmente corrigida, buildada localmente, replicada nas instâncias SaaS, empacotada em arquivo ZIP, commitada e enviada via `git push origin main --force` para o repositório remoto para atualização imediata do servidor cPanel via pipeline do GitHub Actions.
+
+---
+
+## [2026-05-21] - Configuração de Opções Visuais Desativadas por Padrão (v1.3.3)
+- **ID da Conversa**: `adcb4157-b00b-4b25-b810-7b4ac171e7e5`
+- **Versão**: `v1.3.3`
+- **Autor**: Antigravity AI
+- **Alterações**:
+  - **Visualização Oculta por Padrão**: As flags `show_lucro_vendedor` (Liberar Tabela de Comissão para Vendedores) e `show_lucro_dono` (Ativar Lucro Líquido no simulador do Dono) foram configuradas para iniciar desativadas (`false`) por padrão na primeira carga do simulador.
+  - **Taxa de Custo Oculta por Padrão**: A opção de exibir a taxa de custo (`tipo_taxa_exibida === 'custo'`) já vinha desativada por padrão, mostrando a "Taxa do Cliente". O comportamento foi reafirmado.
+  - **Restauração de Padrões Segura**: A rotina de restaurar os padrões de fábrica no Painel Admin foi recalibrada para desativar e persistir ambas as opções de margem como `false` por padrão.
+  - **SaaS Replicação em Lote**: Executado o script `scripts/copy_to_partners.ps1` que distribuiu e injetou essas alterações estéticas do core de forma 100% homogênea para todos os inquilinos SaaS em `saas/*`.
+  - **Build de Produção & Compactação**: Compilação global concluída (`npm run build`) e geração do zip consolidado `antigravity-v1.3.3.zip` na raiz.
+- **Status Final**: Versão v1.3.3 concluída, buildada localmente, replicada para todos os parceiros multi-tenant, empacotada em ZIP, commitada e enviada para o repositório GitHub para deploy cPanel imediato.

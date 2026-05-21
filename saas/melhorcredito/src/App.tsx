@@ -214,10 +214,10 @@ export default function App() {
 
   // --- VISUAL SETTINGS (CONTROLLED ONLY VIA ADMIN PANEL) ---
   const [showLucroVendedor, setShowLucroVendedor] = useState<boolean>(() => 
-    loadLocalStorage('simulador_show_lucro_vendedor', true)
+    loadLocalStorage('simulador_show_lucro_vendedor', false)
   );
   const [showLucroDono, setShowLucroDono] = useState<boolean>(() => 
-    loadLocalStorage('simulador_show_lucro_dono', true)
+    loadLocalStorage('simulador_show_lucro_dono', false)
   );
   const [tipoTaxaExibida, setTipoTaxaExibida] = useState<"cliente" | "custo">(() => 
     loadLocalStorage('simulador_tipo_taxa_exibida', 'cliente')
@@ -241,8 +241,8 @@ export default function App() {
   const [formAcrescimoGeralNormal, setFormAcrescimoGeralNormal] = useState<number>(0);
   const [formAcrescimoGeralPromo, setFormAcrescimoGeralPromo] = useState<number>(0);
   const [formTaxasCusto, setFormTaxasCusto] = useState<Record<string, Record<number, number>>>({ "Master/Visa": {}, "Elo": {} });
-  const [formShowLucroVendedor, setFormShowLucroVendedor] = useState<boolean>(true);
-  const [formShowLucroDono, setFormShowLucroDono] = useState<boolean>(true);
+  const [formShowLucroVendedor, setFormShowLucroVendedor] = useState<boolean>(false);
+  const [formShowLucroDono, setFormShowLucroDono] = useState<boolean>(false);
   const [formTipoTaxaExibida, setFormTipoTaxaExibida] = useState<"cliente" | "custo">("cliente");
 
   // --- IDENTITY & CUSTOMIZATION ---
@@ -665,8 +665,8 @@ export default function App() {
       setAcrescimoGeralNormal(0.00);
       setAcrescimoGeralPromo(0.00);
       setTaxasCustoState(DEFAULT_TAXAS_CUSTO);
-      setShowLucroVendedor(true);
-      setShowLucroDono(true);
+      setShowLucroVendedor(false);
+      setShowLucroDono(false);
       setTipoTaxaExibida('cliente');
       setLogoUrl('');
       setLogoErro(false);
@@ -682,8 +682,8 @@ export default function App() {
         acrescimo_geral_normal: 0.00,
         acrescimo_geral_promo: 0.00,
         taxas_custo: DEFAULT_TAXAS_CUSTO,
-        show_lucro_vendedor: true,
-        show_lucro_dono: true,
+        show_lucro_vendedor: false,
+        show_lucro_dono: false,
         tipo_taxa_exibida: 'cliente',
         logo_url: '',
         primary_color: '#059669'
