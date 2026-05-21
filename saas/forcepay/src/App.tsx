@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -156,10 +156,10 @@ export default function App() {
 
   // --- VISUAL SETTINGS (CONTROLLED ONLY VIA ADMIN PANEL) ---
   const [showLucroVendedor, setShowLucroVendedor] = useState<boolean>(() => 
-    loadLocalStorage('simulador_show_lucro_vendedor', true)
+    loadLocalStorage('simulador_show_lucro_vendedor', false)
   );
   const [showLucroDono, setShowLucroDono] = useState<boolean>(() => 
-    loadLocalStorage('simulador_show_lucro_dono', true)
+    loadLocalStorage('simulador_show_lucro_dono', false)
   );
   const [tipoTaxaExibida, setTipoTaxaExibida] = useState<"cliente" | "custo">(() => 
     loadLocalStorage('simulador_tipo_taxa_exibida', 'cliente')
@@ -183,8 +183,8 @@ export default function App() {
   const [formAcrescimoGeralNormal, setFormAcrescimoGeralNormal] = useState<number>(0);
   const [formAcrescimoGeralPromo, setFormAcrescimoGeralPromo] = useState<number>(0);
   const [formTaxasCusto, setFormTaxasCusto] = useState<Record<string, Record<number, number>>>({ "Master/Visa": {}, "Elo": {} });
-  const [formShowLucroVendedor, setFormShowLucroVendedor] = useState<boolean>(true);
-  const [formShowLucroDono, setFormShowLucroDono] = useState<boolean>(true);
+  const [formShowLucroVendedor, setFormShowLucroVendedor] = useState<boolean>(false);
+  const [formShowLucroDono, setFormShowLucroDono] = useState<boolean>(false);
   const [formTipoTaxaExibida, setFormTipoTaxaExibida] = useState<"cliente" | "custo">("cliente");
 
   // --- IDENTITY & CUSTOMIZATION ---
@@ -371,7 +371,7 @@ export default function App() {
       messageText += `💳 *Bandeira:* ${bandeira}\n`;
       messageText += `📊 *Tabela:* ${tipoTabela === 'normal' ? 'Normal' : 'Oferta (Promo)'} (Tabela ${nivelTabela})\n`;
       messageText += `💵 *Modo:* ${modoCalculo === 'valor' ? 'Valor Solicitado' : 'Limite Disponível'}\n`;
-      messageText += `💰 *Valor de Referência:* ${formatCurrency(parseFloat(modoCalculo === 'valor' ? valorDesejado : limiteCartao))}\n`;
+      messageText += `💰 *Valor de Referência:* ${formatCurrency(parseFloat(valorDesejado))}\n`;
       messageText += `-------------------------------------------\n\n`;
       messageText += `*Opções de Parcelamento:*\n`;
 

@@ -1,6 +1,15 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
-## [1.3.3] - 2026-05-21
+## [1.3.4] - 2026-05-21
+
+### Corrigido
+- **ForcePay — Correção Crítica no WhatsApp**:
+  - Corrigido o `ReferenceError: limiteCartao is not defined` no arquivo `saas/forcepay/src/App.tsx` (linha 374). Esta variável inexistente causava um erro fatal silencioso que impedia a geração da mensagem e a abertura do WhatsApp ao clicar no botão.
+  - A formatação da mensagem agora utiliza corretamente a variável `valorDesejado`, alinhando o ForcePay ao comportamento do core base e de todos os demais parceiros SaaS.
+- **ForcePay — Flags de Exibição de Lucro por Padrão**:
+  - As flags `showLucroVendedor` e `showLucroDono` agora inicializam como `false` por padrão, alinhando o ForcePay às correções aplicadas na v1.3.3 para os demais parceiros.
+
+
 
 ### Alterado
 - **Opções Padrão de Exibição**:
