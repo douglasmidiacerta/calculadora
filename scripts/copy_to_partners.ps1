@@ -11,6 +11,7 @@ $partners = @{
     "rose"         = "Rose"
     "rtgroup"      = "RT Group"
     "ramos"        = "Ramos"
+    "cashcerto"    = "Cash Certo"
 }
 
 # Configuração de tabelas padrão de taxas de custo da máquina específicas por parceiro SaaS

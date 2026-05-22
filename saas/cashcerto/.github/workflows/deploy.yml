@@ -162,17 +162,3 @@ jobs:
           local-dir: ./saas/rtgroup/dist/
           server-dir: ./rtgroup/
           state-name: .ftp-deploy-sync-state-rtgroup.json
-
-      # ---------------- PARCEIRO CASHCERTO ----------------
-      - name: Compilar Parceiro CashCerto
-        run: npm run build --prefix saas/cashcerto
-
-      - name: Deploy CashCerto via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./saas/cashcerto/dist/
-          server-dir: ./cashcerto/
-          state-name: .ftp-deploy-sync-state-cashcerto.json
