@@ -15,7 +15,6 @@ Aplicativo web para **simulação de vendas parceladas no cartão de crédito** 
 - **Animações:** motion/react (Framer Motion)
 - **Export PNG:** html-to-image
 - **Ícones:** lucide-react
-- **Banco de dados:** MySQL (apenas para autenticação de usuários)
 
 ---
 
@@ -209,144 +208,74 @@ Parcelas acima de 18x são marcadas com flag "Contingência" na UI.
 
 Todos os parâmetros de entrada disponíveis ao usuário na tela principal:
 
-| Parâmetro         | Tipo     | Opções / Valores                   | Padrão        |
-|-------------------|----------|------------------------------------|---------------|
-| Valor de Referência | número | qualquer valor positivo             | 1000.00       |
-| Modo de Simulação | enum     | `"valor"` / `"limite"`             | `"valor"`     |
-| Tipo de Tabela    | enum     | `"normal"` / `"promo"`             | `"normal"`    |
-| Nível de Acréscimo| enum     | `"1"` / `"2"` / `"3"` / `"4"` / `"5"` | `"5"` |
-| Bandeira          | enum     | `"Master/Visa"` / `"Elo"`          | `"Master/Visa"` |
+| Parâmetro           | Tipo   | Opções / Valores                           | Padrão        |
+|---------------------|--------|--------------------------------------------|---------------|
+| Valor de Referência | número | qualquer valor positivo                    | 1000.00       |
+| Modo de Simulação   | enum   | `"valor"` / `"limite"`                     | `"valor"`     |
+| Tipo de Tabela      | enum   | `"normal"` / `"promo"`                     | `"normal"`    |
+| Nível de Acréscimo  | enum   | `"1"` / `"2"` / `"3"` / `"4"` / `"5"`     | `"5"`         |
+| Bandeira            | enum   | `"Master/Visa"` / `"Elo"`                  | `"Master/Visa"` |
 
 ---
 
-## 5. Roles de Usuário e Autenticação
+## 5. Sistema de Configuração (localStorage)
 
-### 5.1 Roles
-| Role       | Permissões |
-|------------|------------|
-| `vendedor` | Só visualiza o simulador. Não vê o botão Admin. A coluna de Lucro Líquido é controlada remotamente pelo dono. |
-| `dono`     | Acesso total ao simulador + Painel Admin completo. Autenticado automaticamente no admin ao fazer login. |
-| `admin`    | Mesmo que `dono` + acesso à aba "Fatores Base" e "Custo de Máquina" (read-only) no Painel Admin. |
-
-### 5.2 Fluxo de Login
-1. Tela de login com campos Usuário e Senha.
-2. `POST /api/login/` com `{ username, password }`.
-3. Resposta: `{ success: true, token: "mock-jwt-token", role: "dono"|"vendedor" }`.
-4. Salva `auth_token` e `user_role` no localStorage.
-5. Se role for `dono`, seta `admin_authenticated = true` automaticamente.
-
-### 5.3 Credenciais de Fallback (dev/offline)
-- `dono` / `123456` → role `dono`
-- `vendedor` / `123456` → role `vendedor`
-- `admin` / `123456` → role `dono` (com acesso às abas de leitura)
-
-### 5.4 Segundo fator Admin (Painel)
-Para roles `dono` que não foram autenticados automaticamente, existe uma senha de acesso extra ao Painel Admin:
-- Senha: `3x51ELCO`
-- Após digitar, `admin_authenticated` fica salvo no localStorage.
-
----
-
-## 6. Sistema de Configuração (localStorage + Servidor)
-
-### 6.1 Chaves do localStorage (prefixadas por `STORAGE_PREFIX`)
+### 5.1 Chaves do localStorage (prefixadas por `STORAGE_PREFIX`)
 Todas as chaves são lidas/escritas com um prefixo de tenant, ex: `emprestabh_` + chave.
 
-| Chave                             | Tipo          | Padrão                          |
-|-----------------------------------|---------------|---------------------------------|
-| `auth_token`                      | string        | (ausente = não autenticado)     |
-| `user_role`                       | string        | `"vendedor"`                    |
-| `admin_authenticated`             | string        | (ausente)                       |
-| `simulador_fatores_normal`        | JSON          | DEFAULT_FATORES_BASE_NORMAL     |
-| `simulador_fatores_promo`         | JSON          | DEFAULT_FATORES_BASE_PROMO      |
-| `simulador_acrescimos_normal`     | JSON          | DEFAULT_ACRESCIMOS_NORMAL       |
-| `simulador_acrescimos_promo`      | JSON          | DEFAULT_ACRESCIMOS_PROMO        |
-| `simulador_acrescimo_geral_normal`| número        | 0                               |
-| `simulador_acrescimo_geral_promo` | número        | 0                               |
-| `simulador_taxas_custo`           | JSON          | DEFAULT_TAXAS_CUSTO             |
-| `simulador_show_lucro_vendedor`   | boolean       | `false`                         |
-| `simulador_show_lucro_dono`       | boolean       | `false`                         |
-| `simulador_tipo_taxa_exibida`     | `"cliente"\|"custo"` | `"cliente"`            |
-| `simulador_logo_url`              | string (base64) | `""`                          |
-| `simulador_primary_color`         | string (hex)  | `"#059669"`                     |
+| Chave                             | Tipo                  | Padrão                          |
+|-----------------------------------|-----------------------|---------------------------------|
+| `auth_token`                      | string                | (ausente = não autenticado)     |
+| `user_role`                       | string                | `"vendedor"`                    |
+| `admin_authenticated`             | string                | (ausente)                       |
+| `simulador_fatores_normal`        | JSON                  | DEFAULT_FATORES_BASE_NORMAL     |
+| `simulador_fatores_promo`         | JSON                  | DEFAULT_FATORES_BASE_PROMO      |
+| `simulador_acrescimos_normal`     | JSON                  | DEFAULT_ACRESCIMOS_NORMAL       |
+| `simulador_acrescimos_promo`      | JSON                  | DEFAULT_ACRESCIMOS_PROMO        |
+| `simulador_acrescimo_geral_normal`| número                | 0                               |
+| `simulador_acrescimo_geral_promo` | número                | 0                               |
+| `simulador_taxas_custo`           | JSON                  | DEFAULT_TAXAS_CUSTO             |
+| `simulador_show_lucro_vendedor`   | boolean               | `false`                         |
+| `simulador_show_lucro_dono`       | boolean               | `false`                         |
+| `simulador_tipo_taxa_exibida`     | `"cliente"\|"custo"`  | `"cliente"`                     |
+| `simulador_logo_url`              | string (base64)       | `""`                            |
+| `simulador_primary_color`         | string (hex)          | `"#059669"`                     |
 
-### 6.2 Sincronização com Servidor
-- **Ao fazer login:** `GET /api/config/` → resposta JSON com as configurações salvas → sobrescreve localStorage.
-- **Ao salvar no Painel Admin:** `POST /api/config/` com payload JSON completo → servidor salva em `config.json`.
-- O payload do POST tem as mesmas chaves: `fatores_normal`, `fatores_promo`, `acrescimos_normal`, `acrescimos_promo`, `acrescimo_geral_normal`, `acrescimo_geral_promo`, `taxas_custo`, `show_lucro_vendedor`, `show_lucro_dono`, `tipo_taxa_exibida`, `logo_url`, `primary_color`.
-
-### 6.3 Proteção de Taxas Divergentes
+### 5.2 Proteção de Taxas Divergentes
 Na sincronização do servidor, se `taxas_custo["Master/Visa"][1]` vier diferente do padrão de fábrica, as taxas são restauradas automaticamente para o padrão e sincronizadas de volta ao servidor em background.
 
 ---
 
-## 7. Painel Administrativo
-
-Acessível apenas para roles `dono` e `admin`. É um modal com 4 abas.
-
-### Aba 1 — Opções & Acréscimos
-**Toggles de visibilidade:**
-- "Liberar Tabela de Comissão para Vendedores" → controla `show_lucro_vendedor`
-- "Ativar Lucro Líquido no simulador do Dono" → controla `show_lucro_dono`
-- "Ver Taxa de Custo da Máquina" → controla `tipo_taxa_exibida` (`"cliente"` ou `"custo"`)
-
-**Acréscimos Gerais:**
-- Campo numérico: "Acréscimo Geral — Tabela Normal (%)"
-- Campo numérico: "Acréscimo Geral — Tabela Promo (%)"
-
-**Acréscimos por Nível:**
-- 5 campos para Tabela Normal (Tabela 1 a 5)
-- 5 campos para Tabela Promo (Tabela 1 a 5)
-
-### Aba 2 — Fatores Base (apenas role `admin`)
-Exibição read-only dos 21 fatores base para Normal e Promo. O role `dono` vê mensagem de acesso restrito.
-
-### Aba 3 — Custo de Máquina
-- Role `admin`: tabela read-only com inputs de 21 linhas para Master/Visa e Elo.
-- Role `dono`: tabela read-only em formato de spans (sem inputs).
-
-### Aba 4 — Identidade Visual
-- Upload de logo (arquivo de imagem) → comprimido para max 400×120px antes de salvar
-- Seletor de cor primária (color picker + campo HEX)
-
-### Rodapé do Painel
-- Botão "Restaurar Padrões" → reseta tudo para valores de fábrica e sincroniza no servidor
-- Botão "Cancelar"
-- Botão "Salvar Alterações" → persiste no localStorage e sincroniza no servidor
-
----
-
-## 8. Controle de Visibilidade da Coluna Lucro
-
-| Condição                                            | Mostra coluna? |
-|-----------------------------------------------------|----------------|
-| Role `vendedor` + `show_lucro_vendedor = false`     | Não            |
-| Role `vendedor` + `show_lucro_vendedor = true`      | Sim            |
-| Role `dono` + `show_lucro_dono = false`             | Não            |
-| Role `dono` + `show_lucro_dono = true`              | Sim            |
-| Role `admin`                                        | Segue `show_lucro_dono` |
-
----
-
-## 9. Tabela de Resultados
+## 6. Tabela de Resultados
 
 Colunas exibidas na tabela principal:
 
-| Coluna      | Valor exibido                                             |
-|-------------|-----------------------------------------------------------|
-| Parcelas    | Badge circular: `Nx`                                      |
-| Parcela     | `valorParcela` em BRL. Parcelas > 18x mostram flag "Cont." |
-| Total       | `totalAPassar` (modo valor) ou `valorLiquido` (modo limite) |
-| % a.m.      | `taxaCliente` ou `taxaCusto` dependendo de `tipo_taxa_exibida` |
-| Lucro       | `lucroLiquido` em BRL com ícone TrendingUp/TrendingDown (condicional) |
+| Coluna  | Valor exibido                                                                                |
+|---------|----------------------------------------------------------------------------------------------|
+| Parcelas| Badge circular: `Nx`                                                                         |
+| Parcela | `valorParcela` em BRL. Parcelas > 18x mostram flag "Cont."                                   |
+| Total   | `totalAPassar` (modo valor) ou `valorLiquido` (modo limite)                                  |
+| % a.m.  | `taxaCliente` ou `taxaCusto` dependendo de `tipo_taxa_exibida`                               |
+| Lucro   | `lucroLiquido` em BRL com ícone TrendingUp/TrendingDown. **Visibilidade controlada por role e configuração do parceiro** (ver abaixo) |
 
-Lucro positivo → cor primária. Lucro negativo → vermelho `#f43f5e`.
+### 6.1 Visibilidade da Coluna Lucro
+
+A coluna Lucro pode ser **ativada ou desativada** independentemente por role, via configuração do parceiro (dono da conta):
+
+| Role do usuário logado | Chave que controla a visibilidade  | Padrão    |
+|------------------------|------------------------------------|-----------|
+| `vendedor`             | `simulador_show_lucro_vendedor`    | `false`   |
+| `dono` / `admin`       | `simulador_show_lucro_dono`        | `false`   |
+
+- Quando `false`: a coluna Lucro é ocultada completamente da tabela.
+- Quando `true`: a coluna é exibida com valor em BRL e ícone colorido (positivo = cor primária, negativo = vermelho `#f43f5e`).
+- O dono do parceiro define essas configurações pelo Painel Admin e elas são persistidas no servidor, sincronizando para todos os dispositivos que fizerem login naquele parceiro.
 
 ---
 
-## 10. Sistema de Temas (Cor Dinâmica)
+## 7. Sistema de Temas (Cor Dinâmica)
 
-A cor primária (`primaryColor`, padrão `#059669`) é usada para gerar toda a paleta via uma função `mixColor(hex, mixHex, weight)` que interpola lineares entre duas cores.
+A cor primária (`primaryColor`, padrão `#059669`) é usada para gerar toda a paleta via uma função `mixColor(hex, mixHex, weight)` que interpola linearmente entre duas cores.
 
 **Variantes geradas:**
 - `mixColor(primary, '#000000', 0.25)` → fundo escuro / texto escuro
@@ -354,13 +283,12 @@ A cor primária (`primaryColor`, padrão `#059669`) é usada para gerar toda a p
 - `primaryColor` → cor base
 - `mixColor(primary, '#ffffff', 0.5)` → cor desabilitada
 - `mixColor(primary, '#ffffff', 0.6)` → texto accent claro
-- etc.
 
 Implementado como um bloco `<style>` injetado dinamicamente no DOM com `useMemo` que reescreve todas as classes Tailwind emerald-* com as variantes computadas da cor primária.
 
 ---
 
-## 11. Export para PNG
+## 8. Export para PNG
 
 - Existe um `<div ref={exportRef}>` absolutamente posicionado, invisível (height: 0, overflow hidden, z-index -1), com largura fixa de **480px**.
 - Quando o usuário clica "Gerar Imagem", usa `html-to-image`'s `toPng()` para renderizar esse div como PNG com `pixelRatio: 2`.
@@ -372,7 +300,7 @@ Implementado como um bloco `<style>` injetado dinamicamente no DOM com `useMemo`
 
 ---
 
-## 12. Compartilhamento via WhatsApp
+## 9. Compartilhamento via WhatsApp
 
 Fluxo do botão "WhatsApp":
 1. Renderiza o `exportRef` como PNG via `toPng()`.
@@ -384,7 +312,7 @@ Fluxo do botão "WhatsApp":
 
 ---
 
-## 13. Máscara do Campo de Valor
+## 10. Máscara do Campo de Valor
 
 O campo de valor usa `type="text"` com `inputMode="numeric"` e máscara manual:
 ```javascript
@@ -398,85 +326,13 @@ Resultado: o usuário digita `100000` e vê `1000.00`.
 
 ---
 
-## 14. Compressão de Logo
+## 11. Compressão de Logo
 
 Antes de salvar no localStorage, a imagem de logo é redimensionada para no máximo **400×120px** via Canvas e convertida para PNG base64.
 
 ---
 
-## 15. API do Backend
-
-### POST /api/login/
-**Request body:**
-```json
-{ "username": "dono", "password": "123456" }
-```
-**Response success:**
-```json
-{ "success": true, "token": "mock-jwt-token", "role": "dono" }
-```
-**Response fail:**
-```json
-{ "success": false, "message": "Usuário ou senha inválidos" }
-```
-
-### GET /api/config/
-Retorna o JSON das configurações salvas no servidor (arquivo `config.json`). Retorna `{}` se não existir.
-
-### POST /api/config/
-**Request body:** objeto JSON com todas as configurações do simulador.
-**Response:** `{ "success": true }` ou `{ "success": false, "message": "..." }`
-
----
-
-## 16. Banco de Dados MySQL
-
-Tabela `usuarios`:
-```sql
-CREATE TABLE IF NOT EXISTS usuarios (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  usuario VARCHAR(50) NOT NULL UNIQUE,
-  senha VARCHAR(255) NOT NULL,
-  role VARCHAR(20) NOT NULL DEFAULT 'vendedor'
-);
-```
-Usuários criados automaticamente na inicialização:
-- `dono` / `123456` / role `dono`
-- `vendedor` / `123456` / role `vendedor`
-- `admin` / `123456` / role `dono`
-
----
-
-## 17. Estrutura de Telas
-
-### Tela de Login
-- Header colorido (cor primária) com logo centralizado
-- Formulário: campos Usuário + Senha + botão Entrar
-- Mostra erro inline em caso de credenciais inválidas
-- Rodapé com copyright da marca
-
-### Tela Principal (após login)
-1. **Header:** logo (esquerda) + botões de ação (direita)
-   - Mobile: ícones dos botões primários + hambúrguer para ações secundárias
-   - Desktop: todos os botões visíveis com texto
-
-2. **Painel de Controles** (fundo cor primária):
-   - Campo de valor grande (R$)
-   - 4 selects: Modo, Tabela, Bandeira, Nível
-
-3. **Tabela de Resultados** (21 linhas)
-
-4. **Rodapé da tabela:** legenda de cores (Lucro Positivo / Prejuízo) + texto informativo
-
-5. **Footer:** copyright + validade do orçamento (7 dias)
-
-### Modais
-- **Modal de senha Admin:** campo de senha simples (acesso extra ao painel)
-- **Modal Painel Admin:** 4 abas, max-h-[90vh], scrollável internamente
-
----
-
-## 18. Comportamentos Mobile
+## 12. Comportamentos Mobile
 
 - `inputMode="numeric"` no campo de valor
 - Header em linha única com hambúrguer
@@ -486,29 +342,16 @@ Usuários criados automaticamente na inicialização:
 
 ---
 
-## 19. Variáveis de Ambiente
-
-```
-DB_HOST=localhost
-DB_NAME=nome_do_banco
-DB_USER=usuario_mysql
-DB_PASSWORD=senha_mysql
-PORT=3000
-NODE_ENV=production
-```
-
----
-
-## 20. Notas de Implementação Importantes
+## 13. Notas de Implementação Importantes
 
 1. **Sem testes automatizados** — validação é visual/manual.
 2. **Token de auth é fake** (`"mock-jwt-token"`) — não há JWT real nem refresh.
-3. **Senhas não são hasheadas** no banco — armazenamento em texto puro.
-4. **O `config.json`** é um arquivo em disco — não usa banco para configurações.
-5. **Acréscimos por nível** são armazenados em decimal (`0.01` = 1%), mas exibidos e editados em % na UI.
-6. **Acréscimo Geral** é armazenado em % (`1.5` = 1.5%), dividido por 100 no cálculo.
-7. **Formatação numérica** sempre em `pt-BR` (vírgula decimal, ponto milhar).
-8. **Parcelas 19x-21x** consideradas "contingência" — não são suportadas por todas as operadoras.
-9. A coluna "Total" na tabela muda de label dependendo do modo:
+3. **O `config.json`** é um arquivo em disco — não usa banco para configurações.
+4. **Acréscimos por nível** são armazenados em decimal (`0.01` = 1%), mas exibidos e editados em % na UI.
+5. **Acréscimo Geral** é armazenado em % (`1.5` = 1.5%), dividido por 100 no cálculo.
+6. **Formatação numérica** sempre em `pt-BR` (vírgula decimal, ponto milhar).
+7. **Parcelas 19x-21x** consideradas "contingência" — não são suportadas por todas as operadoras.
+8. A coluna "Total" na tabela muda de label dependendo do modo:
    - Modo valor → "Total a Passar" (quanto passa na máquina)
    - Modo limite → "Total a Receber" (quanto o cliente recebe líquido)
+9. **Coluna Lucro desativada por padrão** — o dono deve habilitá-la explicitamente por role (vendedor e/ou dono) nas configurações do parceiro.
