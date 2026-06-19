@@ -175,6 +175,12 @@ foreach ($partnerKey in $partners.Keys) {
         
         # Substitui o prefixo de localStorage para isolamento de multi-tenancy SaaS
         $content = $content.Replace('const STORAGE_PREFIX = "emprestabh_";', "const STORAGE_PREFIX = `"${partnerKey}_`";")
+
+        # Desativa a "Tabela Oferta (Promo)" para todos os parceiros, exceto Cash Certo
+        # (Empresta BH base e Cash Certo mantem a tabela de oferta ativada)
+        if ($partnerKey -ne "cashcerto") {
+            $content = $content.Replace('const MOSTRAR_TABELA_OFERTA = true;', 'const MOSTRAR_TABELA_OFERTA = false;')
+        }
         
         # Substitui a marca no copyright do rodapé
         $content = $content.Replace("Empresta BH $([char]0x00A9)", "$partnerName $([char]0x00A9)")

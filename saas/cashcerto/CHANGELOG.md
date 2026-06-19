@@ -1,5 +1,17 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
+## [1.3.5] - 2026-06-19
+
+### Alterado
+- **Tabela Oferta (Promo) por Tenant**:
+  - A "Tabela Oferta (Promo)" deixou de ser exibida para todos os parceiros e passou a ser controlada por tenant através da nova constante `MOSTRAR_TABELA_OFERTA` em `src/App.tsx`.
+  - **Ativada apenas para Empresta BH (base) e Cash Certo.** Nos demais tenants o seletor de Tabela é ocultado por completo e a simulação utiliza sempre a tabela Normal.
+- **Técnico**:
+  - Adicionada a constante `const MOSTRAR_TABELA_OFERTA = true;` no core base (`src/App.tsx`), logo após o `STORAGE_PREFIX`.
+  - O seletor de Tabela foi envolvido em `{MOSTRAR_TABELA_OFERTA && (...)}`, removendo o dropdown da UI quando desativado.
+  - `scripts/copy_to_partners.ps1` passa a injetar `MOSTRAR_TABELA_OFERTA = false` em todos os parceiros do hash, exceto `cashcerto`.
+  - `saas/forcepay/src/App.tsx` (cópia congelada, fora do script de replicação) teve o seletor de Tabela removido manualmente.
+
 ## [1.3.4] - 2026-05-21
 
 ### Corrigido

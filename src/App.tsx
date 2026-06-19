@@ -138,6 +138,11 @@ const mixColor = (hex: string, mixHex: string, weight: number): string => {
 // --- STORAGE PREFIX FOR SAAS MULTI-TENANCY ISOLATION ---
 const STORAGE_PREFIX = "emprestabh_";
 
+// Controla a exibição da "Tabela Oferta (Promo)" no seletor de tabela.
+// Base (Empresta BH) e Cash Certo = true. Os demais parceiros recebem `false`
+// automaticamente via scripts/copy_to_partners.ps1, ocultando a tabela de oferta.
+const MOSTRAR_TABELA_OFERTA = true;
+
 const getStorageItem = (key: string): string | null => {
   try {
     return localStorage.getItem(STORAGE_PREFIX + key);
@@ -1056,6 +1061,7 @@ export default function App() {
                   </select>
                 </div>
 
+                {MOSTRAR_TABELA_OFERTA && (
                 <div>
                   <label className="block text-xs font-semibold text-emerald-100/80 mb-1.5 uppercase">Tabela</label>
                   <select
@@ -1067,6 +1073,7 @@ export default function App() {
                     <option value="promo">Tabela Oferta (Promo)</option>
                   </select>
                 </div>
+                )}
               </div>
                 
               <div className="space-y-4">

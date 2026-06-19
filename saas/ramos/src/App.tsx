@@ -4,10 +4,10 @@
  */
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { 
-  DollarSign, FileText, CreditCard, TrendingUp, TrendingDown, Info, 
-  Calculator, Share2, LogIn, Lock, User, Eye, EyeOff, Settings, 
-  RotateCcw, Save, X, Sliders, Check, SlidersHorizontal 
+import {
+  DollarSign, FileText, CreditCard, TrendingUp, TrendingDown, Info,
+  Calculator, Share2, LogIn, Lock, User, Eye, EyeOff, Settings,
+  RotateCcw, Save, X, Sliders, Check, SlidersHorizontal, Menu
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { toPng } from 'html-to-image';
@@ -138,6 +138,11 @@ const mixColor = (hex: string, mixHex: string, weight: number): string => {
 // --- STORAGE PREFIX FOR SAAS MULTI-TENANCY ISOLATION ---
 const STORAGE_PREFIX = "ramos_";
 
+// Controla a exibição da "Tabela Oferta (Promo)" no seletor de tabela.
+// Base (Empresta BH) e Cash Certo = true. Os demais parceiros recebem `false`
+// automaticamente via scripts/copy_to_partners.ps1, ocultando a tabela de oferta.
+const MOSTRAR_TABELA_OFERTA = false;
+
 const getStorageItem = (key: string): string | null => {
   try {
     return localStorage.getItem(STORAGE_PREFIX + key);
@@ -253,6 +258,7 @@ export default function App() {
 
   // --- EXPORT SETTINGS ---
   const [exportShowTaxa, setExportShowTaxa] = useState<boolean>(true);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   // --- CALCULATOR STATES ---
   const [valorDesejado, setValorDesejado] = useState("1000.00");
@@ -858,15 +864,16 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col items-center p-4 md:p-8 font-sans text-slate-800">
       {dynamicStyles}
-      <header className="max-w-4xl w-full mb-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3 justify-center sm:justify-start flex-wrap">
+      <header className="max-w-4xl w-full mb-4 sm:mb-8 flex flex-row items-center justify-between gap-2 sm:gap-4">
+        {/* Logo */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 sm:gap-3">
             {!logoHeaderErro ? (
-              <img 
+              <img
                 src={logoUrl || "logo.png"}
-                onError={() => setLogoHeaderErro(true)} 
-                className="h-10 w-auto object-contain max-w-[180px]" 
-                alt="Logo" 
+                onError={() => setLogoHeaderErro(true)}
+                className="h-9 sm:h-10 w-auto object-contain max-w-[140px] sm:max-w-[180px]"
+                alt="Logo"
               />
             ) : (
               <div className="flex items-center gap-2">
@@ -876,14 +883,16 @@ export default function App() {
             )}
           </div>
         </div>
-        
-        <div className="flex flex-wrap items-center justify-center sm:justify-end gap-3">
-          
-          <button 
+
+        {/* Botões */}
+        <div className="flex items-center justify-end gap-2 sm:gap-3 shrink-0 flex-wrap">
+
+          {/* Mostrar % — oculto no mobile, aparece no menu */}
+          <button
             onClick={() => setExportShowTaxa(!exportShowTaxa)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm select-none ${
-              exportShowTaxa 
-                ? 'bg-emerald-600 border-emerald-600 text-white shadow-emerald-200' 
+            className={`hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm select-none ${
+              exportShowTaxa
+                ? 'bg-emerald-600 border-emerald-600 text-white shadow-emerald-200'
                 : 'bg-white border-slate-200 text-slate-500 hover:border-emerald-300 hover:text-emerald-700'
             }`}
             title="Exibir ou ocultar a coluna de porcentagem na imagem da simulação"
@@ -894,28 +903,30 @@ export default function App() {
             <span>{exportShowTaxa ? 'Ocultar %' : 'Mostrar %'}</span>
           </button>
 
-          <button 
+          {/* Gerar Imagem — ícone no mobile, completo no desktop */}
+          <button
             onClick={handleExport}
             style={{ backgroundColor: primaryColor }}
-            className="flex items-center gap-2 px-5 py-2.5 hover:brightness-110 text-white rounded-2xl font-bold shadow-lg transition-all active:scale-95 group text-sm"
+            className="flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 hover:brightness-110 text-white rounded-2xl font-bold shadow-lg transition-all active:scale-95 group text-sm"
           >
-            <Share2 size={18} className="group-hover:rotate-12 transition-transform" />
-            Gerar Imagem
+            <Share2 size={18} className="group-hover:rotate-12 transition-transform shrink-0" />
+            <span className="hidden sm:inline">Gerar Imagem</span>
           </button>
 
-          <button 
+          {/* WhatsApp — ícone no mobile, completo no desktop */}
+          <button
             onClick={handleShareWhatsApp}
-            className="flex items-center gap-2 px-5 py-2.5 bg-[#25D366] hover:bg-[#1da851] text-white rounded-2xl font-bold shadow-lg transition-all active:scale-95 group text-sm"
+            className="flex items-center gap-2 p-2.5 sm:px-5 sm:py-2.5 bg-[#25D366] hover:bg-[#1da851] text-white rounded-2xl font-bold shadow-lg transition-all active:scale-95 group text-sm"
           >
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" className="group-hover:scale-110 transition-transform">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" className="group-hover:scale-110 transition-transform shrink-0">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
             </svg>
-            WhatsApp
+            <span className="hidden sm:inline">WhatsApp</span>
           </button>
 
-          {/* Botão de Configurações Admin */}
+          {/* Admin — oculto no mobile, aparece no menu */}
           {(userRole === 'dono' || userRole === 'admin') && (
-            <button 
+            <button
               onClick={() => {
                 if (isAdminAuthenticated) {
                   handleOpenAdminPanel();
@@ -925,9 +936,9 @@ export default function App() {
                   setShowAdminPasswordModal(true);
                 }
               }}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm ${
-                isAdminAuthenticated 
-                  ? 'bg-amber-500 border-amber-600 text-white hover:bg-amber-600' 
+              className={`hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-2xl font-bold border transition-all active:scale-95 shadow-sm text-sm ${
+                isAdminAuthenticated
+                  ? 'bg-amber-500 border-amber-600 text-white hover:bg-amber-600'
                   : 'bg-white hover:bg-slate-100 text-slate-600 border-slate-200'
               }`}
               title="Painel Administrativo de Taxas"
@@ -937,16 +948,78 @@ export default function App() {
             </button>
           )}
 
-          <button 
+          {/* Sair — oculto no mobile, aparece no menu */}
+          <button
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-600 rounded-2xl font-bold border border-slate-200 transition-all active:scale-95 shadow-sm text-sm"
+            className="hidden sm:flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-600 rounded-2xl font-bold border border-slate-200 transition-all active:scale-95 shadow-sm text-sm"
             title="Sair do sistema"
           >
             <LogIn size={18} className="rotate-180" />
             Sair
           </button>
+
+          {/* Hamburger — visível apenas no mobile */}
+          <button
+            onClick={() => setShowMobileMenu(v => !v)}
+            className={`sm:hidden p-2.5 rounded-2xl border font-bold transition-all active:scale-95 shadow-sm text-sm ${
+              showMobileMenu
+                ? 'bg-slate-900 text-white border-slate-900'
+                : 'bg-white text-slate-600 border-slate-200'
+            }`}
+            aria-label="Menu"
+          >
+            <Menu size={20} />
+          </button>
         </div>
       </header>
+
+      {/* Menu mobile dropdown */}
+      <AnimatePresence>
+        {showMobileMenu && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.15 }}
+            className="sm:hidden max-w-4xl w-full mb-4 bg-white rounded-2xl border border-slate-200 shadow-lg overflow-hidden divide-y divide-slate-100"
+          >
+            <button
+              onClick={() => { setExportShowTaxa(v => !v); setShowMobileMenu(false); }}
+              className="flex items-center gap-3 w-full px-4 py-3.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 active:bg-slate-100"
+            >
+              <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-[11px] font-black ${exportShowTaxa ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>%</span>
+              {exportShowTaxa ? 'Ocultar % na imagem' : 'Mostrar % na imagem'}
+              {exportShowTaxa && <Check size={15} className="ml-auto text-emerald-600" />}
+            </button>
+            {(userRole === 'dono' || userRole === 'admin') && (
+              <button
+                onClick={() => {
+                  setShowMobileMenu(false);
+                  if (isAdminAuthenticated) {
+                    handleOpenAdminPanel();
+                  } else {
+                    setAdminPasswordInput("");
+                    setAdminPasswordError("");
+                    setShowAdminPasswordModal(true);
+                  }
+                }}
+                className={`flex items-center gap-3 w-full px-4 py-3.5 text-sm font-semibold hover:bg-slate-50 active:bg-slate-100 ${isAdminAuthenticated ? 'text-amber-600' : 'text-slate-700'}`}
+              >
+                <Settings size={17} className={isAdminAuthenticated ? "animate-pulse" : ""} />
+                {isAdminAuthenticated ? "Painel Admin" : "Admin"}
+                {isAdminAuthenticated && <span className="ml-auto w-2 h-2 rounded-full bg-amber-500"></span>}
+              </button>
+            )}
+            <button
+              onClick={() => { handleLogout(); setShowMobileMenu(false); }}
+              className="flex items-center gap-3 w-full px-4 py-3.5 text-sm font-semibold text-rose-600 hover:bg-rose-50 active:bg-rose-100"
+            >
+              <LogIn size={17} className="rotate-180" />
+              Sair do Sistema
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <main className="max-w-4xl w-full bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
         {/* Input Configuration Section */}
@@ -965,6 +1038,7 @@ export default function App() {
                 <input
                   id="valor-liberar"
                   type="text"
+                  inputMode="numeric"
                   value={valorDesejado}
                   onChange={handleValorChange}
                   className="w-full pl-12 rounded-2xl border-2 border-emerald-700/50 py-4 px-6 bg-emerald-900/40 text-white text-3xl font-bold placeholder-emerald-300 focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-400 transition-all outline-none"
@@ -987,6 +1061,7 @@ export default function App() {
                   </select>
                 </div>
 
+                {MOSTRAR_TABELA_OFERTA && (
                 <div>
                   <label className="block text-xs font-semibold text-emerald-100/80 mb-1.5 uppercase">Tabela</label>
                   <select
@@ -998,6 +1073,7 @@ export default function App() {
                     <option value="promo">Tabela Oferta (Promo)</option>
                   </select>
                 </div>
+                )}
               </div>
                 
               <div className="space-y-4">
@@ -1054,13 +1130,13 @@ export default function App() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 text-slate-500 border-b border-slate-100">
-                <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest text-center">Parcelas</th>
-                <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">Valor da Parcela</th>
-                <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">{modoCalculo === 'valor' ? 'Total a Passar' : 'Total a Receber'}</th>
-                <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest">
-                  {tipoTaxaExibida === 'cliente' ? '% a.m.' : 'Taxa Máquina (Custo)'}
+                <th className="py-3 px-3 sm:py-4 sm:px-6 font-bold text-xs uppercase tracking-widest text-center">Parc.</th>
+                <th className="py-3 px-3 sm:py-4 sm:px-6 font-bold text-xs uppercase tracking-widest">Parcela</th>
+                <th className="py-3 px-3 sm:py-4 sm:px-6 font-bold text-xs uppercase tracking-widest">{modoCalculo === 'valor' ? 'Total' : 'Receber'}</th>
+                <th className="py-3 px-3 sm:py-4 sm:px-6 font-bold text-xs uppercase tracking-widest">
+                  {tipoTaxaExibida === 'cliente' ? '% a.m.' : 'Custo'}
                 </th>
-                {showLucroEfetivo && <th className="py-4 px-6 font-bold text-xs uppercase tracking-widest text-right">Lucro Líquido</th>}
+                {showLucroEfetivo && <th className="py-3 px-3 sm:py-4 sm:px-6 font-bold text-xs uppercase tracking-widest text-right">Lucro</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
@@ -1073,37 +1149,37 @@ export default function App() {
                     key={row.parcelas} 
                     className={`${index % 2 === 0 ? 'bg-white' : 'bg-emerald-50/30'} hover:bg-emerald-50/80 transition-colors group`}
                   >
-                    <td className="py-4 px-6 text-center">
-                       <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 text-slate-700 font-bold group-hover:bg-emerald-100 group-hover:text-emerald-700 transition-colors">
+                    <td className="py-3 px-3 sm:py-4 sm:px-6 text-center">
+                      <span className="inline-flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 text-slate-700 font-bold text-xs sm:text-sm group-hover:bg-emerald-100 group-hover:text-emerald-700 transition-colors">
                         {row.parcelas}x
                       </span>
                     </td>
-                    <td className="py-4 px-6">
+                    <td className="py-3 px-3 sm:py-4 sm:px-6">
                       <div className="flex flex-col">
-                        <span className="font-bold text-lg" style={{ color: mixColor(primaryColor, '#000000', 0.25) }}>{formatCurrency(row.valorParcela)}</span>
+                        <span className="font-bold text-base sm:text-lg" style={{ color: mixColor(primaryColor, '#000000', 0.25) }}>{formatCurrency(row.valorParcela)}</span>
                         {row.parcelas > 18 && (
                           <span className="text-[10px] text-amber-600 font-semibold uppercase flex items-center gap-1">
-                            <Info size={10} /> Contingência
+                            <Info size={10} /> Cont.
                           </span>
                         )}
                       </div>
                     </td>
-                    <td className="py-4 px-6">
-                      <span className="text-slate-800 font-semibold">{formatCurrency(modoCalculo === 'valor' ? row.totalAPassar : row.valorLiquido)}</span>
+                    <td className="py-3 px-3 sm:py-4 sm:px-6">
+                      <span className="text-slate-800 font-semibold text-sm sm:text-base">{formatCurrency(modoCalculo === 'valor' ? row.totalAPassar : row.valorLiquido)}</span>
                     </td>
-                    <td className="py-4 px-6">
-                      <span className="font-bold" style={{ color: tipoTaxaExibida === 'cliente' ? mixColor(primaryColor, '#000000', 0.25) : '#d97706' }}>
+                    <td className="py-3 px-3 sm:py-4 sm:px-6">
+                      <span className="font-bold text-sm sm:text-base" style={{ color: tipoTaxaExibida === 'cliente' ? mixColor(primaryColor, '#000000', 0.25) : '#d97706' }}>
                         {row.taxaDinamica}
                       </span>
                     </td>
                     {showLucroEfetivo && (
-                      <td className="py-4 px-6 text-right">
-                        <div className={`flex flex-col items-end gap-1`}>
-                          <div className="inline-flex items-center gap-1.5 font-bold text-lg" style={{ color: row.lucro >= 0 ? primaryColor : '#f43f5e' }}>
-                            {row.lucro >= 0 ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
+                      <td className="py-3 px-3 sm:py-4 sm:px-6 text-right">
+                        <div className="flex flex-col items-end gap-1">
+                          <div className="inline-flex items-center gap-1 font-bold text-sm sm:text-lg" style={{ color: row.lucro >= 0 ? primaryColor : '#f43f5e' }}>
+                            {row.lucro >= 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
                             {formatCurrency(row.lucro)}
                           </div>
-                          <span className="text-slate-400 text-[10px] font-medium">Margem Líquida</span>
+                          <span className="text-slate-400 text-[10px] font-medium hidden sm:block">Margem Líquida</span>
                         </div>
                       </td>
                     )}

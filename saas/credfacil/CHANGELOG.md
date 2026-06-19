@@ -1,6 +1,27 @@
 # CHANGELOG - Simulador de Vendas e Taxas (Calculadora)
 
-## [1.3.3] - 2026-05-21
+## [1.3.5] - 2026-06-19
+
+### Alterado
+- **Tabela Oferta (Promo) por Tenant**:
+  - A "Tabela Oferta (Promo)" deixou de ser exibida para todos os parceiros e passou a ser controlada por tenant através da nova constante `MOSTRAR_TABELA_OFERTA` em `src/App.tsx`.
+  - **Ativada apenas para Empresta BH (base) e Cash Certo.** Nos demais tenants o seletor de Tabela é ocultado por completo e a simulação utiliza sempre a tabela Normal.
+- **Técnico**:
+  - Adicionada a constante `const MOSTRAR_TABELA_OFERTA = true;` no core base (`src/App.tsx`), logo após o `STORAGE_PREFIX`.
+  - O seletor de Tabela foi envolvido em `{MOSTRAR_TABELA_OFERTA && (...)}`, removendo o dropdown da UI quando desativado.
+  - `scripts/copy_to_partners.ps1` passa a injetar `MOSTRAR_TABELA_OFERTA = false` em todos os parceiros do hash, exceto `cashcerto`.
+  - `saas/forcepay/src/App.tsx` (cópia congelada, fora do script de replicação) teve o seletor de Tabela removido manualmente.
+
+## [1.3.4] - 2026-05-21
+
+### Corrigido
+- **ForcePay — Correção Crítica no WhatsApp**:
+  - Corrigido o `ReferenceError: limiteCartao is not defined` no arquivo `saas/forcepay/src/App.tsx` (linha 374). Esta variável inexistente causava um erro fatal silencioso que impedia a geração da mensagem e a abertura do WhatsApp ao clicar no botão.
+  - A formatação da mensagem agora utiliza corretamente a variável `valorDesejado`, alinhando o ForcePay ao comportamento do core base e de todos os demais parceiros SaaS.
+- **ForcePay — Flags de Exibição de Lucro por Padrão**:
+  - As flags `showLucroVendedor` e `showLucroDono` agora inicializam como `false` por padrão, alinhando o ForcePay às correções aplicadas na v1.3.3 para os demais parceiros.
+
+
 
 ### Alterado
 - **Opções Padrão de Exibição**:

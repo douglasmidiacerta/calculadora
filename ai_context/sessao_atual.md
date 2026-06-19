@@ -1,16 +1,19 @@
-### Sessão Atual - Concluída (v1.3.3)
+### Sessão Atual - Concluída (v1.3.5)
 
-- **Configuração de Opções Padrão Desativadas**:
-  - **Requisito**: Deixar por padrão desativadas na inicialização (e na restauração de padrões de fábrica) as seguintes opções visuais:
-    1. *Liberar Tabela de Comissão para os Vendedores* (desativado por padrão / bloqueado).
-    2. *Ativar Lucro Líquido no simulador do Dono* (desativado por padrão).
-    3. *Ver Taxa de Custo da Máquina* (desativado por padrão, exibindo a "Taxa do Cliente").
-  - **Solução**: Ajustado o fallback do `loadLocalStorage` para retornar `false` nas chaves `simulador_show_lucro_vendedor` e `simulador_show_lucro_dono`, além de inicializar as variáveis locais do formulário com `false`. A flag `simulador_tipo_taxa_exibida` já inicializava como `'cliente'` por padrão (desativando a exibição da taxa de custo).
-  - **Restauração de Padrões**: A função de restaurar padrões no Painel Admin foi atualizada para resetar e persistir essas flags visuais como `false` por padrão.
-  - **Replicação SaaS Multi-Tenant**: Novo comportamento do core propagado em lote para todas as 10 instâncias SaaS (`saas/*`) usando o script PowerShell `scripts/copy_to_partners.ps1`.
-  - **Build & Zip**: Compilação local concluída e fontes compactados em `antigravity-v1.3.3.zip`.
+- **Tema**: Controle da Tabela Oferta (Promo) por tenant.
+- **Requisito do usuário**: Deixar a "Tabela Oferta (Promo)" ativada **somente** para Empresta BH (base) e Cash Certo.
+- **Solução implementada**:
+  1. Nova constante `MOSTRAR_TABELA_OFERTA` em `src/App.tsx` (logo após `STORAGE_PREFIX`), iniciando `true` na base.
+  2. Seletor de Tabela envolvido em `{MOSTRAR_TABELA_OFERTA && (...)}` — quando `false`, o dropdown é ocultado e a simulação usa sempre a tabela Normal.
+  3. `scripts/copy_to_partners.ps1` injeta `MOSTRAR_TABELA_OFERTA = false` para todos os parceiros do hash, exceto `cashcerto`.
+  4. `saas/forcepay/src/App.tsx` (fora do script de replicação) teve o seletor removido manualmente.
+- **Estado pós-replicação**:
+  - **Com Tabela Oferta**: Empresta BH (base), Cash Certo.
+  - **Sem Tabela Oferta**: d_cred, credpara, credsimples, melhorcredito, credfacil, roma, rose, ramos, rtgroup, forcepay.
+- **Validação**: `npm run lint` OK (tsc --noEmit), `npm run build` OK (Vite + esbuild). Todos os 10 tenants do hash em `v1.3.5`.
 
 ### Próximos Passos
 
-1. **Validação das Flags de Exibição**: Solicitar ao usuário a validação das flags visuais vindo desativadas por padrão no simulador principal e inquilinos SaaS.
-2. **Monitoramento do GitHub Actions**: Acompanhar se o pipeline de CI/CD do repositório remoto conclui o deploy para o cPanel.
+1. **Monitorar GitHub Actions**: Confirmar o deploy FTP de todas as instâncias no cPanel após o push.
+2. **Validação visual**: Conferir em produção que o seletor de Tabela aparece apenas em Empresta BH e Cash Certo.
+3. **ForcePay**: Avaliar se vale reincorporar o ForcePay ao hash de replicação (`scripts/copy_to_partners.ps1`) para parar de mantê-lo como cópia congelada divergente.

@@ -452,3 +452,17 @@ Este arquivo serve como o log cumulativo de todas as conversas, decisões arquit
   - **SaaS Replicação em Lote**: Executado o script `scripts/copy_to_partners.ps1` que distribuiu e injetou essas alterações estéticas do core de forma 100% homogênea para todos os inquilinos SaaS em `saas/*`.
   - **Build de Produção & Compactação**: Compilação global concluída (`npm run build`) e geração do zip consolidado `antigravity-v1.3.3.zip` na raiz.
 - **Status Final**: Versão v1.3.3 concluída, buildada localmente, replicada para todos os parceiros multi-tenant, empacotada em ZIP, commitada e enviada para o repositório GitHub para deploy cPanel imediato.
+
+---
+
+## [2026-06-19] - Controle da Tabela Oferta (Promo) por Tenant (v1.3.5)
+- **ID da Conversa**: `sessao-claude-code`
+- **Versão**: `v1.3.5` (sobre a base v1.3.4)
+- **Autor**: Claude Code (Opus 4.8)
+- **Alterações**:
+  - **Flag `MOSTRAR_TABELA_OFERTA`**: Criada a constante `const MOSTRAR_TABELA_OFERTA = true;` no core base (`src/App.tsx`), logo após o `STORAGE_PREFIX`. Ela controla a exibição do seletor "Tabela Oferta (Promo)".
+  - **Renderização Condicional**: O bloco `<div>` do seletor de Tabela passou a ser envolvido por `{MOSTRAR_TABELA_OFERTA && (...)}`. Quando desativado, o dropdown some por completo da UI e a simulação usa sempre a tabela Normal (`tipoTabela` permanece `"normal"`, que já é o valor padrão e não é persistido em localStorage).
+  - **Injeção por Parceiro**: `scripts/copy_to_partners.ps1` ganhou um bloco que substitui `MOSTRAR_TABELA_OFERTA = true` por `false` em todos os parceiros do hash, **exceto** `cashcerto`. Resultado: tabela de oferta ativada apenas em **Empresta BH (base)** e **Cash Certo**.
+  - **ForcePay (cópia congelada)**: Como o ForcePay não faz parte do hash de replicação, seu seletor de Tabela foi removido manualmente em `saas/forcepay/src/App.tsx`.
+  - **Validação**: `npm run lint` (tsc --noEmit) sem erros e `npm run build` (Vite + esbuild) concluído com sucesso. Replicação confirmada: `cashcerto = true`, demais 9 tenants = `false`, todos em `v1.3.5`.
+- **Status Final**: Versão v1.3.5 concluída, type-check e build OK na raiz, replicada para os 10 tenants do hash, ForcePay ajustado à parte, empacotada em `antigravity-v1.3.5.zip`, commitada e enviada para `origin/main` (dispara deploy via GitHub Actions).
